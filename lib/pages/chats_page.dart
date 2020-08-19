@@ -24,9 +24,17 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView.builder(
+        body: ListView.separated(
             physics: ScrollPhysics(),
             itemCount: contatsLength,
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 70.0),
+                child: Divider(
+                  thickness: 1.5,
+                ),
+              );
+            },
             itemBuilder: (context, index) {
               return _buildContactListTile();
             }));
