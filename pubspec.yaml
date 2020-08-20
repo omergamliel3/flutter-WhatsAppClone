@@ -1,7 +1,7 @@
 name: WhatAppClone
 description: A Text Message WhatsApp Clone.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 
 version: 1.0.0+1
@@ -13,28 +13,21 @@ dependencies:
   flutter:
     sdk: flutter
 
-  #contacts_service: ^0.4.6
-  permission_handler: ^5.0.1+1
+  contacts_service: any
+  permission_handler: any
+  call_log: ^2.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+     - asset/images/whatsapp_icon.png
+     - asset/images/Whatsapp_Wallpaper.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

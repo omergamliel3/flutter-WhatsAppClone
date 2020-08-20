@@ -4,12 +4,12 @@ import 'package:WhatAppClone/pages/calls_page.dart';
 import 'package:WhatAppClone/pages/chats_page.dart';
 import 'package:WhatAppClone/pages/status_page.dart';
 
-class HomePage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   // Class Attributes
   TabController _tabController;

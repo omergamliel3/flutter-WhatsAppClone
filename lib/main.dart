@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatAppClone/pages/home_page.dart';
+import 'package:WhatAppClone/pages/loading_page.dart';
+import 'package:WhatAppClone/pages/main_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,8 +19,11 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
-      routes: {'/': (BuildContext context) => HomePage()},
+      themeMode: ThemeMode.dark,
+      routes: {
+        '/': (BuildContext context) => LoadingPage(),
+        '/main_page': (BuildContext context) => MainPage()
+      },
     );
   }
 }
