@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:call_log/call_log.dart';
 
 class CallsPage extends StatefulWidget {
@@ -9,17 +10,16 @@ class CallsPage extends StatefulWidget {
 
 class _CallsPageState extends State<CallsPage>
     with AutomaticKeepAliveClientMixin {
-  final int callsLength = 6;
-
+  // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry) {
     return ListTile(
       leading: CircleAvatar(),
       title: Text(callLogEntry.name),
-      subtitle: Text(callLogEntry.timestamp.toString()),
+      subtitle: Text(callLogEntry.number),
       trailing: Icon(Icons.call),
       dense: true,
       onTap: () {
-        print('nativage call info');
+        UrlLauncher.launch('tel:+${callLogEntry.number}');
       },
     );
   }
@@ -45,7 +45,7 @@ class _CallsPageState extends State<CallsPage>
           }
           return ListView.builder(
               physics: ScrollPhysics(),
-              itemCount: callsLength,
+              itemCount: callLogsData.length,
               itemBuilder: (context, index) {
                 return _buildCallsListTile(callLogsData[index]);
               });

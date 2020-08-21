@@ -16,6 +16,7 @@ class _ChatsPageState extends State<ChatsPage>
     super.initState();
   }
 
+  // build contact list tile widget
   Widget _buildContactListTile(Contact contact) {
     return ListTile(
       leading: CircleAvatar(

@@ -16,6 +16,8 @@ dependencies:
   contacts_service: any
   permission_handler: any
   call_log: ^2.1.0
+  android_intent: any
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:
