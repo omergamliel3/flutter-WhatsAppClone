@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:WhatsAppClone/services/prefs_service.dart';
+
 import 'package:WhatsAppClone/core/constants.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -28,9 +30,18 @@ class _LoadingPageState extends State<LoadingPage> {
     while (cameraStatus != PermissionStatus.granted) {
       cameraStatus = await Permission.contacts.request();
     }
+    // init prefs service
+    await PrefsService.initPrefs();
+    // delay
     await Future.delayed(Duration(seconds: 2));
-    // navigate main page
-    Navigator.pushReplacementNamed(context, '/login_page');
+    // is phone num save in prefs check
+    if (PrefsService.isPhoneNumSaved()) {
+      // navigate main page
+      Navigator.pushReplacementNamed(context, '/main_page');
+    } else {
+      // navigate login page
+      Navigator.pushReplacementNamed(context, '/login_page');
+    }
   }
 
   @override

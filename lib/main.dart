@@ -1,10 +1,10 @@
-import 'package:WhatsAppClone/pages/login_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/core/theme.dart';
 
 import 'package:WhatsAppClone/pages/loading_page.dart';
 import 'package:WhatsAppClone/pages/main_page.dart';
+import 'package:WhatsAppClone/pages/login_page.dart';
 
 void main() {
   runApp(MyApp());
