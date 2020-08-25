@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatAppClone/pages/calls_page.dart';
-import 'package:WhatAppClone/pages/chats_page.dart';
-import 'package:WhatAppClone/pages/status_page.dart';
+import 'package:WhatsAppClone/pages/calls_page.dart';
+import 'package:WhatsAppClone/pages/chats_page.dart';
+import 'package:WhatsAppClone/pages/status_page.dart';
 
 class MainPage extends StatefulWidget {
   @override

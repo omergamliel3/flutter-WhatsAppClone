@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:WhatAppClone/core/constants.dart';
+import 'package:WhatsAppClone/core/constants.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _LoadingPageState extends State<LoadingPage> {
     }
     await Future.delayed(Duration(seconds: 2));
     // navigate main page
-    Navigator.pushReplacementNamed(context, '/main_page');
+    Navigator.pushReplacementNamed(context, '/login_page');
   }
 
   @override
@@ -56,6 +56,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 Expanded(
                     flex: 1,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'from',

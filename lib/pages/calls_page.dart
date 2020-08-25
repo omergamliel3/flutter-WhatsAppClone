@@ -10,15 +10,31 @@ class CallsPage extends StatefulWidget {
 
 class _CallsPageState extends State<CallsPage>
     with AutomaticKeepAliveClientMixin {
+  // call logs future
+  Future<Iterable<CallLogEntry>> _callLogFuture;
+  @override
+  initState() {
+    // init future
+    _callLogFuture = CallLog.get();
+    super.initState();
+  }
+
   // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry) {
     return ListTile(
-      leading: CircleAvatar(),
+      leading: CircleAvatar(
+        backgroundColor: Colors.grey,
+        child: Text(
+          callLogEntry.name[0].toUpperCase() ?? '?',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
       title: Text(callLogEntry.name),
-      subtitle: Text(callLogEntry.number),
+      subtitle: Text(callLogEntry.formattedNumber),
       trailing: Icon(Icons.call),
       dense: true,
       onTap: () {
+        // launch device phone call
         UrlLauncher.launch('tel:+${callLogEntry.number}');
       },
     );
@@ -29,7 +45,7 @@ class _CallsPageState extends State<CallsPage>
     super.build(context);
     return Scaffold(
         body: FutureBuilder<Iterable<CallLogEntry>>(
-      future: CallLog.get(),
+      future: _callLogFuture,
       builder: (BuildContext context,
           AsyncSnapshot<Iterable<CallLogEntry>> snapshot) {
         if (snapshot.hasData) {
