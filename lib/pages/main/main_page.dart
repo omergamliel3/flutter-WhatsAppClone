@@ -1,8 +1,11 @@
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/pages/calls_page.dart';
-import 'package:WhatsAppClone/pages/chats_page.dart';
-import 'package:WhatsAppClone/pages/status_page.dart';
+import 'package:WhatsAppClone/core/constants.dart';
+
+import 'package:WhatsAppClone/pages/screens/calls_page.dart';
+import 'package:WhatsAppClone/pages/screens/chats_page.dart';
+import 'package:WhatsAppClone/pages/screens/status_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -57,13 +60,12 @@ class _MainPageState extends State<MainPage>
 
   // handle FAB onPressed method, based on [_pageIndex]
   void _onPressedFAB() {
-    print('onPressed FAB');
     if (_pageIndex == 1) {
-      print('select contact message action');
+      NavigatorHelper.navigateContactScreen(context, ContactMode.Chat);
     } else if (_pageIndex == 2) {
       print('camera action');
     } else {
-      print('select contact call action');
+      NavigatorHelper.navigateContactScreen(context, ContactMode.Calls);
     }
   }
 

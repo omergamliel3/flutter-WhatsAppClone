@@ -1,6 +1,5 @@
+import 'package:WhatsAppClone/services/auth_service.dart';
 import 'package:flutter/material.dart';
-
-import 'package:WhatsAppClone/services/prefs_service.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
 
@@ -23,8 +22,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildTextFormField() {
     return TextFormField(
         autofocus: false,
-        decoration: InputDecoration(hintText: 'Enter your phone number'),
-        //initialValue: '0587675744',
+        initialValue: '0587675744',
+        decoration: InputDecoration(
+            hintText: 'Enter your phone number',
+            prefixIcon: Icon(Icons.phone),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(width: .7)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(
+                    width: .7, color: Theme.of(context).accentColor))),
         keyboardType: TextInputType.phone,
         validator: (String value) {
           if (!value.contains(
@@ -40,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // build continue button
   Widget _buildContinueButton() {
-    return RaisedButton(
+    return FlatButton(
       child: Text(
         'Continue'.toUpperCase(),
         style: TextStyle(color: Colors.white),
@@ -70,10 +78,8 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKeyAuth.currentState.validate()) {
       // save phone num value
       _formKeyAuth.currentState.save();
-      print('Login with: ' + _phoneNum);
-      PrefsService.savePhoneNum(_phoneNum);
-      // navigate main page
-      Navigator.pushReplacementNamed(context, '/main_page');
+      // register user auth service call
+      AuthService.registerUser(_phoneNum, context);
     }
   }
 

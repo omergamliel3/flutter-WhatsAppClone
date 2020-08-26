@@ -19,6 +19,8 @@ dependencies:
   android_intent: any
   url_launcher: any
   shared_preferences: any
+  firebase_auth: ^0.18.0+1
+  firebase_core: any
 
 dev_dependencies:
   flutter_test:

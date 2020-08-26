@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:WhatsAppClone/services/prefs_service.dart';
+import 'package:WhatsAppClone/services/contacts_service.dart';
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
 
@@ -32,15 +34,17 @@ class _LoadingPageState extends State<LoadingPage> {
     }
     // init prefs service
     await PrefsService.initPrefs();
+    // init contacts handler service
+    await ContactsHandler.initContactsHandler();
     // delay
-    await Future.delayed(Duration(seconds: 2));
+    //await Future.delayed(Duration(seconds: 2));
     // is phone num save in prefs check
     if (PrefsService.isPhoneNumSaved()) {
       // navigate main page
-      Navigator.pushReplacementNamed(context, '/main_page');
+      NavigatorHelper.navigateMainPage(context);
     } else {
       // navigate login page
-      Navigator.pushReplacementNamed(context, '/login_page');
+      NavigatorHelper.navigateLoginPage(context);
     }
   }
 
