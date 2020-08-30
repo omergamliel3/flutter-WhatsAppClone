@@ -16,12 +16,15 @@ class _ChatsPageState extends State<ChatsPage>
   Widget _buildContactListTile(Contact contact) {
     return ListTile(
       leading: CircleAvatar(
-        //backgroundImage: MemoryImage(contact.avatar),
-        backgroundColor: Colors.blue,
+        child: Text(
+          contact.givenName[0].toUpperCase() ?? '',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.grey,
       ),
       title: Text(contact.displayName),
       subtitle: Text('Last message'),
-      trailing: Text('timeago'),
+      trailing: Text('19:13'),
       dense: true,
       onTap: () {
         print('nativage call private chat');

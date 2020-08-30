@@ -1,5 +1,6 @@
-import 'package:WhatsAppClone/services/auth_service.dart';
 import 'package:flutter/material.dart';
+
+import 'package:WhatsAppClone/services/auth_service.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
 
@@ -22,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildTextFormField() {
     return TextFormField(
         autofocus: false,
-        initialValue: '0587675744',
+        initialValue: '+9720587675744',
         decoration: InputDecoration(
             hintText: 'Enter your phone number',
             prefixIcon: Icon(Icons.phone),
@@ -48,14 +49,31 @@ class _LoginPageState extends State<LoginPage> {
 
   // build continue button
   Widget _buildContinueButton() {
-    return FlatButton(
-      child: Text(
-        'Continue'.toUpperCase(),
-        style: TextStyle(color: Colors.white),
-      ),
-      color: kPrimaryColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    return RaisedButton(
       onPressed: _submitForm,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+      padding: const EdgeInsets.all(0.0),
+      child: Ink(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: <Color>[kPrimaryColor, Colors.green],
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(80.0)),
+        ),
+        child: Container(
+          width: 150,
+          constraints: const BoxConstraints(minWidth: 88.0, minHeight: 36.0),
+          alignment: Alignment.center,
+          child: Text(
+            'CONTINUE',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.white),
+          ),
+        ),
+      ),
     );
   }
 
@@ -88,28 +106,32 @@ class _LoginPageState extends State<LoginPage> {
     return SafeArea(
       top: false,
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Sign Up'),
-        ),
-        body: Container(
-          padding: EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKeyAuth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 15),
-                _buildTextFormField(),
-                SizedBox(height: 15),
-                _buildContinueButton(),
-                Spacer(),
-                _buildWhatsAppIcon()
-              ],
-            ),
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Sign Up'),
           ),
-        ),
-      ),
+          body: Container(
+            padding: EdgeInsets.all(4.0),
+            child: Form(
+              key: _formKeyAuth,
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 15),
+                    _buildTextFormField(),
+                    SizedBox(height: 15),
+                    _buildContinueButton(),
+                    Spacer(),
+                    _buildWhatsAppIcon()
+                  ],
+                ),
+              ),
+            ),
+          )),
     );
   }
 }

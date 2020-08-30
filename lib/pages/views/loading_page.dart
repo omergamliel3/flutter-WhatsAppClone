@@ -32,14 +32,18 @@ class _LoadingPageState extends State<LoadingPage> {
     while (cameraStatus != PermissionStatus.granted) {
       cameraStatus = await Permission.contacts.request();
     }
+
+    PermissionStatus phoneStatus = await Permission.phone.request();
+    while (phoneStatus != PermissionStatus.granted) {
+      phoneStatus = await Permission.phone.request();
+    }
     // init prefs service
     await PrefsService.initPrefs();
     // init contacts handler service
     await ContactsHandler.initContactsHandler();
-    // delay
-    //await Future.delayed(Duration(seconds: 2));
-    // is phone num save in prefs check
-    if (PrefsService.isPhoneNumSaved()) {
+
+    // if authenticated navigate main page, else navigate log-in page
+    if (PrefsService.isAuthenticated()) {
       // navigate main page
       NavigatorHelper.navigateMainPage(context);
     } else {
