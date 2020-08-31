@@ -1,7 +1,10 @@
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
+
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+
+import 'package:WhatsAppClone/services/prefs_service.dart';
 
 import 'package:WhatsAppClone/pages/screens/calls_page.dart';
 import 'package:WhatsAppClone/pages/screens/chats_page.dart';
@@ -15,6 +18,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   // Class Attributes
+  GlobalKey<ScaffoldState> _scaffoldKey;
   TabController _tabController;
   int _pageIndex;
   IconData _fabIconData;
@@ -24,6 +28,7 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     _pageIndex = 1;
+    _scaffoldKey = GlobalKey<ScaffoldState>();
     _tabController = TabController(length: 4, initialIndex: 1, vsync: this);
     _fabIconData = Icons.message;
     _fabVisible = true;
@@ -31,7 +36,18 @@ class _MainPageState extends State<MainPage>
       _pageIndex = _tabController.index;
       _updateFAB();
     });
+    WidgetsBinding.instance.addPostFrameCallback(_showPostFrameSnackBar);
     super.initState();
+  }
+
+  // show welcome snackbar after delayed duration
+  void _showPostFrameSnackBar(_) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    String userName = PrefsService.userName;
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text('Welcome $userName'),
+      behavior: SnackBarBehavior.fixed,
+    ));
   }
 
   // controll FAB icon and visivility
@@ -182,6 +198,7 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: FittedBox(fit: BoxFit.fitWidth, child: Text('WhatsApp')),
         actions: _buildAppBarAction(),

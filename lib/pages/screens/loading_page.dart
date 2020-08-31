@@ -43,7 +43,7 @@ class _LoadingPageState extends State<LoadingPage> {
     await ContactsHandler.initContactsHandler();
 
     // if authenticated navigate main page, else navigate log-in page
-    if (PrefsService.isAuthenticated()) {
+    if (PrefsService.isAuthenticated) {
       // navigate main page
       NavigatorHelper.navigateMainPage(context);
     } else {

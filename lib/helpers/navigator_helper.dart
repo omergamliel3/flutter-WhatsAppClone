@@ -5,7 +5,7 @@ import 'package:WhatsAppClone/core/constants.dart';
 abstract class NavigatorHelper {
   /// navigate main page
   static void navigateMainPage(BuildContext context) {
-    Navigator.pushNamed(context, '/main_page');
+    Navigator.pushReplacementNamed(context, '/main_page');
   }
 
   /// navigate login page

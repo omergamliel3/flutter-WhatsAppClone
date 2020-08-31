@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+import 'package:WhatsAppClone/services/prefs_service.dart';
 
 abstract class AuthService {
   /// register user with phone number [FirebaseAuth]
@@ -10,13 +10,14 @@ abstract class AuthService {
     print('register user');
     FirebaseAuth _auth = FirebaseAuth.instance;
 
-    _auth.verifyPhoneNumber(
+    await _auth.verifyPhoneNumber(
       phoneNumber: mobile,
       timeout: Duration(minutes: 1),
       verificationCompleted: (PhoneAuthCredential authCredential) {
         print('verificationCompleted');
         _auth.signInWithCredential(authCredential).then((_) {
-          NavigatorHelper.navigateMainPage(context);
+          // save authentication in prefs service
+          PrefsService.saveAuthentication(auth: true);
         }).catchError((e) {
           print(e);
         });
@@ -58,9 +59,10 @@ abstract class AuthService {
                     String smsCode = _codeController.text.trim();
                     AuthCredential _credential = PhoneAuthProvider.credential(
                         verificationId: verificationId, smsCode: smsCode);
-                    auth.signInWithCredential(_credential).then((_) {
-                      NavigatorHelper.navigateMainPage(context);
-                    }).catchError((e) {
+                    auth
+                        .signInWithCredential(_credential)
+                        .then((_) {})
+                        .catchError((e) {
                       print(e);
                     });
                   },
@@ -75,5 +77,12 @@ abstract class AuthService {
         print('Timeout ' + verificationId);
       },
     );
+  }
+
+  /// mock register user
+  static Future mockRegisterUser({int delay = 3, bool auth = true}) async {
+    await Future.delayed(Duration(seconds: delay), () {
+      PrefsService.saveAuthentication(auth: auth);
+    });
   }
 }

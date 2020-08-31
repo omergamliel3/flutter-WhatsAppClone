@@ -4,10 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:WhatsAppClone/core/theme.dart';
 
-import 'package:WhatsAppClone/pages/views/loading_page.dart';
+import 'package:WhatsAppClone/pages/screens/loading_page.dart';
 import 'package:WhatsAppClone/pages/main/main_page.dart';
 import 'package:WhatsAppClone/pages/views/login_page.dart';
-import 'package:WhatsAppClone/pages/views/select_contact_screen.dart';
+import 'package:WhatsAppClone/pages/screens/select_contact_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
