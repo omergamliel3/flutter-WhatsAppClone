@@ -2,13 +2,16 @@ import 'package:contacts_service/contacts_service.dart';
 
 abstract class ContactsHandler {
   // holds contacts data
-  static List<Contact> contactsData;
-  static final int length = 3;
+  static List<Contact> _contactsData;
+  static final int length = 0;
 
   /// init contacts handler service
   static Future<void> initContactsHandler() async {
     Iterable<Contact> contacts =
         await ContactsService.getContacts(orderByGivenName: false);
-    contactsData = contacts.toList();
+    _contactsData = contacts.toList();
   }
+
+  // contactsData getter
+  static List<Contact> get contactsData => List.from(_contactsData);
 }

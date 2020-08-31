@@ -23,20 +23,8 @@ class _LoadingPageState extends State<LoadingPage> {
 
   // run init tasks method
   void runInitTasks() async {
-    // request contracts, camera permissions
-    PermissionStatus locationStatus = await Permission.contacts.request();
-    while (locationStatus != PermissionStatus.granted) {
-      locationStatus = await Permission.contacts.request();
-    }
-    PermissionStatus cameraStatus = await Permission.camera.request();
-    while (cameraStatus != PermissionStatus.granted) {
-      cameraStatus = await Permission.contacts.request();
-    }
-
-    PermissionStatus phoneStatus = await Permission.phone.request();
-    while (phoneStatus != PermissionStatus.granted) {
-      phoneStatus = await Permission.phone.request();
-    }
+    // request device permissions
+    await _requestsPermissions();
     // init prefs service
     await PrefsService.initPrefs();
     // init contacts handler service
@@ -49,6 +37,25 @@ class _LoadingPageState extends State<LoadingPage> {
     } else {
       // navigate login page
       NavigatorHelper.navigateLoginPage(context);
+    }
+  }
+
+  // requests device [contacts, camera, phone] permissions
+  Future<void> _requestsPermissions() async {
+    // request contacts permission
+    PermissionStatus contactsStatus = await Permission.contacts.request();
+    while (contactsStatus != PermissionStatus.granted) {
+      contactsStatus = await Permission.contacts.request();
+    }
+    // request camera permission
+    PermissionStatus cameraStatus = await Permission.camera.request();
+    while (cameraStatus != PermissionStatus.granted) {
+      cameraStatus = await Permission.contacts.request();
+    }
+    // request phone permission
+    PermissionStatus phoneStatus = await Permission.phone.request();
+    while (phoneStatus != PermissionStatus.granted) {
+      phoneStatus = await Permission.phone.request();
     }
   }
 
