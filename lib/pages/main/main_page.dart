@@ -74,17 +74,6 @@ class _MainPageState extends State<MainPage>
     setState(() {});
   }
 
-  // handle FAB onPressed method, based on [_pageIndex]
-  void _onPressedFAB() {
-    if (_pageIndex == 1) {
-      NavigatorHelper.navigateContactScreen(context, ContactMode.Chat);
-    } else if (_pageIndex == 2) {
-      print('camera action');
-    } else {
-      NavigatorHelper.navigateContactScreen(context, ContactMode.Calls);
-    }
-  }
-
   // returns AppBar action widget
   List<Widget> _buildAppBarAction() {
     return <Widget>[
@@ -207,5 +196,26 @@ class _MainPageState extends State<MainPage>
       body: _buildAppBarBody(),
       floatingActionButton: _buildAppBarFAB(),
     );
+  }
+
+  // handle FAB onPressed method, based on [_pageIndex]
+  void _onPressedFAB() {
+    if (_pageIndex == 1) {
+      NavigatorHelper.navigateContactScreen(context, ContactMode.Chat);
+    } else if (_pageIndex == 2) {
+      _scaffoldKey.currentState.showBottomSheet((context) {
+        return Container(
+          decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0))),
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: TextField(),
+        );
+      });
+    } else {
+      NavigatorHelper.navigateContactScreen(context, ContactMode.Calls);
+    }
   }
 }

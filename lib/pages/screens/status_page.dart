@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:WhatsAppClone/core/models/status.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:WhatsAppClone/services/prefs_service.dart';
@@ -35,22 +36,19 @@ class _StatusPageState extends State<StatusPage> {
   }
 
   // build users status widget
-  Widget _buildStatusListTile(Map<String, dynamic> statusDoc) {
-    String name = statusDoc['name'];
-    String status = statusDoc['status'];
-    DateTime datetime = DateTime.parse(statusDoc['datetime']);
-    String timeAgo = timeago.format(datetime);
+  Widget _buildStatusListTile(Status status) {
+    String timeAgo = timeago.format(status.dateTime);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         child: Text(
-          name[0].toUpperCase(),
+          status.name[0].toUpperCase(),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      title: Text(name),
+      title: Text(status.name),
       subtitle: Text(
-        status,
+        status.content,
       ),
       trailing: Text(
         timeAgo,
@@ -79,11 +77,17 @@ class _StatusPageState extends State<StatusPage> {
         if (snapshot.hasError) {
           return Text(snapshot.error);
         }
+
+        // sort snapshot data
+        List<QueryDocumentSnapshot> sortedSnapshot =
+            sortSnapshot(snapshot.data.docs);
+
         return Expanded(
           child: ListView.builder(
             itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
-              return _buildStatusListTile(snapshot.data.docs[index].data());
+              Status status = Status.fromJsonMap(sortedSnapshot[index].data());
+              return _buildStatusListTile(status);
             },
           ),
         );
@@ -92,21 +96,30 @@ class _StatusPageState extends State<StatusPage> {
   }
 
   void updateNewStatus() async {
+    Status status = Status(
+        name: PrefsService.userName,
+        content: 'Late flutter coding in fun!',
+        dateTime: DateTime.now());
     try {
-      var docRef =
-          await FirebaseFirestore.instance.collection('users_status').add({
-        'name': PrefsService.userName,
-        'status': 'I love flutter!!!',
-        'datetime': DateTime.now().toIso8601String()
-      });
+      var docRef = await FirebaseFirestore.instance
+          .collection('users_status')
+          .add(status.toJsonMap());
       print('created new firestore recored with id: ${docRef.id}');
     } catch (e) {
       print('failed to add new record to firestoe');
       print(e);
     }
     setState(() {
-      PrefsService.saveUserStatus(status: 'I love flutter!!!');
+      PrefsService.saveUserStatus(status: 'Late flutter coding in fun!');
     });
+  }
+
+  // sort snapshot db collection data according to datetime (newest first, oldest last)
+  List<QueryDocumentSnapshot> sortSnapshot(
+      List<QueryDocumentSnapshot> snapshotDataDocs) {
+    snapshotDataDocs.sort((a, b) => DateTime.parse(a.data()['datetime'])
+        .compareTo(DateTime.parse(b.data()['datetime'])));
+    return snapshotDataDocs.reversed.toList();
   }
 
   @override
