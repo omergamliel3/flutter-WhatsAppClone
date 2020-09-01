@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class PrefsService {
   static final _kAuthKeyName = 'authenticate';
   static final _kUserNameKey = 'username';
+  static final _kUserStatusNameKey = 'user_status';
   static SharedPreferences _sharedPreferences;
 
   /// init shared preferences instance
@@ -28,4 +29,14 @@ abstract class PrefsService {
 
   /// username getter
   static String get userName => _sharedPreferences.getString(_kUserNameKey);
+
+  /// save user status in prefs
+  static void saveUserStatus({String status}) {
+    if (status == null || status.isEmpty) return;
+    _sharedPreferences.setString(_kUserStatusNameKey, status.trim());
+  }
+
+  /// user status getter
+  static String get userStatus =>
+      _sharedPreferences.getString(_kUserStatusNameKey);
 }

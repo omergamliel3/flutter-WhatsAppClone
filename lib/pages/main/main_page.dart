@@ -63,7 +63,7 @@ class _MainPageState extends State<MainPage>
         break;
       case 2:
         _fabVisible = true;
-        _fabIconData = Icons.camera_alt;
+        _fabIconData = Icons.edit;
         break;
       case 3:
         _fabVisible = true;
