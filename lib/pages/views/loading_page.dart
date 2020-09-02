@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:permission_handler/permission_handler.dart';
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import 'package:WhatsAppClone/services/device/contacts_service.dart';
+import 'package:WhatsAppClone/services/device/permission_handler.dart';
 
-import 'package:WhatsAppClone/services/prefs_service.dart';
-import 'package:WhatsAppClone/services/contacts_service.dart';
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
@@ -24,7 +24,7 @@ class _LoadingPageState extends State<LoadingPage> {
   // run init tasks method
   void runInitTasks() async {
     // request device permissions
-    await _requestsPermissions();
+    await PermissionHandler.requestPermissions();
     // init prefs service
     await PrefsService.initPrefs();
     // init contacts handler service
@@ -37,25 +37,6 @@ class _LoadingPageState extends State<LoadingPage> {
     } else {
       // navigate login page
       NavigatorHelper.navigateLoginPage(context);
-    }
-  }
-
-  // requests device [contacts, camera, phone] permissions
-  Future<void> _requestsPermissions() async {
-    // request contacts permission
-    PermissionStatus contactsStatus = await Permission.contacts.request();
-    while (contactsStatus != PermissionStatus.granted) {
-      contactsStatus = await Permission.contacts.request();
-    }
-    // request camera permission
-    PermissionStatus cameraStatus = await Permission.camera.request();
-    while (cameraStatus != PermissionStatus.granted) {
-      cameraStatus = await Permission.contacts.request();
-    }
-    // request phone permission
-    PermissionStatus phoneStatus = await Permission.phone.request();
-    while (phoneStatus != PermissionStatus.granted) {
-      phoneStatus = await Permission.phone.request();
     }
   }
 

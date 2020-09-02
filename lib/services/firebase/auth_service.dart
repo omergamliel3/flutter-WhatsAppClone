@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:WhatsAppClone/services/prefs_service.dart';
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
 abstract class AuthService {
   /// register user with phone number [FirebaseAuth]

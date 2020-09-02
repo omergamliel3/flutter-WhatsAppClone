@@ -5,7 +5,9 @@ import 'package:WhatsAppClone/core/models/status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'package:WhatsAppClone/services/prefs_service.dart';
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+
+import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 
 class StatusPage extends StatefulWidget {
   // build user status listile
@@ -30,7 +32,8 @@ class _StatusPageState extends State<StatusPage> {
       subtitle: Text(userStatus),
       dense: true,
       onTap: () {
-        updateNewStatus();
+        // show status modal bottom sheet
+        showStatusModalBottomSheet(context);
       },
     );
   }
@@ -93,25 +96,6 @@ class _StatusPageState extends State<StatusPage> {
         );
       },
     );
-  }
-
-  void updateNewStatus() async {
-    Status status = Status(
-        name: PrefsService.userName,
-        content: 'Late flutter coding in fun!',
-        dateTime: DateTime.now());
-    try {
-      var docRef = await FirebaseFirestore.instance
-          .collection('users_status')
-          .add(status.toJsonMap());
-      print('created new firestore recored with id: ${docRef.id}');
-    } catch (e) {
-      print('failed to add new record to firestoe');
-      print(e);
-    }
-    setState(() {
-      PrefsService.saveUserStatus(status: 'Late flutter coding in fun!');
-    });
   }
 
   // sort snapshot db collection data according to datetime (newest first, oldest last)

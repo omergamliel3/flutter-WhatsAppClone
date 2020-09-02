@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/services/contacts_service.dart';
+import 'package:WhatsAppClone/services/device/contacts_service.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
 

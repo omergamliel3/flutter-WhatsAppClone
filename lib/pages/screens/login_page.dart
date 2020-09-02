@@ -1,8 +1,8 @@
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
-import 'package:WhatsAppClone/services/prefs_service.dart';
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/services/auth_service.dart';
+import 'package:WhatsAppClone/services/firebase/auth_service.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
 
@@ -217,8 +217,8 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _displayWidget = _buildProgressBarIndicator();
       });
-
-      await AuthService.mockRegisterUser(auth: true);
+      // register user
+      await AuthService.registerUser(_phoneNum, context);
       if (PrefsService.isAuthenticated) {
         setState(() {
           _displayWidget = _buildUserNameForm();

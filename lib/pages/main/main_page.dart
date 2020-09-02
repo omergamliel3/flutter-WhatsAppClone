@@ -4,11 +4,13 @@ import 'package:WhatsAppClone/core/constants.dart';
 
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
-import 'package:WhatsAppClone/services/prefs_service.dart';
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
 import 'package:WhatsAppClone/pages/screens/calls_page.dart';
 import 'package:WhatsAppClone/pages/screens/chats_page.dart';
 import 'package:WhatsAppClone/pages/screens/status_page.dart';
+
+import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -46,7 +48,8 @@ class _MainPageState extends State<MainPage>
     String userName = PrefsService.userName;
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text('Welcome $userName'),
-      behavior: SnackBarBehavior.fixed,
+      behavior: SnackBarBehavior.floating,
+      duration: Duration(milliseconds: 800),
     ));
   }
 
@@ -72,6 +75,20 @@ class _MainPageState extends State<MainPage>
     }
     // notify ui change
     setState(() {});
+  }
+
+  // handle FAB onPressed method, based on [_pageIndex]
+  void _onPressedFAB() {
+    if (_pageIndex == 1) {
+      // navigate contact screen on CHAT MODE
+      NavigatorHelper.navigateContactScreen(context, ContactMode.Chat);
+    } else if (_pageIndex == 2) {
+      // show status modal bottom sheet
+      showStatusModalBottomSheet(context);
+    } else {
+      // navigate contact screen on CALLS MODE
+      NavigatorHelper.navigateContactScreen(context, ContactMode.Calls);
+    }
   }
 
   // returns AppBar action widget
@@ -196,26 +213,5 @@ class _MainPageState extends State<MainPage>
       body: _buildAppBarBody(),
       floatingActionButton: _buildAppBarFAB(),
     );
-  }
-
-  // handle FAB onPressed method, based on [_pageIndex]
-  void _onPressedFAB() {
-    if (_pageIndex == 1) {
-      NavigatorHelper.navigateContactScreen(context, ContactMode.Chat);
-    } else if (_pageIndex == 2) {
-      _scaffoldKey.currentState.showBottomSheet((context) {
-        return Container(
-          decoration: BoxDecoration(
-              color: Colors.grey[900],
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8.0),
-                  topRight: Radius.circular(8.0))),
-          height: MediaQuery.of(context).size.height * 0.3,
-          child: TextField(),
-        );
-      });
-    } else {
-      NavigatorHelper.navigateContactScreen(context, ContactMode.Calls);
-    }
   }
 }
