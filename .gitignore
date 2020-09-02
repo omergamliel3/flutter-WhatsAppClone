@@ -90,3 +90,4 @@ pubspec.lock
 /iOS/flutter/flutter_export_environment.sh
 /.vscode
 /.gradle
+/trash

@@ -98,7 +98,7 @@ class _StatusPageState extends State<StatusPage> {
     );
   }
 
-  // sort snapshot db collection data according to datetime (newest first, oldest last)
+  // sort snapshot db collection data according to datetime (newest first)
   List<QueryDocumentSnapshot> sortSnapshot(
       List<QueryDocumentSnapshot> snapshotDataDocs) {
     snapshotDataDocs.sort((a, b) => DateTime.parse(a.data()['datetime'])

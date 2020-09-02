@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 import 'package:WhatsAppClone/services/device/contacts_service.dart';
 import 'package:WhatsAppClone/services/device/permission_handler.dart';
+
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
@@ -21,7 +23,7 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
   }
 
-  // run init tasks method
+  // run init tasks before navigate main page
   void runInitTasks() async {
     // request device permissions
     await PermissionHandler.requestPermissions();
@@ -29,7 +31,8 @@ class _LoadingPageState extends State<LoadingPage> {
     await PrefsService.initPrefs();
     // init contacts handler service
     await ContactsHandler.initContactsHandler();
-
+    // init local storage sqlite db
+    await DBservice.asyncInitDB();
     // if authenticated navigate main page, else navigate log-in page
     if (PrefsService.isAuthenticated) {
       // navigate main page

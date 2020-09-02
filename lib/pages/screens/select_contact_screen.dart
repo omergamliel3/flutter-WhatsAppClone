@@ -1,6 +1,8 @@
+import 'package:WhatsAppClone/core/models/chat.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/services/device/contacts_service.dart';
+import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 
 import 'package:WhatsAppClone/core/constants.dart';
 
@@ -87,7 +89,7 @@ class SelectContactScreen extends StatelessWidget {
   }
 
   // build contact list tile
-  Widget _buildContactListTile(String displayName) {
+  Widget _buildContactListTile(String displayName, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
@@ -101,7 +103,10 @@ class SelectContactScreen extends StatelessWidget {
             : IconButton(icon: Icon(Icons.phone), onPressed: () {}),
         onTap: _contactMode == ContactMode.Chat
             ? () {
-                print('add contact to chat page');
+                final Chat chat =
+                    Chat(name: displayName, messages: '', timestamp: '');
+                DBservice.createChat(chat);
+                Navigator.pop(context);
               }
             : null,
       ),
@@ -131,7 +136,7 @@ class SelectContactScreen extends StatelessWidget {
             itemCount: ContactsHandler.contactsData.length,
             itemBuilder: (context, index) {
               return _buildContactListTile(
-                  ContactsHandler.contactsData[index].displayName);
+                  ContactsHandler.contactsData[index].displayName, context);
             }),
       ),
     );

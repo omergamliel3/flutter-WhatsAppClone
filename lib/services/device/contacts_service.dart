@@ -3,7 +3,6 @@ import 'package:contacts_service/contacts_service.dart';
 abstract class ContactsHandler {
   // holds contacts data
   static List<Contact> _contactsData;
-  static final int length = 0;
 
   /// init contacts handler service
   static Future<void> initContactsHandler() async {
