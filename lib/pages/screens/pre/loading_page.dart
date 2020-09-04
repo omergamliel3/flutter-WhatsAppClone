@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:WhatsAppClone/services/device/contacts_service.dart';
 import 'package:WhatsAppClone/services/device/permission_handler.dart';
+
+import 'package:WhatsAppClone/core/provider/main.dart';
 
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
-import 'package:WhatsAppClone/core/constants.dart';
+import 'package:WhatsAppClone/core/shared/constants.dart';
+
+import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
   _LoadingPageState createState() => _LoadingPageState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class _LoadingPageState extends State<LoadingPage>
+    with TickerProviderStateMixin {
   @override
   void initState() {
     // invoke runInitTasks at startup
@@ -33,6 +40,8 @@ class _LoadingPageState extends State<LoadingPage> {
     await ContactsHandler.initContactsHandler();
     // init local storage sqlite db
     await DBservice.asyncInitDB();
+    // init main model data
+    await context.read<MainModel>().getActiveChats();
     // if authenticated navigate main page, else navigate log-in page
     if (PrefsService.isAuthenticated) {
       // navigate main page
@@ -63,6 +72,7 @@ class _LoadingPageState extends State<LoadingPage> {
                       height: 100,
                       width: 100,
                     )),
+                Expanded(flex: 1, child: SpinkitLoadingIndicator()),
                 Expanded(
                     flex: 1,
                     child: Column(

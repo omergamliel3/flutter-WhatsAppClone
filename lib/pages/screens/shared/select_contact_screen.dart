@@ -1,10 +1,14 @@
-import 'package:WhatsAppClone/core/models/chat.dart';
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
 
 import 'package:WhatsAppClone/services/device/contacts_service.dart';
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 
-import 'package:WhatsAppClone/core/constants.dart';
+import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/provider/main.dart';
+
+import 'package:WhatsAppClone/core/shared/constants.dart';
 
 class SelectContactScreen extends StatelessWidget {
   //
@@ -94,8 +98,10 @@ class SelectContactScreen extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
         leading: CircleAvatar(
-          //backgroundImage: MemoryImage(contact.avatar),
-          backgroundColor: Colors.blue,
+          child: Text(displayName[0].toUpperCase(),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          backgroundColor: Colors.grey,
         ),
         title: Text(displayName),
         trailing: _contactMode == ContactMode.Chat
@@ -103,19 +109,26 @@ class SelectContactScreen extends StatelessWidget {
             : IconButton(icon: Icon(Icons.phone), onPressed: () {}),
         onTap: _contactMode == ContactMode.Chat
             ? () {
-                final Chat chat =
-                    Chat(name: displayName, messages: '', timestamp: '');
-                DBservice.createChat(chat);
-                Navigator.pop(context);
+                _createNewChat(displayName, context);
               }
             : null,
       ),
     );
   }
 
+  // create new chat
+  void _createNewChat(String displayName, BuildContext context) async {
+    // new empty chat instance
+    final Chat chat = Chat(name: displayName, messages: '', timestamp: '');
+    // create new chat in db chats table
+    await DBservice.createChat(chat);
+    // get active chats in main model to update UI
+    await context.read<MainModel>().getActiveChats(notify: true);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(_contactMode);
     return SafeArea(
       top: false,
       child: Scaffold(

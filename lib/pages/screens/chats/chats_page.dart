@@ -1,10 +1,12 @@
+import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/provider/main.dart';
 
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+import 'package:WhatsAppClone/core/models/chat.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -54,27 +56,32 @@ class _ChatsPageState extends State<ChatsPage>
       subtitle: Text(lastMessage),
       trailing: Text(timeAgo),
       dense: true,
-      onTap: () {
-        print('nativage call private chat');
+      onTap: () async {
+        await DBservice.deleteChat(chat);
+        context.read<MainModel>().getActiveChats(notify: true);
       },
     );
   }
 
   // build contact chats listview
   Widget _buildContactChats() {
-    List<Chat> activeChatsData = DBservice.activePrivateChats;
-    return Expanded(
-        child: ListView.separated(
-            separatorBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 70.0, right: 10),
-                child: Divider(thickness: 2.0),
-              );
-            },
-            itemCount: activeChatsData.length,
-            itemBuilder: (context, index) {
-              return _buildContactListTile(activeChatsData[index]);
-            }));
+    return Selector<MainModel, List<Chat>>(
+      selector: (context, model) => model.activeChats,
+      builder: (context, data, child) {
+        return Expanded(
+            child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 70.0, right: 10),
+                    child: Divider(thickness: 2.0),
+                  );
+                },
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return _buildContactListTile(data[index]);
+                }));
+      },
+    );
   }
 
   @override

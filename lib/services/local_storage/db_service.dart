@@ -14,10 +14,6 @@ abstract class DBservice {
   // class attributes
   static Database _db; // db instace
   static final AsyncMemoizer _memoizer = AsyncMemoizer(); // async memoizer
-  static List<Chat> _activePrivateChats; // holds active private chats data
-
-  /// active private chats getter
-  static List<Chat> get activePrivateChats => List.from(_activePrivateChats);
 
   /// Init DB, run only once
   static Future<bool> asyncInitDB() async {
@@ -44,7 +40,6 @@ abstract class DBservice {
           await _createChatsTable(db);
         },
       );
-      _activePrivateChats = await getChats();
       // success init db
       return true;
     } catch (e) {
@@ -69,6 +64,14 @@ abstract class DBservice {
   /// clear chat table
   static Future<void> clearTable() async {
     await _db.rawDelete('''DELETE FROM $_kDbTableName''');
+  }
+
+  /// delete chat from db chats table
+  static Future<void> deleteChat(Chat chat) async {
+    await _db.rawDelete('''
+    DELETE FROM $_kDbTableName
+    WHERE id = "${chat.id}"
+    ''');
   }
 
   /// Reertieves chats from db chats table
@@ -99,33 +102,24 @@ abstract class DBservice {
         },
       );
 
+      // success created new chat in db chats table
       return true;
     } catch (e) {
       print(e);
+      // failed to create new chat in db chats table
       return false;
     }
   }
-
-  static Future<void> createChatsData() async {
-    //await clearTable();
-    // await createChat(Chat(
-    //     name: 'Tal Dahan',
-    //     timestamp: DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
-    //     messages: 'Good night'));
-    // await createChat(Chat(
-    //     name: 'Ohad Shabat',
-    //     timestamp:
-    //         DateTime.now().subtract(Duration(hours: 3)).toIso8601String(),
-    //     messages: 'Hey'));
-    // await createChat(Chat(
-    //     name: 'Amit Bar',
-    //     timestamp: DateTime.now().toIso8601String(),
-    //     messages: 'LOL'));
-    // await createChat(Chat(
-    //     name: 'Yarden Reich',
-    //     timestamp: DateTime.now().subtract(Duration(days: 5)).toIso8601String(),
-    //     messages: 'LMAO ROFL'));
-
-    //_activePrivateChats = await getChats();
-  }
 }
+
+// evoid create chat with allready exiting contact
+// bool exists = false;
+// for (var i = 0; i < _activePrivateChats.length; i++) {
+//   if (_activePrivateChats[i].name == chat.name) {
+//     print(chat.name);
+//     exists = true;
+//     break;
+//   }
+// }
+// // return false if exitsts
+// if (exists) return false;

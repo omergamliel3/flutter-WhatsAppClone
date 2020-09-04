@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/constants.dart';
+import 'package:WhatsAppClone/core/shared/constants.dart';
 
 // light theme data
 ThemeData lightTheme = ThemeData(

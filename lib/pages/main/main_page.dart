@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/constants.dart';
+import 'package:WhatsAppClone/core/shared/constants.dart';
 
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
-import 'package:WhatsAppClone/pages/screens/calls_page.dart';
-import 'package:WhatsAppClone/pages/screens/chats_page.dart';
-import 'package:WhatsAppClone/pages/screens/status_page.dart';
+import 'package:WhatsAppClone/pages/screens/calls/calls_page.dart';
+import 'package:WhatsAppClone/pages/screens/chats/chats_page.dart';
+import 'package:WhatsAppClone/pages/screens/status/status_page.dart';
 
 import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 

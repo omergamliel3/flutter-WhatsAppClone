@@ -1,10 +1,13 @@
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/services/firebase/auth_service.dart';
+import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
-import 'package:WhatsAppClone/core/constants.dart';
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+
+import 'package:WhatsAppClone/core/shared/constants.dart';
+
+import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 enum FormMode { PhoneNum, UserName }
 
@@ -42,11 +45,8 @@ class _LoginPageState extends State<LoginPage> {
 
   // build progress indicator widget
   Widget _buildProgressBarIndicator() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Center(
-        child: LinearProgressIndicator(),
-      ),
+    return Center(
+      child: SpinkitLoadingIndicator(),
     );
   }
 
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildPhoneNumFormField() {
     return TextFormField(
         autofocus: false,
-        initialValue: '+9720587675744',
+        //initialValue: '+9720587675744',
         decoration: InputDecoration(
             hintText: 'Enter your phone number',
             prefixIcon: Icon(Icons.phone),
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildUserNameFormField() {
     return TextFormField(
         autofocus: false,
-        initialValue: 'omer gamliel',
+        //initialValue: 'omer gamliel',
         decoration: InputDecoration(
             hintText: 'Enter username',
             prefixIcon: Icon(Icons.person),
@@ -212,13 +212,13 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKeyAuth.currentState.validate()) {
       // save phone num value
       _formKeyAuth.currentState.save();
-      // register user auth service call
-      //await AuthService.registerUser(_phoneNum, context);
       setState(() {
         _displayWidget = _buildProgressBarIndicator();
       });
       // register user
-      await AuthService.registerUser(_phoneNum, context);
+      //await AuthService.registerUser(_phoneNum, context);
+      // TODO: REMOVE MOCK REGISTER ON RELEASE
+      await AuthService.mockRegisterUser();
       if (PrefsService.isAuthenticated) {
         setState(() {
           _displayWidget = _buildUserNameForm();

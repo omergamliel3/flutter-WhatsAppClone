@@ -84,16 +84,14 @@ class _StatusPageState extends State<StatusPage> {
         // sort snapshot data
         List<QueryDocumentSnapshot> sortedSnapshot =
             sortSnapshot(snapshot.data.docs);
-
         return Expanded(
-          child: ListView.builder(
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (context, index) {
-              Status status = Status.fromJsonMap(sortedSnapshot[index].data());
-              return _buildStatusListTile(status);
-            },
-          ),
-        );
+            child: ListView.builder(
+          itemCount: snapshot.data.docs.length,
+          itemBuilder: (context, index) {
+            Status status = Status.fromJsonMap(sortedSnapshot[index].data());
+            return _buildStatusListTile(status);
+          },
+        ));
       },
     );
   }
