@@ -123,7 +123,7 @@ class SelectContactScreen extends StatelessWidget {
     // create new chat in db chats table
     await DBservice.createChat(chat);
     // get active chats in main model to update UI
-    await context.read<MainModel>().getActiveChats(notify: true);
+    await context.read<MainModel>().getActiveChats();
     Navigator.pop(context);
   }
 
@@ -144,13 +144,15 @@ class SelectContactScreen extends StatelessWidget {
             _buildPopUpMenuButton()
           ],
         ),
-        body: ListView.builder(
-            physics: ScrollPhysics(),
-            itemCount: ContactsHandler.contactsData.length,
-            itemBuilder: (context, index) {
-              return _buildContactListTile(
-                  ContactsHandler.contactsData[index].displayName, context);
-            }),
+        body: Scrollbar(
+          child: ListView.builder(
+              physics: ScrollPhysics(),
+              itemCount: ContactsHandler.contactsData.length,
+              itemBuilder: (context, index) {
+                return _buildContactListTile(
+                    ContactsHandler.contactsData[index].displayName, context);
+              }),
+        ),
       ),
     );
   }

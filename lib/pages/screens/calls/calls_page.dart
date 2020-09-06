@@ -40,6 +40,29 @@ class _CallsPageState extends State<CallsPage>
     );
   }
 
+  // build empty call logs widget text
+  Widget _buildEmptyCallLogs() {
+    return Container(
+        padding: EdgeInsets.only(top: 20),
+        alignment: Alignment.topCenter,
+        child: Text(
+          'THERE ARE NO CALL LOGS',
+          style: Theme.of(context).textTheme.headline6,
+        ));
+  }
+
+  // build call logs listview
+  Widget _buildCallLogsListView(List<CallLogEntry> callLogsData) {
+    return Scrollbar(
+      child: ListView.builder(
+          physics: ScrollPhysics(),
+          itemCount: callLogsData.length,
+          itemBuilder: (context, index) {
+            return _buildCallsListTile(callLogsData[index]);
+          }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -51,20 +74,9 @@ class _CallsPageState extends State<CallsPage>
         if (snapshot.hasData) {
           List<CallLogEntry> callLogsData = snapshot.data.toList();
           if (callLogsData.length == 0) {
-            return Container(
-                padding: EdgeInsets.only(top: 20),
-                alignment: Alignment.topCenter,
-                child: Text(
-                  'THERE ARE NO CALL LOGS',
-                  style: Theme.of(context).textTheme.headline6,
-                ));
+            return _buildEmptyCallLogs();
           }
-          return ListView.builder(
-              physics: ScrollPhysics(),
-              itemCount: callLogsData.length,
-              itemBuilder: (context, index) {
-                return _buildCallsListTile(callLogsData[index]);
-              });
+          return _buildCallLogsListView(callLogsData);
         }
         return Center(child: CircularProgressIndicator());
       },

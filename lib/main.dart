@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:WhatsAppClone/core/provider/main.dart';
 import 'package:WhatsAppClone/core/shared/theme.dart';
 
 import 'package:WhatsAppClone/pages/screens/pre/loading_page.dart';
 import 'package:WhatsAppClone/pages/main/main_page.dart';
 import 'package:WhatsAppClone/pages/screens/pre/login_page.dart';
 import 'package:WhatsAppClone/pages/screens/shared/select_contact_screen.dart';
-
-import 'package:provider/provider.dart';
-import 'package:WhatsAppClone/core/provider/main.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

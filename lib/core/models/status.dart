@@ -1,18 +1,26 @@
 import 'package:flutter/foundation.dart';
 
 class Status {
-  final String name;
+  final String id;
+  final String userName;
   final String content;
-  final DateTime dateTime;
+  final DateTime timestamp;
 
   Status(
-      {@required this.name, @required this.content, @required this.dateTime});
+      {this.id,
+      @required this.userName,
+      @required this.content,
+      @required this.timestamp});
 
-  Status.fromJsonMap(Map<String, dynamic> map)
-      : name = map['name'],
+  Status.fromJsonMap(Map<String, dynamic> map, String id)
+      : id = id,
+        userName = map['userName'],
         content = map['status'],
-        dateTime = DateTime.parse(map['datetime']);
+        timestamp = DateTime.parse(map['timestamp']);
 
-  Map<String, dynamic> toJsonMap() =>
-      {'name': name, 'status': content, 'datetime': dateTime.toIso8601String()};
+  Map<String, dynamic> toJsonMap() => {
+        'userName': userName,
+        'status': content,
+        'timestamp': timestamp.toIso8601String()
+      };
 }

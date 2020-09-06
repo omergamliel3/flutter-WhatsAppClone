@@ -41,7 +41,7 @@ class _LoadingPageState extends State<LoadingPage>
     // init local storage sqlite db
     await DBservice.asyncInitDB();
     // init main model data
-    await context.read<MainModel>().getActiveChats();
+    await context.read<MainModel>().initModel(context);
     // if authenticated navigate main page, else navigate log-in page
     if (PrefsService.isAuthenticated) {
       // navigate main page

@@ -9,6 +9,7 @@ import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 import 'package:WhatsAppClone/pages/screens/calls/calls_page.dart';
 import 'package:WhatsAppClone/pages/screens/chats/chats_page.dart';
 import 'package:WhatsAppClone/pages/screens/status/status_page.dart';
+import 'package:WhatsAppClone/pages/screens/camera/camera_page.dart';
 
 import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 
@@ -190,14 +191,7 @@ class _MainPageState extends State<MainPage>
       child: TabBarView(
           controller: _tabController,
           physics: ScrollPhysics(),
-          children: [
-            Center(
-              child: Text('CAMERA PAGE'),
-            ),
-            ChatsPage(),
-            StatusPage(),
-            CallsPage()
-          ]),
+          children: [CameraPage(), ChatsPage(), StatusPage(), CallsPage()]),
     );
   }
 

@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildPhoneNumFormField() {
     return TextFormField(
         autofocus: false,
-        //initialValue: '+9720587675744',
+        initialValue: '+9720587675744',
         decoration: InputDecoration(
             hintText: 'Enter your phone number',
             prefixIcon: Icon(Icons.phone),
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildUserNameFormField() {
     return TextFormField(
         autofocus: false,
-        //initialValue: 'omer gamliel',
+        initialValue: 'omer gamliel',
         decoration: InputDecoration(
             hintText: 'Enter username',
             prefixIcon: Icon(Icons.person),

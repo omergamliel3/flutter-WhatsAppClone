@@ -58,7 +58,7 @@ class _ChatsPageState extends State<ChatsPage>
       dense: true,
       onTap: () async {
         await DBservice.deleteChat(chat);
-        context.read<MainModel>().getActiveChats(notify: true);
+        context.read<MainModel>().getActiveChats();
       },
     );
   }

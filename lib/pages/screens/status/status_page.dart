@@ -1,8 +1,11 @@
+import 'package:WhatsAppClone/core/provider/main.dart';
+import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/core/models/status.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
@@ -15,41 +18,53 @@ class StatusPage extends StatefulWidget {
   _StatusPageState createState() => _StatusPageState();
 }
 
-class _StatusPageState extends State<StatusPage> {
+class _StatusPageState extends State<StatusPage>
+    with AutomaticKeepAliveClientMixin {
+  bool _isLight;
+  @override
+  initState() {
+    _isLight = context.read<MainModel>().isLight;
+    super.initState();
+  }
+
   // build personal status listile
   Widget _buildPersonalStatus() {
-    bool isLight = Theme.of(context).brightness == Brightness.light;
-    String userStatus = PrefsService.userStatus ?? 'Tap to add status update';
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: isLight ? Theme.of(context).primaryColor : Colors.blue,
-        child: Text(
-          PrefsService.userName[0].toUpperCase(),
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-      title: Text('My status'),
-      subtitle: Text(userStatus),
-      dense: true,
-      onTap: () {
-        // show status modal bottom sheet
-        showStatusModalBottomSheet(context);
-      },
-    );
+    return Selector<MainModel, String>(
+        selector: (context, model) => model.userStatus,
+        builder: (context, value, child) {
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundColor:
+                  _isLight ? Theme.of(context).primaryColor : Colors.blue,
+              child: Text(
+                PrefsService.userName[0].toUpperCase(),
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            title: Text('My status'),
+            subtitle: Text(value ?? 'Tap to add status update'),
+            dense: true,
+            onTap: () {
+              // show status modal bottom sheet
+              showStatusModalBottomSheet(context);
+            },
+          );
+        });
   }
 
   // build users status widget
   Widget _buildStatusListTile(Status status) {
-    String timeAgo = timeago.format(status.dateTime);
+    String timeAgo = timeago.format(status.timestamp);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         child: Text(
-          status.name[0].toUpperCase(),
+          status.userName[0].toUpperCase(),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      title: Text(status.name),
+      title: Text(status.userName),
       subtitle: Text(
         status.content,
       ),
@@ -58,6 +73,14 @@ class _StatusPageState extends State<StatusPage> {
         style: Theme.of(context).textTheme.caption,
       ),
       dense: true,
+      onTap: status.userName == PrefsService.userName
+          ? () async {
+              bool delete = await FirestoreService.deleteStatus(status);
+              if (delete) {
+                //setState(() {});
+              }
+            }
+          : null,
     );
   }
 
@@ -88,7 +111,8 @@ class _StatusPageState extends State<StatusPage> {
             child: ListView.builder(
           itemCount: snapshot.data.docs.length,
           itemBuilder: (context, index) {
-            Status status = Status.fromJsonMap(sortedSnapshot[index].data());
+            Status status = Status.fromJsonMap(
+                sortedSnapshot[index].data(), sortedSnapshot[index].id);
             return _buildStatusListTile(status);
           },
         ));
@@ -99,13 +123,14 @@ class _StatusPageState extends State<StatusPage> {
   // sort snapshot db collection data according to datetime (newest first)
   List<QueryDocumentSnapshot> sortSnapshot(
       List<QueryDocumentSnapshot> snapshotDataDocs) {
-    snapshotDataDocs.sort((a, b) => DateTime.parse(a.data()['datetime'])
-        .compareTo(DateTime.parse(b.data()['datetime'])));
+    snapshotDataDocs.sort((a, b) => DateTime.parse(a.data()['timestamp'])
+        .compareTo(DateTime.parse(b.data()['timestamp'])));
     return snapshotDataDocs.reversed.toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         body: Column(
       children: [
@@ -115,4 +140,7 @@ class _StatusPageState extends State<StatusPage> {
       ],
     ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
