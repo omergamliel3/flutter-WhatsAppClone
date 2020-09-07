@@ -7,7 +7,6 @@ import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 abstract class AuthService {
   /// register user with phone number [FirebaseAuth]
   static Future registerUser(String mobile, BuildContext context) async {
-    print('register user');
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     await _auth.verifyPhoneNumber(

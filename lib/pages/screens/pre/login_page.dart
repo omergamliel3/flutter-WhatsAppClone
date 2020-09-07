@@ -1,3 +1,4 @@
+import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/services/firebase/auth_service.dart';
@@ -216,9 +217,7 @@ class _LoginPageState extends State<LoginPage> {
         _displayWidget = _buildProgressBarIndicator();
       });
       // register user
-      //await AuthService.registerUser(_phoneNum, context);
-      // TODO: REMOVE MOCK REGISTER ON RELEASE
-      await AuthService.mockRegisterUser();
+      await AuthService.registerUser(_phoneNum, context);
       if (PrefsService.isAuthenticated) {
         setState(() {
           _displayWidget = _buildUserNameForm();
@@ -238,6 +237,12 @@ class _LoginPageState extends State<LoginPage> {
     // validate username field
     if (_formKeyUserName.currentState.validate()) {
       _formKeyUserName.currentState.save();
+      bool validateUserWithDB =
+          await FirestoreService.validateUserName(_userName.trim());
+      if (!validateUserWithDB) {
+        _showUserIsTakenDialog();
+        return;
+      }
       // save username in prefs service
       PrefsService.saveUserName(username: _userName);
       // set display widget to loading indicator
@@ -266,6 +271,23 @@ class _LoginPageState extends State<LoginPage> {
                   'OK',
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ))
+          ],
+        );
+      },
+    );
+  }
+
+  // show user is taken dialog
+  void _showUserIsTakenDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Username is taken'.toUpperCase()),
+          content: Text('Please enter another username'),
+          actions: [
+            FlatButton(
+                child: Text('OK'), onPressed: () => Navigator.pop(context))
           ],
         );
       },
