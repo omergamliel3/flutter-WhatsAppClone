@@ -9,7 +9,7 @@ abstract class PrefsService {
   /// init shared preferences instance
   static Future<void> initPrefs() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    //_sharedPreferences.clear();
+    _sharedPreferences.clear();
   }
 
   /// save authentication state in prefs

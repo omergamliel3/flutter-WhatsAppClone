@@ -1,4 +1,6 @@
+import 'package:WhatsAppClone/core/alerts/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:provider/provider.dart';
 
@@ -49,7 +51,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     super.dispose();
   }
 
-// inner child container border radius
+  // inner child container border radius
   final borderRadiusGeometry = BorderRadius.only(
       topLeft: const Radius.circular(8.0),
       topRight: const Radius.circular(8.0));
@@ -73,7 +75,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     );
   }
 
-// build upload status button
+  // build upload status button
   Widget _buildUploadButton() {
     return FlatButton(
       child: Text(
@@ -85,7 +87,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     );
   }
 
-// update status in FirestoreService, PrefsService, MainModel provider
+  // update status in FirestoreService, PrefsService, MainModel provider
   void _updateStatus() async {
     if (_textEditingController.value.text == null ||
         _textEditingController.value.text.isEmpty) return;
@@ -111,6 +113,8 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
         Navigator.pop(context);
       }
     } else {
+      // show toast allert
+      showToast('Unable to upload status', Toast.LENGTH_SHORT);
       // reset flag and setState to update responsive widget back to button
       setState(() {
         _responsiveWidget = _buildUploadButton();

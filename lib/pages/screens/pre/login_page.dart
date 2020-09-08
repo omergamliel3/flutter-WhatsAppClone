@@ -1,6 +1,7 @@
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' as Foundation;
 
+import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:WhatsAppClone/services/firebase/auth_service.dart';
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
@@ -28,19 +29,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget _displayWidget;
   // holds the current form mode [PhoneNum/UserName]
   FormMode _formMode;
-  final navigator = NavigatorHelper;
+  bool busy = false;
 
   // Called when this object is inserted into the tree.
   @override
   void initState() {
-    _formKeyAuth = GlobalKey<FormState>();
-    _formKeyUserName = GlobalKey<FormState>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _displayWidget = _buildPhoneNumForm();
       });
     });
-
     super.initState();
   }
 
@@ -152,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // build Form phone num auth
   Widget _buildPhoneNumForm() {
+    _formKeyAuth = GlobalKey<FormState>();
     _formMode = FormMode.PhoneNum;
     return Form(
       key: _formKeyAuth,
@@ -176,6 +175,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // build user name form
   Widget _buildUserNameForm() {
+    _formKeyUserName = GlobalKey<FormState>();
     _formMode = FormMode.UserName;
     return Form(
       key: _formKeyUserName,
@@ -211,13 +211,18 @@ class _LoginPageState extends State<LoginPage> {
   void _submitPhoneNumForm() async {
     // validate phone num field
     if (_formKeyAuth.currentState.validate()) {
-      // save phone num value
-      _formKeyAuth.currentState.save();
       setState(() {
         _displayWidget = _buildProgressBarIndicator();
       });
+      // save phone num value
+      _formKeyAuth.currentState.save();
       // register user
-      await AuthService.registerUser(_phoneNum, context);
+      if (Foundation.kDebugMode) {
+        await AuthService.mockRegisterUser();
+      } else {
+        await AuthService.registerUser(_phoneNum, context);
+      }
+
       if (PrefsService.isAuthenticated) {
         setState(() {
           _displayWidget = _buildUserNameForm();
@@ -236,19 +241,23 @@ class _LoginPageState extends State<LoginPage> {
   void _submitUserNameForm() async {
     // validate username field
     if (_formKeyUserName.currentState.validate()) {
+      setState(() {
+        _displayWidget = _buildProgressBarIndicator();
+      });
       _formKeyUserName.currentState.save();
       bool validateUserWithDB =
           await FirestoreService.validateUserName(_userName.trim());
       if (!validateUserWithDB) {
+        setState(() {
+          _displayWidget = _buildUserNameForm();
+        });
         _showUserIsTakenDialog();
         return;
       }
+      // add username to firestore usernames collection
+      await FirestoreService.addUserName(_userName);
       // save username in prefs service
       PrefsService.saveUserName(username: _userName);
-      // set display widget to loading indicator
-      setState(() {
-        _displayWidget = _buildProgressBarIndicator();
-      });
       // delay to show loading indicator
       await Future.delayed(Duration(seconds: 1));
       // navigate main page

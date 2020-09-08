@@ -92,7 +92,8 @@ abstract class FirestoreService {
       bool flag = false;
       // iterate usernames query docs list
       usernames.forEach((element) {
-        if (element.data()['username'] == username) {
+        String elementName = element.data()['username'];
+        if (elementName.toLowerCase() == username.toLowerCase()) {
           flag = true;
           return;
         }
