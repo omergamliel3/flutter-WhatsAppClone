@@ -14,12 +14,12 @@ class Status {
 
   Status.fromJsonMap(Map<String, dynamic> map, String id)
       : id = id,
-        userName = map['userName'],
+        userName = map['username'],
         content = map['status'],
         timestamp = DateTime.parse(map['timestamp']);
 
   Map<String, dynamic> toJsonMap() => {
-        'userName': userName,
+        'username': userName,
         'status': content,
         'timestamp': timestamp.toIso8601String()
       };

@@ -50,6 +50,43 @@ abstract class FirestoreService {
     }
   }
 
+  /// get the most recent user status, if there is one
+  /// return null if there is no status
+  static Future<String> getUserStatus(String username) async {
+    // checks for internet connectivity
+    bool connectivity = await ConnectivityHelper.internetConnectivity();
+    // return null if there is no connectivity
+    if (!connectivity) {
+      return null;
+    }
+    try {
+      // get all user status, order by timestamp (descending)
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection(_kUsersStatusCollection)
+          .orderBy('timestamp', descending: true)
+          .get();
+      // if snapshot is empty return null
+      if (querySnapshot.docs.isEmpty) {
+        return null;
+      }
+      // iterate docs from query
+      for (var doc in querySnapshot.docs) {
+        // only compare doc with the same username as user
+        if (doc.data()['username'].toLowerCase() == username.toLowerCase()) {
+          // return the first matched doc data
+          return querySnapshot.docs.first.data()['status'] as String;
+        }
+      }
+      // did not find any user status, return null
+      return null;
+    }
+    // return null if error has occurred
+    catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   /// add new username to firestore db [user_names] collection
   static Future<bool> addUserName(String username) async {
     // checks for internet connectivity

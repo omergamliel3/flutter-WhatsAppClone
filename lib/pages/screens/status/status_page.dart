@@ -20,10 +20,18 @@ class StatusPage extends StatefulWidget {
 
 class _StatusPageState extends State<StatusPage>
     with AutomaticKeepAliveClientMixin {
-  bool _isLight;
+  bool _isLight; // theme mode
+  Stream<QuerySnapshot> _statusStream; // status stream
+
   @override
   initState() {
+    // get theme mode from main model
     _isLight = context.read<MainModel>().isLight;
+    // set status stream to firestore snapshots
+    _statusStream = FirebaseFirestore.instance
+        .collection('users_status')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
     super.initState();
   }
 
@@ -56,6 +64,8 @@ class _StatusPageState extends State<StatusPage>
   // build users status widget
   Widget _buildStatusListTile(Status status) {
     String timeAgo = timeago.format(status.timestamp);
+    bool allowDelete = status.userName.toLowerCase().trim() ==
+        PrefsService.userName.toLowerCase().trim();
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -73,14 +83,8 @@ class _StatusPageState extends State<StatusPage>
         style: Theme.of(context).textTheme.caption,
       ),
       dense: true,
-      onTap: status.userName == PrefsService.userName
-          ? () async {
-              bool delete = await FirestoreService.deleteStatus(status);
-              if (delete) {
-                //setState(() {});
-              }
-            }
-          : null,
+      // only user can delete its own status
+      onTap: allowDelete ? () => _handleDeleteStatus(status) : null,
     );
   }
 
@@ -95,7 +99,7 @@ class _StatusPageState extends State<StatusPage>
   // build users status widgets from firestore collection snapthots
   Widget _buildUsersStatus() {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users_status').snapshots(),
+      stream: _statusStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -104,15 +108,12 @@ class _StatusPageState extends State<StatusPage>
           return Text(snapshot.error);
         }
 
-        // sort snapshot data
-        List<QueryDocumentSnapshot> sortedSnapshot =
-            sortSnapshot(snapshot.data.docs);
         return Expanded(
             child: ListView.builder(
           itemCount: snapshot.data.docs.length,
           itemBuilder: (context, index) {
             Status status = Status.fromJsonMap(
-                sortedSnapshot[index].data(), sortedSnapshot[index].id);
+                snapshot.data.docs[index].data(), snapshot.data.docs[index].id);
             return _buildStatusListTile(status);
           },
         ));
@@ -120,12 +121,12 @@ class _StatusPageState extends State<StatusPage>
     );
   }
 
-  // sort snapshot db collection data according to datetime (newest first)
-  List<QueryDocumentSnapshot> sortSnapshot(
-      List<QueryDocumentSnapshot> snapshotDataDocs) {
-    snapshotDataDocs.sort((a, b) => DateTime.parse(a.data()['timestamp'])
-        .compareTo(DateTime.parse(b.data()['timestamp'])));
-    return snapshotDataDocs.reversed.toList();
+  // delete status, update latest user status
+  void _handleDeleteStatus(Status status) async {
+    await FirestoreService.deleteStatus(status);
+    String updatedStatus =
+        await FirestoreService.getUserStatus(PrefsService.userName);
+    context.read<MainModel>().updateUserStatus(updatedStatus);
   }
 
   @override

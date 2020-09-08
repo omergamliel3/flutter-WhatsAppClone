@@ -105,10 +105,8 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     // upload status to firestore db
     bool upload = await FirestoreService.uploadStatus(status);
     if (upload) {
-      // save user status localy
-      PrefsService.saveUserStatus(status: status.content);
       // update user status in main model
-      context.read<MainModel>().updateUserStatus();
+      context.read<MainModel>().updateUserStatus(status.content);
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }

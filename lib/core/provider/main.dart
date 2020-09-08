@@ -1,3 +1,4 @@
+import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/core/models/chat.dart';
@@ -16,15 +17,16 @@ class MainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // user status data
+  // user data
   String _userStatus;
   String get userStatus => _userStatus;
 
-  void updateUserStatus() {
-    _userStatus = PrefsService.userStatus;
+  void updateUserStatus(String status) {
+    _userStatus = status;
     notifyListeners();
   }
 
+  // theme data
   bool _isLight;
   bool get isLight => _isLight;
 
@@ -32,8 +34,10 @@ class MainModel extends ChangeNotifier {
   Future<void> initModel(BuildContext context) async {
     // set active chats from local db storage
     _activeChats = await DBservice.getChats();
-    // set user status from prefs local storage
-    _userStatus = PrefsService.userStatus;
+    if (PrefsService.userName != null) {
+      // set user status from prefs local storage
+      _userStatus = await FirestoreService.getUserStatus(PrefsService.userName);
+    }
     // set isLight attribute
     _isLight = Theme.of(context).brightness == Brightness.light;
   }
