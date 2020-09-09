@@ -130,6 +130,7 @@ class SelectContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // get contacts datas from main model
     List<Contact> contacts = Provider.of<MainModel>(context).unActiveContacts;
     return SafeArea(
       top: false,

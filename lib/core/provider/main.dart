@@ -20,6 +20,10 @@ class MainModel extends ChangeNotifier {
         (contact) => contact.displayName.toLowerCase() == name.toLowerCase());
   }
 
+  Future<void> fetchUnActiveContacts() async {
+    _unActiveContacts = await ContactsHandler.getUnActiveContacts();
+  }
+
   // active chats data
   List<Chat> _activeChats = [];
   List<Chat> get activeChats => List.from(_activeChats);

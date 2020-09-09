@@ -11,7 +11,7 @@ abstract class ContactsHandler {
     // get active chats data from local db
     List<Chat> activeChats = await DBservice.getChats();
     if (activeChats == null || activeChats.isEmpty) {
-      return null;
+      return contactsData;
     }
     // extract active chats data names
     List<String> names = activeChats.map((e) => e.name).toList();

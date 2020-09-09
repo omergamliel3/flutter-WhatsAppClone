@@ -1,3 +1,5 @@
+import 'package:WhatsAppClone/core/widgets/ui_elements/loading_shader_mask.dart';
+import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,7 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatsPageState extends State<ChatsPage>
     with AutomaticKeepAliveClientMixin {
+  List<int> _loadingIndex = [];
   // build global chat listile
   Widget _buildGlobalChat() {
     return ListTile(
@@ -37,7 +40,7 @@ class _ChatsPageState extends State<ChatsPage>
   }
 
   // build contact list tile widget
-  Widget _buildContactListTile(Chat chat) {
+  Widget _buildContactListTile(Chat chat, int index) {
     String name = chat.name;
     String lastMessage = chat.messages.isEmpty ? 'No messages' : chat.messages;
     String timeAgo = '';
@@ -57,8 +60,13 @@ class _ChatsPageState extends State<ChatsPage>
       trailing: Text(timeAgo),
       dense: true,
       onTap: () async {
+        setState(() {
+          _loadingIndex.add(index);
+        });
         await DBservice.deleteChat(chat);
-        context.read<MainModel>().getActiveChats();
+        await context.read<MainModel>().fetchUnActiveContacts();
+        _loadingIndex.remove(index);
+        await context.read<MainModel>().getActiveChats();
       },
     );
   }
@@ -78,7 +86,10 @@ class _ChatsPageState extends State<ChatsPage>
                 },
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return _buildContactListTile(data[index]);
+                  if (_loadingIndex.contains(index)) {
+                    return Center(child: SpinkitLoadingIndicator());
+                  }
+                  return _buildContactListTile(data[index], index);
                 }));
       },
     );
