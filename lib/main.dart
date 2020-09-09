@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           title: 'WhatsApp',
           theme: lightTheme,
           darkTheme: darkTheme,
-          // TODO: CHANGE TO THEMEMODE.ADAPTIVE ON RELEASE
+          // TODO: CHANGE TO THEMEMODE.SYSTEM ON RELEASE
           themeMode: ThemeMode.dark,
           routes: {
             '/': (BuildContext context) => LoadingPage(),

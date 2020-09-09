@@ -1,14 +1,14 @@
-import 'package:WhatsAppClone/core/widgets/ui_elements/loading_shader_mask.dart';
-import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'package:WhatsAppClone/core/provider/main.dart';
-
 import 'package:WhatsAppClone/core/models/chat.dart';
+
+import 'package:WhatsAppClone/core/provider/main.dart';
+import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+
+import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
