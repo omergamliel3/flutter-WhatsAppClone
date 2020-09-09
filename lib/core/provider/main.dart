@@ -1,5 +1,9 @@
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:flutter/material.dart';
+
+import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
+import 'package:contacts_service/contacts_service.dart';
+
+import 'package:WhatsAppClone/services/device/contacts_service.dart';
 
 import 'package:WhatsAppClone/core/models/chat.dart';
 
@@ -7,9 +11,18 @@ import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
 class MainModel extends ChangeNotifier {
+  // contacts data
+  List<Contact> _unActiveContacts;
+  List<Contact> get unActiveContacts => List.from(_unActiveContacts);
+
+  void activeContact(String name) {
+    _unActiveContacts.removeWhere(
+        (contact) => contact.displayName.toLowerCase() == name.toLowerCase());
+  }
+
   // active chats data
   List<Chat> _activeChats = [];
-  List<Chat> get activeChats => _activeChats;
+  List<Chat> get activeChats => List.from(_activeChats);
 
   /// get active chats from local db
   Future<void> getActiveChats() async {
@@ -32,6 +45,8 @@ class MainModel extends ChangeNotifier {
 
   /// init model data
   Future<void> initModel(BuildContext context) async {
+    // get unactive chats
+    _unActiveContacts = await ContactsHandler.getUnActiveContacts();
     // set active chats from local db storage
     _activeChats = await DBservice.getChats();
     if (PrefsService.userName != null) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/services/device/contacts_service.dart';
 import 'package:WhatsAppClone/services/device/permission_handler.dart';
 
 import 'package:WhatsAppClone/core/provider/main.dart';
@@ -36,8 +35,6 @@ class _LoadingPageState extends State<LoadingPage>
     await PermissionHandler.requestPermissions();
     // init prefs service
     await PrefsService.initPrefs();
-    // init contacts handler service
-    await ContactsHandler.initContactsHandler();
     // init local storage sqlite db
     await DBservice.asyncInitDB();
     // init main model data

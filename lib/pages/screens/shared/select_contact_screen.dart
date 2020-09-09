@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:contacts_service/contacts_service.dart';
 
-import 'package:WhatsAppClone/services/device/contacts_service.dart';
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 
 import 'package:WhatsAppClone/core/models/chat.dart';
@@ -16,14 +16,14 @@ class SelectContactScreen extends StatelessWidget {
   SelectContactScreen(this._contactMode);
 
   // build appbar title
-  Widget _buildAppBarTitle(BuildContext context) {
+  Widget _buildAppBarTitle(BuildContext context, int contactsLength) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Select contact'),
         SizedBox(height: 3.0),
         Text(
-          '${ContactsHandler.contactsData.length.toString()} contacts',
+          '${contactsLength.toString()} contacts',
           style: Theme.of(context).textTheme.caption,
         ),
       ],
@@ -124,16 +124,18 @@ class SelectContactScreen extends StatelessWidget {
     await DBservice.createChat(chat);
     // get active chats in main model to update UI
     await context.read<MainModel>().getActiveChats();
+    context.read<MainModel>().activeContact(chat.name);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Contact> contacts = Provider.of<MainModel>(context).unActiveContacts;
     return SafeArea(
       top: false,
       child: Scaffold(
         appBar: AppBar(
-          title: _buildAppBarTitle(context),
+          title: _buildAppBarTitle(context, contacts.length),
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -147,10 +149,10 @@ class SelectContactScreen extends StatelessWidget {
         body: Scrollbar(
           child: ListView.builder(
               physics: ScrollPhysics(),
-              itemCount: ContactsHandler.contactsData.length,
+              itemCount: contacts.length,
               itemBuilder: (context, index) {
                 return _buildContactListTile(
-                    ContactsHandler.contactsData[index].displayName, context);
+                    contacts[index].displayName, context);
               }),
         ),
       ),
