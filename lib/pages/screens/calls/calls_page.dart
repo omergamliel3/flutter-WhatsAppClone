@@ -25,17 +25,16 @@ class _CallsPageState extends State<CallsPage>
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         child: Text(
-          callLogEntry.name[0].toUpperCase() ?? '?',
+          callLogEntry.name[0].toUpperCase() ?? 'Unknown',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      title: Text(callLogEntry.name),
-      subtitle: Text(callLogEntry.formattedNumber),
+      title: Text(callLogEntry.name ?? 'Unknown'),
+      subtitle: Text(callLogEntry.formattedNumber ?? 'Unknown'),
       trailing: Icon(Icons.call),
-      dense: true,
       onTap: () {
         // launch device phone call
-        UrlLauncher.launch('tel:+${callLogEntry.number}');
+        UrlLauncher.launch('tel:${callLogEntry.number}');
       },
     );
   }

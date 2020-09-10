@@ -49,6 +49,46 @@ class _LoadingPageState extends State<LoadingPage>
     }
   }
 
+  Widget _buildWhatsAppImage() {
+    return Expanded(
+        flex: 5,
+        child: Image.asset(
+          iconAssetName,
+          fit: BoxFit.contain,
+          height: 100,
+          width: 100,
+        ));
+  }
+
+  Widget _buildBottomText() {
+    return Expanded(
+        flex: 1,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'from',
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: Colors.grey[700], fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 12.0),
+            ShaderMask(
+              shaderCallback: (rect) {
+                return LinearGradient(colors: [Colors.amber, Colors.red])
+                    .createShader(rect);
+              },
+              child: Text(
+                'FACEBOOK',
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5),
+              ),
+            ),
+          ],
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLight = Theme.of(context).brightness == Brightness.light;
@@ -61,36 +101,9 @@ class _LoadingPageState extends State<LoadingPage>
           children: <Widget>[
             Column(
               children: <Widget>[
-                Expanded(
-                    flex: 5,
-                    child: Image.asset(
-                      iconAssetName,
-                      fit: BoxFit.contain,
-                      height: 100,
-                      width: 100,
-                    )),
+                _buildWhatsAppImage(),
                 Expanded(flex: 1, child: SpinkitLoadingIndicator()),
-                Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'from',
-                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 12.0),
-                        Text(
-                          'FACEBOOK',
-                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                              color: isLight ? Colors.blue : Colors.white,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5),
-                        )
-                      ],
-                    ))
+                _buildBottomText()
               ],
             )
           ],

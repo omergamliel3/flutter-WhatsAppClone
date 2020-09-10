@@ -4,8 +4,6 @@ import 'package:WhatsAppClone/core/shared/constants.dart';
 
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
-
 import 'package:WhatsAppClone/pages/screens/calls/calls_page.dart';
 import 'package:WhatsAppClone/pages/screens/chats/chats_page.dart';
 import 'package:WhatsAppClone/pages/screens/status/status_page.dart';
@@ -39,19 +37,7 @@ class _MainPageState extends State<MainPage>
       _pageIndex = _tabController.index;
       _updateFAB();
     });
-    WidgetsBinding.instance.addPostFrameCallback(_showPostFrameSnackBar);
     super.initState();
-  }
-
-  // show welcome snackbar after delayed duration
-  void _showPostFrameSnackBar(_) async {
-    await Future.delayed(Duration(milliseconds: 500));
-    String userName = PrefsService.userName;
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text('Welcome $userName'),
-      behavior: SnackBarBehavior.floating,
-      duration: Duration(milliseconds: 800),
-    ));
   }
 
   // controll FAB icon and visivility

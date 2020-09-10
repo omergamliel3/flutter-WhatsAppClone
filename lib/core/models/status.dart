@@ -16,11 +16,11 @@ class Status {
       : id = id,
         userName = map['username'],
         content = map['status'],
-        timestamp = DateTime.parse(map['timestamp']);
+        timestamp = DateTime.fromMillisecondsSinceEpoch(map['timestamp']);
 
   Map<String, dynamic> toJsonMap() => {
         'username': userName,
         'status': content,
-        'timestamp': timestamp.toIso8601String()
+        'timestamp': timestamp.millisecondsSinceEpoch
       };
 }

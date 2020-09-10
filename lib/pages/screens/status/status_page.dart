@@ -6,7 +6,6 @@ import 'package:WhatsAppClone/core/models/status.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
@@ -52,7 +51,6 @@ class _StatusPageState extends State<StatusPage>
             ),
             title: Text('My status'),
             subtitle: Text(value ?? 'Tap to add status update'),
-            dense: true,
             onTap: () {
               // show status modal bottom sheet
               showStatusModalBottomSheet(context);
@@ -62,8 +60,8 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // build users status widget
-  Widget _buildStatusListTile(Status status) {
-    String timeAgo = timeago.format(status.timestamp);
+  Widget _buildStatus(Status status) {
+    String timeAgo = status.timestamp.toString().split(' ')[1].substring(0, 5);
     bool allowDelete = status.userName.toLowerCase().trim() ==
         PrefsService.userName.toLowerCase().trim();
     return ListTile(
@@ -82,7 +80,6 @@ class _StatusPageState extends State<StatusPage>
         timeAgo,
         style: Theme.of(context).textTheme.caption,
       ),
-      dense: true,
       // only user can delete its own status
       onTap: allowDelete ? () => _handleDeleteStatus(status) : null,
     );
@@ -109,13 +106,16 @@ class _StatusPageState extends State<StatusPage>
         }
 
         return Expanded(
-            child: ListView.builder(
-          itemCount: snapshot.data.docs.length,
-          itemBuilder: (context, index) {
-            Status status = Status.fromJsonMap(
-                snapshot.data.docs[index].data(), snapshot.data.docs[index].id);
-            return _buildStatusListTile(status);
-          },
+            child: Scrollbar(
+          child: ListView.builder(
+            itemCount: snapshot.data.docs.length,
+            itemBuilder: (context, index) {
+              Status status = Status.fromJsonMap(
+                  snapshot.data.docs[index].data(),
+                  snapshot.data.docs[index].id);
+              return _buildStatus(status);
+            },
+          ),
         ));
       },
     );

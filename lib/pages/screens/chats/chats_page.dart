@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:WhatsAppClone/core/models/chat.dart';
 
 import 'package:WhatsAppClone/core/provider/main.dart';
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -17,7 +15,6 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatsPageState extends State<ChatsPage>
     with AutomaticKeepAliveClientMixin {
-  List<int> _loadingIndex = [];
   // build global chat listile
   Widget _buildGlobalChat() {
     return ListTile(
@@ -42,11 +39,10 @@ class _ChatsPageState extends State<ChatsPage>
   // build contact list tile widget
   Widget _buildContactListTile(Chat chat, int index) {
     String name = chat.name;
-    String lastMessage = chat.messages.isEmpty ? 'No messages' : chat.messages;
-    String timeAgo = '';
-    if (chat.timestamp.isNotEmpty) {
-      timeAgo = timeago.format(DateTime.parse(chat.timestamp));
-    }
+    String lastMessage =
+        chat.messages.isEmpty ? 'No messages' : chat.messages.split('1+_+1')[0];
+    String timeAgo = chat.timestamp.toString().split(' ')[1].substring(0, 5);
+
     return ListTile(
       leading: CircleAvatar(
         child: Text(
@@ -58,15 +54,8 @@ class _ChatsPageState extends State<ChatsPage>
       title: Text(name),
       subtitle: Text(lastMessage),
       trailing: Text(timeAgo),
-      dense: true,
-      onTap: () async {
-        setState(() {
-          _loadingIndex.add(index);
-        });
-        await DBservice.deleteChat(chat);
-        await context.read<MainModel>().fetchUnActiveContacts();
-        _loadingIndex.remove(index);
-        await context.read<MainModel>().getActiveChats();
+      onTap: () {
+        NavigatorHelper.navigatePrivateChatSceen(context, chat);
       },
     );
   }
@@ -86,9 +75,6 @@ class _ChatsPageState extends State<ChatsPage>
                 },
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  if (_loadingIndex.contains(index)) {
-                    return Center(child: SpinkitLoadingIndicator());
-                  }
                   return _buildContactListTile(data[index], index);
                 }));
       },

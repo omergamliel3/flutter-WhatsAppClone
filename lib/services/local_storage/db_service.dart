@@ -49,21 +49,27 @@ abstract class DBservice {
     }
   }
 
+  /// Delete the database
+  static Future<void> deleteDB() async {
+    final dbFolder = await getDatabasesPath();
+    if (!await Directory(dbFolder).exists()) {
+      await Directory(dbFolder).create(recursive: true);
+    }
+    final dbPath = join(dbFolder, _kDbFileName);
+    await deleteDatabase(dbPath);
+    _db = null;
+  }
+
   // execute chats table
   static Future<void> _createChatsTable(Database db) async {
     await db.execute('''
         CREATE TABLE $_kDbTableName(
           id INTEGER PRIMARY KEY, 
           name TEXT,
-          timestamp TEXT,
+          timestamp INTEGER,
           messages TEXT
           )
         ''');
-  }
-
-  /// clear chat table
-  static Future<void> clearTable() async {
-    await _db.rawDelete('''DELETE FROM $_kDbTableName''');
   }
 
   /// delete chat from db chats table
@@ -95,7 +101,7 @@ abstract class DBservice {
           VALUES
             (
               "${chat.name}",
-              "${chat.timestamp}", 
+              "${chat.timestamp.millisecondsSinceEpoch}", 
               "${chat.messages}"   
             )''');
           print('create new record with id: $id');
@@ -110,16 +116,32 @@ abstract class DBservice {
       return false;
     }
   }
-}
 
-// evoid create chat with allready exiting contact
-// bool exists = false;
-// for (var i = 0; i < _activePrivateChats.length; i++) {
-//   if (_activePrivateChats[i].name == chat.name) {
-//     print(chat.name);
-//     exists = true;
-//     break;
-//   }
-// }
-// // return false if exitsts
-// if (exists) return false;
+  /// get chat messsages
+  static Future<List<String>> getMessages(Chat chat) async {
+    List<Map> jsons = await _db
+        .rawQuery('SELECT * FROM $_kDbTableName WHERE id = ?', [chat.id]);
+    String messages = jsons.first['messages'] as String;
+    List<String> messagesList = messages.split('1+_+1').toList();
+    messagesList.removeWhere((element) => element.isEmpty);
+    return messagesList;
+  }
+
+  /// insert new message to chat
+  static Future<bool> insertMessage(Chat chat, String msg) async {
+    try {
+      List<String> msgs = await getMessages(chat);
+      msgs.add(msg);
+
+      await _db.rawUpdate('''
+      UPDATE $_kDbTableName
+      SET messages = ?
+      WHERE id = ?
+      ''', [msgs.join('1+_+1'), chat.id]);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+}

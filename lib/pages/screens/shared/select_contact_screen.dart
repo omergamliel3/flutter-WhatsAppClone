@@ -119,7 +119,8 @@ class SelectContactScreen extends StatelessWidget {
   // create new chat
   void _createNewChat(String displayName, BuildContext context) async {
     // new empty chat instance
-    final Chat chat = Chat(name: displayName, messages: '', timestamp: '');
+    final Chat chat =
+        Chat(name: displayName, messages: '', timestamp: DateTime.now());
     // create new chat in db chats table
     await DBservice.createChat(chat);
     // get active chats in main model to update UI
