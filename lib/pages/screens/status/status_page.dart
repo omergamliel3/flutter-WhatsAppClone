@@ -1,13 +1,13 @@
-import 'package:WhatsAppClone/core/provider/main.dart';
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:flutter/material.dart';
 
+import 'package:WhatsAppClone/core/provider/main.dart';
 import 'package:WhatsAppClone/core/models/status.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 
 import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 

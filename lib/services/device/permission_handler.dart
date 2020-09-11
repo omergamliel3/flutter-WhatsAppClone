@@ -1,6 +1,8 @@
 import 'package:permission_handler/permission_handler.dart';
 
-abstract class PermissionHandler {
+class PermissionHandler {
+  PermissionHandler._();
+
   /// request device permissions (contacts, call logs, camera)
   static Future<void> requestPermissions() async {
     // request contacts permission

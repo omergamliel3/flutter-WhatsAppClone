@@ -1,6 +1,8 @@
 import 'dart:io';
 
 class ConnectivityHelper {
+  ConnectivityHelper._();
+
   /// checks for internet connectivity
   /// return true for connection, false for no connection
   static Future<bool> internetConnectivity() async {

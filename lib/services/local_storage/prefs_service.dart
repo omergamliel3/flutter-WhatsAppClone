@@ -1,6 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class PrefsService {
+class PrefsService {
+  PrefsService._();
+
+  // static variables
   static final _kAuthKeyName = 'authenticate';
   static final _kUserNameKey = 'username';
   static final _kUserStatusNameKey = 'user_status';

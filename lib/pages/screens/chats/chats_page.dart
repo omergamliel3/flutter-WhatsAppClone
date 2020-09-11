@@ -1,3 +1,4 @@
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -5,8 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:WhatsAppClone/core/models/chat.dart';
 
 import 'package:WhatsAppClone/core/provider/main.dart';
-
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -55,7 +54,7 @@ class _ChatsPageState extends State<ChatsPage>
       subtitle: Text(lastMessage),
       trailing: Text(timeAgo),
       onTap: () {
-        NavigatorHelper.navigatePrivateChatSceen(context, chat);
+        Routes.navigatePrivateChatSceen(context, chat);
       },
     );
   }

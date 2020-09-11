@@ -1,6 +1,4 @@
-import 'package:WhatsAppClone/core/alerts/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:provider/provider.dart';
 
@@ -10,6 +8,9 @@ import 'package:WhatsAppClone/core/provider/main.dart';
 import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:WhatsAppClone/core/alerts/toast.dart';
+
 import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 // parent container border radius
@@ -18,6 +19,7 @@ final borderRadius = RoundedRectangleBorder(
         topLeft: const Radius.circular(8.0),
         topRight: const Radius.circular(8.0)));
 
+// evoke modal bottom sheet
 void showStatusModalBottomSheet(BuildContext context) {
   showModalBottomSheet(
       context: context,

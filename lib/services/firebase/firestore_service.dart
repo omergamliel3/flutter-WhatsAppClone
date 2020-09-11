@@ -4,7 +4,8 @@ import 'package:WhatsAppClone/core/models/status.dart';
 
 import 'package:WhatsAppClone/helpers/connectivity_helper.dart';
 
-abstract class FirestoreService {
+class FirestoreService {
+  FirestoreService._();
   static const _kUsersStatusCollection = 'users_status';
   static const _kUserNamesCollection = 'user_names';
 

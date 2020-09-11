@@ -20,12 +20,16 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   // Class Attributes
   GlobalKey<ScaffoldState> _scaffoldKey;
+  // tab controller
   TabController _tabController;
+  // tabs page index
   int _pageIndex;
+  // holds FAB IconData
   IconData _fabIconData;
+  // FAB visibiliy flag
   bool _fabVisible;
 
-  // init state method comment !!!
+  // Called when this object is inserted into the tree.
   @override
   void initState() {
     _pageIndex = 1;
@@ -68,13 +72,13 @@ class _MainPageState extends State<MainPage>
   void _onPressedFAB() {
     if (_pageIndex == 1) {
       // navigate contact screen on CHAT MODE
-      NavigatorHelper.navigateContactScreen(context, ContactMode.Chat);
+      Routes.navigateContactScreen(context, ContactMode.Chat);
     } else if (_pageIndex == 2) {
       // show status modal bottom sheet
       showStatusModalBottomSheet(context);
     } else {
       // navigate contact screen on CALLS MODE
-      NavigatorHelper.navigateContactScreen(context, ContactMode.Calls);
+      Routes.navigateContactScreen(context, ContactMode.Calls);
     }
   }
 
@@ -156,6 +160,17 @@ class _MainPageState extends State<MainPage>
     ]);
   }
 
+  // returns AppBar body widget
+  Widget _buildAppBarBody() {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: TabBarView(
+          controller: _tabController,
+          physics: ScrollPhysics(),
+          children: [CameraPage(), ChatsPage(), StatusPage(), CallsPage()]),
+    );
+  }
+
   // returns AppBar FAB widget
   Widget _buildAppBarFAB() {
     return AnimatedOpacity(
@@ -167,17 +182,6 @@ class _MainPageState extends State<MainPage>
             color: Colors.white,
           ),
           onPressed: _onPressedFAB),
-    );
-  }
-
-  // returns AppBar body widget
-  Widget _buildAppBarBody() {
-    return Container(
-      padding: EdgeInsets.all(8.0),
-      child: TabBarView(
-          controller: _tabController,
-          physics: ScrollPhysics(),
-          children: [CameraPage(), ChatsPage(), StatusPage(), CallsPage()]),
     );
   }
 

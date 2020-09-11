@@ -42,13 +42,14 @@ class _LoadingPageState extends State<LoadingPage>
     // if authenticated navigate main page, else navigate log-in page
     if (PrefsService.isAuthenticated) {
       // navigate main page
-      NavigatorHelper.navigateMainPage(context);
+      Routes.navigateMainPage(context);
     } else {
       // navigate login page
-      NavigatorHelper.navigateLoginPage(context);
+      Routes.navigateLoginPage(context);
     }
   }
 
+  // build whatsapp image asset
   Widget _buildWhatsAppImage() {
     return Expanded(
         flex: 5,
@@ -60,6 +61,7 @@ class _LoadingPageState extends State<LoadingPage>
         ));
   }
 
+  // build 'from facebook' text
   Widget _buildBottomText() {
     return Expanded(
         flex: 1,

@@ -10,6 +10,8 @@ import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 import 'package:WhatsAppClone/core/shared/constants.dart';
 
 import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import 'package:WhatsAppClone/pages/screens/login/widgets/dialogs.dart';
+import 'package:WhatsAppClone/pages/screens/login/widgets/whatapp_image.dart';
 
 enum FormMode { PhoneNum, UserName }
 
@@ -25,28 +27,21 @@ class _LoginPageState extends State<LoginPage> {
   // holds form fields data variables
   String _phoneNum;
   String _userName;
-  // holds the current shown widget
-  Widget _displayWidget;
+  // holds the current shown form widget
+  Widget _responsiveWidget;
   // holds the current form mode [PhoneNum/UserName]
   FormMode _formMode;
   bool busy = false;
 
-  // Called when this object is inserted into the tree.
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _displayWidget = _buildPhoneNumForm();
-      });
-    });
-    super.initState();
+  didChangeDependencies() {
+    _responsiveWidget = _buildPhoneNumForm();
+    super.didChangeDependencies();
   }
 
   // build progress indicator widget
   Widget _buildProgressBarIndicator() {
-    return Center(
-      child: SpinkitLoadingIndicator(),
-    );
+    return SpinkitLoadingIndicator();
   }
 
   // build phone number text field
@@ -135,19 +130,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // build whatsapp icon
-  Widget _buildWhatsAppIcon() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0),
-      child: Image.asset(
-        iconAssetName,
-        fit: BoxFit.contain,
-        height: 100,
-        width: 100,
-      ),
-    );
-  }
-
   // build Form phone num auth
   Widget _buildPhoneNumForm() {
     _formKeyAuth = GlobalKey<FormState>();
@@ -159,16 +141,7 @@ class _LoginPageState extends State<LoginPage> {
           left: 10,
           right: 10,
         ),
-        child: Column(
-          children: [
-            SizedBox(height: 15),
-            _buildPhoneNumFormField(),
-            SizedBox(height: 15),
-            _buildContinueButton(),
-            Spacer(),
-            _buildWhatsAppIcon()
-          ],
-        ),
+        child: _buildPhoneNumFormField(),
       ),
     );
   }
@@ -184,16 +157,7 @@ class _LoginPageState extends State<LoginPage> {
           left: 10,
           right: 10,
         ),
-        child: Column(
-          children: [
-            SizedBox(height: 15),
-            _buildUserNameFormField(),
-            SizedBox(height: 15),
-            _buildContinueButton(),
-            Spacer(),
-            _buildWhatsAppIcon()
-          ],
-        ),
+        child: _buildUserNameFormField(),
       ),
     );
   }
@@ -212,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
     // validate phone num field
     if (_formKeyAuth.currentState.validate()) {
       setState(() {
-        _displayWidget = _buildProgressBarIndicator();
+        _responsiveWidget = _buildProgressBarIndicator();
       });
       // save phone num value
       _formKeyAuth.currentState.save();
@@ -225,14 +189,14 @@ class _LoginPageState extends State<LoginPage> {
 
       if (PrefsService.isAuthenticated) {
         setState(() {
-          _displayWidget = _buildUserNameForm();
+          _responsiveWidget = _buildUserNameForm();
         });
       } else {
         setState(() {
-          _displayWidget = _buildPhoneNumForm();
+          _responsiveWidget = _buildPhoneNumForm();
         });
         // show alert dialog
-        _showFailedAuthDialog();
+        showFailedAuthDialog(context);
       }
     }
   }
@@ -242,16 +206,16 @@ class _LoginPageState extends State<LoginPage> {
     // validate username field
     if (_formKeyUserName.currentState.validate()) {
       setState(() {
-        _displayWidget = _buildProgressBarIndicator();
+        _responsiveWidget = _buildProgressBarIndicator();
       });
       _formKeyUserName.currentState.save();
       bool validateUserWithDB =
           await FirestoreService.validateUserName(_userName.trim());
       if (!validateUserWithDB) {
         setState(() {
-          _displayWidget = _buildUserNameForm();
+          _responsiveWidget = _buildUserNameForm();
         });
-        _showUserIsTakenDialog();
+        showUserIsTakenDialog(context);
         return;
       }
       // add username to firestore usernames collection
@@ -261,46 +225,8 @@ class _LoginPageState extends State<LoginPage> {
       // delay to show loading indicator
       await Future.delayed(Duration(seconds: 1));
       // navigate main page
-      NavigatorHelper.navigateMainPage(context);
+      Routes.navigateMainPage(context);
     }
-  }
-
-  // show authentication failed dialog
-  void _showFailedAuthDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Phone auth failed'),
-          content: Text('Please validate your phone number'),
-          actions: [
-            FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ))
-          ],
-        );
-      },
-    );
-  }
-
-  // show user is taken dialog
-  void _showUserIsTakenDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Username is taken'.toUpperCase()),
-          content: Text('Please enter another username'),
-          actions: [
-            FlatButton(
-                child: Text('OK'), onPressed: () => Navigator.pop(context))
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -313,12 +239,23 @@ class _LoginPageState extends State<LoginPage> {
             title: Text('Sign Up'),
           ),
           body: Container(
-            padding: EdgeInsets.all(4.0),
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 500),
-              child: _displayWidget,
-            ),
-          )),
+              padding: EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 15),
+                  Container(
+                    height: 60,
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: _responsiveWidget,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  _buildContinueButton(),
+                  Spacer(),
+                  WhatsAppImage()
+                ],
+              ))),
     );
   }
 }

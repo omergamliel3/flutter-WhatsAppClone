@@ -7,10 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:WhatsAppClone/core/provider/main.dart';
 import 'package:WhatsAppClone/core/shared/theme.dart';
 
-import 'package:WhatsAppClone/pages/screens/loading/loading_page.dart';
-import 'package:WhatsAppClone/pages/main/main_page.dart';
-import 'package:WhatsAppClone/pages/screens/login/login_page.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -28,15 +24,10 @@ class MyApp extends StatelessWidget {
           title: 'WhatsApp',
           theme: lightTheme,
           darkTheme: darkTheme,
-          // TODO: CHANGE TO THEMEMODE.SYSTEM ON RELEASE
           themeMode: ThemeMode.light,
-          routes: {
-            '/': (BuildContext context) => LoadingPage(),
-            '/login_page': (BuildContext context) => LoginPage(),
-            '/main_page': (BuildContext context) => MainPage()
-          },
+          routes: Routes.routes,
           onGenerateRoute: (RouteSettings settings) {
-            return NavigatorHelper.onGenerateRoute(settings, context);
+            return Routes.onGenerateRoute(settings, context);
           },
         );
       },

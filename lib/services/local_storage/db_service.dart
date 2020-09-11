@@ -7,7 +7,8 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:WhatsAppClone/core/models/chat.dart';
 
-abstract class DBservice {
+class DBservice {
+  DBservice._();
   // constants
   static const _kDbFileName = 'sqflite_ex.db';
   static const _kDbTableName = 'chats_table';

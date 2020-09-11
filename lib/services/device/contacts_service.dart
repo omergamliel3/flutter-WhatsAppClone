@@ -2,7 +2,9 @@ import 'package:WhatsAppClone/core/models/chat.dart';
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:contacts_service/contacts_service.dart';
 
-abstract class ContactsHandler {
+class ContactsHandler {
+  ContactsHandler._();
+
   /// init contacts handler service
   static Future getUnActiveContacts() async {
     Iterable<Contact> contacts =

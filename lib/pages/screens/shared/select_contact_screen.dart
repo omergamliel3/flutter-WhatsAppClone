@@ -125,6 +125,7 @@ class SelectContactScreen extends StatelessWidget {
     await DBservice.createChat(chat);
     // get active chats in main model to update UI
     await context.read<MainModel>().getActiveChats();
+    // activate contact relate to chat name
     context.read<MainModel>().activeContact(chat.name);
     Navigator.pop(context);
   }
