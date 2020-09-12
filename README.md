@@ -14,7 +14,7 @@ A WhatsApp clone flutter project
 ### Front-end
 
 - **Flutter SDK**
-- **Provider and Change Notifier for state management*
+- **Provider and Change Notifier for state management**
 
 ### Storage
  - **Firebase Firestore**
