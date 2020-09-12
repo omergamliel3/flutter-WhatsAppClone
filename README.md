@@ -1,6 +1,7 @@
 # WhatsAppClone - _UNDER CONSTRUCTION_
 
-A WhatsApp clone flutter project
+A WhatsApp clone project. This app is my own version for WhatsApp with Flutter.
+Real contacts replaced with Firebase ML kit bots.
 
 ## Screenshots
 
@@ -17,15 +18,14 @@ A WhatsApp clone flutter project
 - **Provider and Change Notifier for state management**
 
 ### Storage
- - **Firebase Firestore**
- - **Firebase realtime database**
+ - **Firebase Could Firestore**
+ - **Firebase Realtime Database**
  - **Firebase Storage**
  - **SQLite**
  - **Shared preferences**
 
 ### Back-end
-- **Firebase Authentication**
-- **Firebase Storage**
+- **Firebase (Auth, Storage, Cloud functions, ML kit)**
 
 # Author 🙋
 
