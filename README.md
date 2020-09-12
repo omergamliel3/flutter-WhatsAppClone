@@ -1,8 +1,6 @@
 # WhatsAppClone - _UNDER CONSTRUCTION_
 
-## WhatsAppClone
-
-A WhatsApp clone flutter project.
+A WhatsApp clone flutter project
 
 ## Screenshots
 
