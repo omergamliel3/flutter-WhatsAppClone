@@ -1,6 +1,7 @@
 # WhatsAppClone - _UNDER CONSTRUCTION_
 
 A WhatsApp clone project.
+
 This app is my own version for WhatsApp with Flutter. Real contacts replaced with Firebase ML kit bots.
 
 ## Screenshots
