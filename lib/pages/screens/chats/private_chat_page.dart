@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+
+import 'package:WhatsAppClone/core/provider/main.dart';
 
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/core/models/message.dart';
 
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+
+import 'package:WhatsAppClone/helpers/strings.dart';
 
 import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
@@ -84,12 +89,14 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
             padding: const EdgeInsets.all(4.0),
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
+              String timestamp =
+                  convertDateTimeToText(snapshot.data[index].timestamp);
               return Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0)),
                 child: ListTile(
                   title: Text(snapshot.data[index].text),
-                  trailing: Text(snapshot.data[index].timestamp.toString()),
+                  trailing: Text(timestamp),
                 ),
               );
             },
@@ -132,6 +139,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         timestamp: DateTime.now());
     // insert message to local db
     await DBservice.insertMessage(message);
+    // update active contacts
+    Provider.of<MainModel>(context, listen: false).getActiveContacts();
     _textEditingController.clear();
     // get messages from local db and rebuild msgs list
     setState(() {

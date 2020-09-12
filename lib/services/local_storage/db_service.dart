@@ -1,16 +1,16 @@
 import 'dart:io';
 
-import 'package:WhatsAppClone/core/models/message.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 
 import 'package:sqflite/sqflite.dart';
 
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
+import 'package:WhatsAppClone/core/models/message.dart';
 
 class DBservice {
   DBservice._();
-  // constants
+  // static name constants
   static const _kDbFileName = 'sqflite_ex.db';
   static const _kDBTableContacts = 'contacts_table';
   static const _kDBTableMsgs = 'messages_table';
@@ -40,15 +40,7 @@ class DBservice {
         dbPath,
         version: 1,
         onCreate: (Database db, int version) async {
-          await db.execute('''
-          CREATE TABLE $_kDBTableContacts(
-          id INTEGER PRIMARY KEY, 
-          displayName TEXT,
-          phoneNumber TEXT,
-          lastMsg TEXT,
-          lastMsgTime INTEGER
-          )
-        ''');
+          await _initDBtables(db);
         },
       );
       // success init db
@@ -69,6 +61,29 @@ class DBservice {
     final dbPath = join(dbFolder, _kDbFileName);
     await deleteDatabase(dbPath);
     _db = null;
+  }
+
+  // create initialise db tables (contacts and messages)
+  static Future<void> _initDBtables(Database db) async {
+    // create contacts entities table
+    await db.execute('''
+          CREATE TABLE $_kDBTableContacts(
+          id INTEGER PRIMARY KEY, 
+          displayName TEXT,
+          phoneNumber TEXT,
+          lastMsg TEXT,
+          lastMsgTime INTEGER
+          )
+        ''');
+    // create messages table
+    await db.execute('''
+          CREATE TABLE $_kDBTableMsgs(
+          id INTEGER PRIMARY KEY, 
+          foreignID INTEGER,
+          text TEXT,
+          timestamp INTEGER
+          )
+        ''');
   }
 
   /// delete contact entity from db contacts_table
@@ -102,7 +117,7 @@ class DBservice {
               "${contactEntity.displayName}",
               "${contactEntity.phoneNumber}",
               "${contactEntity.lastMsg}",
-              "${contactEntity.lastMsgTime.millisecondsSinceEpoch}"
+              "${DateTime.now().millisecondsSinceEpoch}"
             )''');
           print('create new record with id: $id');
         },
@@ -127,6 +142,7 @@ class DBservice {
   /// insert new message
   static Future<bool> insertMessage(Message message) async {
     try {
+      // insert new message to messages table
       await _db.transaction((Transaction txn) async {
         int id = await txn.rawInsert('''INSERT INTO $_kDBTableMsgs
         ( 
@@ -138,11 +154,24 @@ class DBservice {
         (
           "${message.foreignID}",
           "${message.text}",
-          "${message.timestamp}"
+          "${message.timestamp.millisecondsSinceEpoch}"
         )
         ''');
         print('create new record with id: $id');
       });
+      // update lastMsg, lastMsgTime to the related contact entity
+      int count = await _db.rawUpdate(
+        '''UPDATE $_kDBTableContacts
+                    SET lastMsg = ?,
+                    lastMsgTime = ?
+                    WHERE id = ? ''',
+        [
+          message.text,
+          message.timestamp.millisecondsSinceEpoch,
+          message.foreignID
+        ],
+      );
+      print('Updated $count records in db.');
       return true;
     } catch (e) {
       print(e);

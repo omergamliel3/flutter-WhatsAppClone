@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 
 class Message {
   final int id;
-  // referece to ContactEntity id
   final int foreignID;
   final String text;
   final DateTime timestamp;

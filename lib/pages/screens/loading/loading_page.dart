@@ -35,6 +35,7 @@ class _LoadingPageState extends State<LoadingPage>
     await PermissionHandler.requestPermissions();
     // init prefs service
     await PrefsService.initPrefs();
+    await DBservice.deleteDB();
     // init local storage sqlite db
     await DBservice.asyncInitDB();
     // init main model data

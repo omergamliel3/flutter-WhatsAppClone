@@ -1,5 +1,4 @@
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 class ContactsHandler {
@@ -11,13 +10,12 @@ class ContactsHandler {
   /// FOURTH, RETURN [ContactEntity] LIST (CONSTRUCT FROM [Contact] RAW DATA) WHICH REPRESENTS UNACTIVE CONTACTS DATA.
 
   /// get un-active contacts
-  static Future<List<ContactEntity>> getUnActiveContacts() async {
+  static Future<List<ContactEntity>> getUnActiveContacts(
+      List<ContactEntity> activeContacts) async {
     // get raw contacts from contacts service plugin
     Iterable<Contact> contacts =
         await ContactsService.getContacts(orderByGivenName: false);
     List<Contact> contactsRawData = contacts.toList();
-    // get active contact entities from local db
-    List<ContactEntity> activeContacts = await DBservice.getContactEntites();
     // if there are entities
     if (activeContacts != null && activeContacts.isNotEmpty) {
       // extract entities displayName
@@ -27,9 +25,9 @@ class ContactsHandler {
           .removeWhere((contact) => names.contains(contact.displayName));
     }
     // return ContactEntity list which represents un active contacts data
-    return contactsRawData
-        .map((e) => ContactEntity(
-            displayName: e.displayName, phoneNumber: e.phones.first.value))
-        .toList();
+    return contactsRawData.map((e) {
+      String phoneNum = e.phones.isEmpty ? '<unKnown>' : e.phones.first.value;
+      return ContactEntity(displayName: e.displayName, phoneNumber: phoneNum);
+    }).toList();
   }
 }

@@ -1,11 +1,12 @@
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
-
 import 'package:WhatsAppClone/core/provider/main.dart';
+
+import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+import 'package:WhatsAppClone/helpers/strings.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -38,10 +39,11 @@ class _ChatsPageState extends State<ChatsPage>
   // build contact list tile widget
   Widget _buildContactListTile(ContactEntity contactEntity, int index) {
     String name = contactEntity.displayName ?? 'unKnown';
-    String lastMessage = contactEntity.lastMsg ?? '';
+    String lastMessage =
+        contactEntity.lastMsg == 'null' ? '' : contactEntity.lastMsg;
     String timeAgo = contactEntity.lastMsgTime == null
         ? ''
-        : contactEntity.lastMsgTime.toString().split(' ')[1].substring(0, 5);
+        : convertDateTimeToText(contactEntity.lastMsgTime);
 
     return ListTile(
       leading: CircleAvatar(
@@ -63,8 +65,13 @@ class _ChatsPageState extends State<ChatsPage>
   // build contact chats listview
   Widget _buildContactChats() {
     return Selector<MainModel, List<ContactEntity>>(
-      selector: (context, model) => model.activeChats,
+      selector: (context, model) => model.activeContacts,
       builder: (context, data, child) {
+        // order contacts data by date time decending
+        List<ContactEntity> contacts = data;
+        contacts.sort((a, b) => a.lastMsgTime.compareTo(b.lastMsgTime));
+        contacts = contacts.reversed.toList();
+
         return Expanded(
             child: ListView.separated(
                 separatorBuilder: (context, index) {
@@ -73,9 +80,9 @@ class _ChatsPageState extends State<ChatsPage>
                     child: Divider(thickness: 2.0),
                   );
                 },
-                itemCount: data.length,
+                itemCount: contacts.length,
                 itemBuilder: (context, index) {
-                  return _buildContactListTile(data[index], index);
+                  return _buildContactListTile(contacts[index], index);
                 }));
       },
     );

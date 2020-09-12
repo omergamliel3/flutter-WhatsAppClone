@@ -21,7 +21,10 @@ class SelectContactScreen extends StatelessWidget {
         SizedBox(height: 3.0),
         Text(
           '${contactsLength.toString()} contacts',
-          style: Theme.of(context).textTheme.caption,
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(color: Colors.grey[300]),
         ),
       ],
     );
@@ -126,7 +129,7 @@ class SelectContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // get contacts datas from main model
     List<ContactEntity> contacts =
-        Provider.of<MainModel>(context).unActiveContacts;
+        Provider.of<MainModel>(context, listen: false).unActiveContacts;
     return SafeArea(
       top: false,
       child: Scaffold(

@@ -16,7 +16,7 @@ class ContactEntity {
 
   ContactEntity.fromJsonMap(Map<String, dynamic> map)
       : id = map['id'],
-        displayName = map['name'] ?? 'unKnown',
+        displayName = map['displayName'] ?? 'unKnown',
         phoneNumber = map['phoneNumber'] ?? 'unKnown',
         lastMsg = map['lastMsg'],
         lastMsgTime = DateTime.fromMillisecondsSinceEpoch(map['lastMsgTime']);
@@ -28,4 +28,9 @@ class ContactEntity {
         'lastMsg': lastMsg,
         'lastMsgTime': lastMsgTime.millisecondsSinceEpoch,
       };
+
+  @override
+  String toString() {
+    return 'Name: $displayName\nPhone: $phoneNumber\nLastMsg: $lastMsg\nLastMsgTime: $lastMsgTime';
+  }
 }
