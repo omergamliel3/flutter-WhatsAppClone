@@ -1,17 +1,19 @@
 import 'dart:io';
 
+import 'package:WhatsAppClone/core/models/message.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
 
 class DBservice {
   DBservice._();
   // constants
   static const _kDbFileName = 'sqflite_ex.db';
-  static const _kDbTableName = 'chats_table';
+  static const _kDBTableContacts = 'contacts_table';
+  static const _kDBTableMsgs = 'messages_table';
   // class attributes
   static Database _db; // db instace
   static final AsyncMemoizer _memoizer = AsyncMemoizer(); // async memoizer
@@ -38,7 +40,15 @@ class DBservice {
         dbPath,
         version: 1,
         onCreate: (Database db, int version) async {
-          await _createChatsTable(db);
+          await db.execute('''
+          CREATE TABLE $_kDBTableContacts(
+          id INTEGER PRIMARY KEY, 
+          displayName TEXT,
+          phoneNumber TEXT,
+          lastMsg TEXT,
+          lastMsgTime INTEGER
+          )
+        ''');
         },
       );
       // success init db
@@ -61,49 +71,38 @@ class DBservice {
     _db = null;
   }
 
-  // execute chats table
-  static Future<void> _createChatsTable(Database db) async {
-    await db.execute('''
-        CREATE TABLE $_kDbTableName(
-          id INTEGER PRIMARY KEY, 
-          name TEXT,
-          timestamp INTEGER,
-          messages TEXT
-          )
-        ''');
-  }
-
-  /// delete chat from db chats table
-  static Future<void> deleteChat(Chat chat) async {
+  /// delete contact entity from db contacts_table
+  static Future<void> deleteContactEntity(ContactEntity contactEntity) async {
     await _db.rawDelete('''
-    DELETE FROM $_kDbTableName
-    WHERE id = "${chat.id}"
+    DELETE FROM $_kDBTableContacts
+    WHERE id = "${contactEntity.id}"
     ''');
   }
 
-  /// Reertieves chats from db chats table
-  static Future<List<Chat>> getChats() async {
-    List<Map> jsons = await _db.rawQuery('SELECT * FROM $_kDbTableName');
-    return jsons.map((e) => Chat.fromJsonMap(e)).toList();
+  /// Reertieves contact entities from db contacts_table
+  static Future<List<ContactEntity>> getContactEntites() async {
+    List<Map> jsons = await _db.rawQuery('SELECT * FROM $_kDBTableContacts');
+    return jsons.map((e) => ContactEntity.fromJsonMap(e)).toList();
   }
 
-  /// insert new chat to chats db table
-  static Future<bool> createChat(Chat chat) async {
+  /// insert new contact entity
+  static Future<bool> insertContactEntity(ContactEntity contactEntity) async {
     try {
-      // insert new element to the table
       await _db.transaction(
         (Transaction txn) async {
           int id = await txn.rawInsert('''
-          INSERT INTO $_kDbTableName 
+          INSERT INTO $_kDBTableContacts 
           (
-          name,
-          timestamp,
-          messages)
+          displayName,
+          phoneNumber,
+          lastMsg,
+          lastMsgTime)
           VALUES
             (
-              "${chat.name}",
-              "${chat.timestamp.millisecondsSinceEpoch}", 
-              "${chat.messages}"   
+              "${contactEntity.displayName}",
+              "${contactEntity.phoneNumber}",
+              "${contactEntity.lastMsg}",
+              "${contactEntity.lastMsgTime.millisecondsSinceEpoch}"
             )''');
           print('create new record with id: $id');
         },
@@ -118,27 +117,32 @@ class DBservice {
     }
   }
 
-  /// get chat messsages
-  static Future<List<String>> getMessages(Chat chat) async {
-    List<Map> jsons = await _db
-        .rawQuery('SELECT * FROM $_kDbTableName WHERE id = ?', [chat.id]);
-    String messages = jsons.first['messages'] as String;
-    List<String> messagesList = messages.split('1+_+1').toList();
-    messagesList.removeWhere((element) => element.isEmpty);
-    return messagesList;
+  /// get messsages, related to the ContactEntity
+  static Future<List<Message>> getMessages(ContactEntity contactEntity) async {
+    List<Map> jsons = await _db.rawQuery(
+        'SELECT * FROM $_kDBTableMsgs WHERE foreignID = ?', [contactEntity.id]);
+    return jsons.map((e) => Message.fromJsonMap(e)).toList();
   }
 
-  /// insert new message to chat
-  static Future<bool> insertMessage(Chat chat, String msg) async {
+  /// insert new message
+  static Future<bool> insertMessage(Message message) async {
     try {
-      List<String> msgs = await getMessages(chat);
-      msgs.add(msg);
-
-      await _db.rawUpdate('''
-      UPDATE $_kDbTableName
-      SET messages = ?
-      WHERE id = ?
-      ''', [msgs.join('1+_+1'), chat.id]);
+      await _db.transaction((Transaction txn) async {
+        int id = await txn.rawInsert('''INSERT INTO $_kDBTableMsgs
+        ( 
+          foreignID,
+          text,
+          timestamp
+        ) 
+        VALUES
+        (
+          "${message.foreignID}",
+          "${message.text}",
+          "${message.timestamp}"
+        )
+        ''');
+        print('create new record with id: $id');
+      });
       return true;
     } catch (e) {
       print(e);

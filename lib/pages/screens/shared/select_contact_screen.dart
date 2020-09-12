@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:contacts_service/contacts_service.dart';
 
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
-
-import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/core/provider/main.dart';
 
 import 'package:WhatsAppClone/core/shared/constants.dart';
@@ -93,47 +90,43 @@ class SelectContactScreen extends StatelessWidget {
   }
 
   // build contact list tile
-  Widget _buildContactListTile(String displayName, BuildContext context) {
+  Widget _buildContactListTile(
+      ContactEntity contactEntity, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
         leading: CircleAvatar(
-          child: Text(displayName[0].toUpperCase(),
+          child: Text(contactEntity.displayName[0].toUpperCase(),
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           backgroundColor: Colors.grey,
         ),
-        title: Text(displayName),
+        title: Text(contactEntity.displayName),
         trailing: _contactMode == ContactMode.Chat
             ? SizedBox()
             : IconButton(icon: Icon(Icons.phone), onPressed: () {}),
         onTap: _contactMode == ContactMode.Chat
             ? () {
-                _createNewChat(displayName, context);
+                _createContactEntity(contactEntity, context);
               }
             : null,
       ),
     );
   }
 
-  // create new chat
-  void _createNewChat(String displayName, BuildContext context) async {
-    // new empty chat instance
-    final Chat chat =
-        Chat(name: displayName, messages: '', timestamp: DateTime.now());
-    // create new chat in db chats table
-    await DBservice.createChat(chat);
-    // get active chats in main model to update UI
-    await context.read<MainModel>().getActiveChats();
-    // activate contact relate to chat name
-    context.read<MainModel>().activeContact(chat.name);
+  // create new contactEntity
+  void _createContactEntity(
+      ContactEntity contactEntity, BuildContext context) async {
+    // activate contactEntity
+    await context.read<MainModel>().activeContact(contactEntity);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     // get contacts datas from main model
-    List<Contact> contacts = Provider.of<MainModel>(context).unActiveContacts;
+    List<ContactEntity> contacts =
+        Provider.of<MainModel>(context).unActiveContacts;
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -154,8 +147,7 @@ class SelectContactScreen extends StatelessWidget {
               physics: ScrollPhysics(),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
-                return _buildContactListTile(
-                    contacts[index].displayName, context);
+                return _buildContactListTile(contacts[index], context);
               }),
         ),
       ),

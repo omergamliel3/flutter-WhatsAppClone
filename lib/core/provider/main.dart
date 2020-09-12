@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 
 import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
-import 'package:contacts_service/contacts_service.dart';
 
 import 'package:WhatsAppClone/services/device/contacts_service.dart';
 
-import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
 
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 
 class MainModel extends ChangeNotifier {
   // contacts data
-  List<Contact> _unActiveContacts;
-  List<Contact> get unActiveContacts => List.from(_unActiveContacts);
+  List<ContactEntity> _unActiveContacts;
+  List<ContactEntity> get unActiveContacts => List.from(_unActiveContacts);
 
-  void activeContact(String name) {
-    _unActiveContacts.removeWhere(
-        (contact) => contact.displayName.toLowerCase() == name.toLowerCase());
+  Future<void> activeContact(ContactEntity contactEntity) async {
+    // create new contact in local db
+    await DBservice.insertContactEntity(contactEntity);
+    // get active contacts from local db
+    _activeChats = await DBservice.getContactEntites();
+    // remove newly added contact from unActiveContacts
+    _unActiveContacts.removeWhere((contact) =>
+        contact.displayName.toLowerCase() ==
+        contactEntity.displayName.toLowerCase());
+    // notify model change
+    notifyListeners();
   }
 
   Future<void> fetchUnActiveContacts() async {
@@ -25,12 +32,12 @@ class MainModel extends ChangeNotifier {
   }
 
   // active chats data
-  List<Chat> _activeChats = [];
-  List<Chat> get activeChats => List.from(_activeChats);
+  List<ContactEntity> _activeChats = [];
+  List<ContactEntity> get activeChats => List.from(_activeChats);
 
   /// get active chats from local db
   Future<void> getActiveChats() async {
-    _activeChats = await DBservice.getChats();
+    _activeChats = await DBservice.getContactEntites();
     notifyListeners();
   }
 
@@ -52,7 +59,7 @@ class MainModel extends ChangeNotifier {
     // get unactive chats
     _unActiveContacts = await ContactsHandler.getUnActiveContacts();
     // set active chats from local db storage
-    _activeChats = await DBservice.getChats();
+    _activeChats = await DBservice.getContactEntites();
     if (PrefsService.userName != null) {
       // set user status from prefs local storage
       _userStatus = await FirestoreService.getUserStatus(PrefsService.userName);

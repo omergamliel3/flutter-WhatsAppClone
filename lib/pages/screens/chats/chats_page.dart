@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
 
 import 'package:WhatsAppClone/core/provider/main.dart';
 
@@ -36,11 +36,12 @@ class _ChatsPageState extends State<ChatsPage>
   }
 
   // build contact list tile widget
-  Widget _buildContactListTile(Chat chat, int index) {
-    String name = chat.name;
-    String lastMessage =
-        chat.messages.isEmpty ? 'No messages' : chat.messages.split('1+_+1')[0];
-    String timeAgo = chat.timestamp.toString().split(' ')[1].substring(0, 5);
+  Widget _buildContactListTile(ContactEntity contactEntity, int index) {
+    String name = contactEntity.displayName ?? 'unKnown';
+    String lastMessage = contactEntity.lastMsg ?? '';
+    String timeAgo = contactEntity.lastMsgTime == null
+        ? ''
+        : contactEntity.lastMsgTime.toString().split(' ')[1].substring(0, 5);
 
     return ListTile(
       leading: CircleAvatar(
@@ -54,14 +55,14 @@ class _ChatsPageState extends State<ChatsPage>
       subtitle: Text(lastMessage),
       trailing: Text(timeAgo),
       onTap: () {
-        Routes.navigatePrivateChatSceen(context, chat);
+        Routes.navigatePrivateChatSceen(context, contactEntity);
       },
     );
   }
 
   // build contact chats listview
   Widget _buildContactChats() {
-    return Selector<MainModel, List<Chat>>(
+    return Selector<MainModel, List<ContactEntity>>(
       selector: (context, model) => model.activeChats,
       builder: (context, data, child) {
         return Expanded(

@@ -1,26 +1,30 @@
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/models/chat.dart';
-
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
+import 'package:WhatsAppClone/core/models/message.dart';
+
+import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+
+import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class PrivateChatPage extends StatefulWidget {
   @override
   _PrivateChatPageState createState() => _PrivateChatPageState();
 
-  final Chat chat;
-  PrivateChatPage(this.chat);
+  final ContactEntity contactEntity;
+  PrivateChatPage(this.contactEntity);
 }
 
 class _PrivateChatPageState extends State<PrivateChatPage> {
-  TextEditingController _textEditingController;
-  List<String> msgs = [];
+  TextEditingController _textEditingController; // text controller
+  Future<List<Message>> _msgs; // msgs data
 
   @override
   initState() {
     _textEditingController = TextEditingController();
-    _getMessages();
+    _msgs = DBservice.getMessages(widget.contactEntity);
     super.initState();
   }
 
@@ -67,22 +71,33 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // build messages list
   Widget _buildMsgList() {
-    return Flexible(
-        child: Scrollbar(
-            child: ListView.builder(
-      padding: const EdgeInsets.all(4.0),
-      itemCount: msgs.length,
-      itemBuilder: (context, index) {
-        return Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          child: ListTile(
-            title: Text(msgs[index]),
-            trailing: Text(index.toString()),
-          ),
-        );
+    return FutureBuilder<List<Message>>(
+      future: _msgs,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        if (snapshot.hasData) {
+          return Flexible(
+              child: Scrollbar(
+                  child: ListView.builder(
+            padding: const EdgeInsets.all(4.0),
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0)),
+                child: ListTile(
+                  title: Text(snapshot.data[index].text),
+                  trailing: Text(snapshot.data[index].timestamp.toString()),
+                ),
+              );
+            },
+          )));
+        }
+        return Center(child: SpinkitLoadingIndicator());
       },
-    )));
+    );
   }
 
   // build compose message
@@ -111,27 +126,29 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   // submitted text message
   void _onTextMsgSubmitted(String msg) async {
     if (msg == null || msg.isEmpty) return;
-    await DBservice.insertMessage(widget.chat, msg);
-    setState(() {
-      msgs.add(msg);
-    });
+    Message message = Message(
+        foreignID: widget.contactEntity.id,
+        text: msg.trim(),
+        timestamp: DateTime.now());
+    // insert message to local db
+    await DBservice.insertMessage(message);
     _textEditingController.clear();
-  }
-
-  void _getMessages() async {
-    msgs = await DBservice.getMessages(widget.chat);
-    setState(() {});
+    // get messages from local db and rebuild msgs list
+    setState(() {
+      _msgs = DBservice.getMessages(widget.contactEntity);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.chat.name),
+        title: Text(widget.contactEntity.displayName),
         actions: [
           IconButton(
             icon: Icon(Icons.call),
-            onPressed: () => UrlLauncher.launch('tel:'),
+            onPressed: () =>
+                UrlLauncher.launch('tel:${widget.contactEntity.phoneNumber}'),
           ),
           _buildPopUpMenuButton()
         ],

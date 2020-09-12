@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/models/chat.dart';
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
 
 import 'package:WhatsAppClone/core/shared/constants.dart';
 
@@ -37,7 +37,7 @@ class Routes {
       });
     } else if (settings.name == privateChat) {
       return MaterialPageRoute(builder: (context) {
-        return PrivateChatPage(Chat.fromJsonMap(arguments));
+        return PrivateChatPage(ContactEntity.fromJsonMap(arguments));
       });
     }
     return MaterialPageRoute(builder: (context) {
@@ -62,7 +62,9 @@ class Routes {
   }
 
   /// navigate private chat screen
-  static void navigatePrivateChatSceen(BuildContext context, Chat chat) {
-    Navigator.pushNamed(context, privateChat, arguments: chat.toJsonMap());
+  static void navigatePrivateChatSceen(
+      BuildContext context, ContactEntity contactEntity) {
+    Navigator.pushNamed(context, privateChat,
+        arguments: contactEntity.toJsonMap());
   }
 }
