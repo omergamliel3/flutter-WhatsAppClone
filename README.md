@@ -4,6 +4,8 @@ A WhatsApp clone project.
 
 This app is my own version for WhatsApp with Flutter. Real contacts replaced with Firebase ML kit bots.
 
+Chat with contacts (bots), chat with friends via Global chat, and upload your status.
+
 ## Screenshots
 
 -------------------
