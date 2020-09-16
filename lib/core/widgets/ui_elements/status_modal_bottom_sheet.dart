@@ -96,7 +96,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     Status status = Status(
         userName: PrefsService.userName,
         content: _textEditingController.value.text,
-        timestamp: DateTime.now());
+        timestamp: DateTime.now().toUtc());
 
     setState(() {
       _responsiveWidget = Center(

@@ -6,7 +6,7 @@ import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/core/provider/main.dart';
 
 import 'package:WhatsAppClone/helpers/navigator_helper.dart';
-import 'package:WhatsAppClone/helpers/strings.dart';
+import 'package:WhatsAppClone/helpers/datetime.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -15,25 +15,14 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatsPageState extends State<ChatsPage>
     with AutomaticKeepAliveClientMixin {
-  // build global chat listile
-  Widget _buildGlobalChat() {
-    return ListTile(
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('GL', style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(width: 4.0),
-          Icon(Icons.language)
-        ],
-      ),
-      title: Text('Chat room'),
-      subtitle: Text('last message'),
-      trailing: Text('timeago'),
-      onTap: () {
-        // navigate global chat room
-        print('navigate global chat room');
-      },
-    );
+  Widget _buildEmptyContact() {
+    return Container(
+        padding: const EdgeInsets.only(top: 20),
+        alignment: Alignment.topCenter,
+        child: Text(
+          'No active contacts',
+          style: Theme.of(context).textTheme.headline5,
+        ));
   }
 
   // build contact list tile widget
@@ -43,7 +32,7 @@ class _ChatsPageState extends State<ChatsPage>
         contactEntity.lastMsg == 'null' ? '' : contactEntity.lastMsg;
     String timeAgo = contactEntity.lastMsgTime == null
         ? ''
-        : convertDateTimeToText(contactEntity.lastMsgTime);
+        : formatDateTime(contactEntity.lastMsgTime);
 
     return ListTile(
       leading: CircleAvatar(
@@ -69,21 +58,23 @@ class _ChatsPageState extends State<ChatsPage>
       builder: (context, data, child) {
         // order contacts data by date time decending
         List<ContactEntity> contacts = data;
+        if (contacts.isEmpty) {
+          return _buildEmptyContact();
+        }
         contacts.sort((a, b) => a.lastMsgTime.compareTo(b.lastMsgTime));
         contacts = contacts.reversed.toList();
 
-        return Expanded(
-            child: ListView.separated(
-                separatorBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 70.0, right: 10),
-                    child: Divider(thickness: 2.0),
-                  );
-                },
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  return _buildContactListTile(contacts[index], index);
-                }));
+        return ListView.separated(
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 70.0, right: 10),
+                child: Divider(thickness: 2.0),
+              );
+            },
+            itemCount: contacts.length,
+            itemBuilder: (context, index) {
+              return _buildContactListTile(contacts[index], index);
+            });
       },
     );
   }
@@ -92,13 +83,7 @@ class _ChatsPageState extends State<ChatsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Column(
-        children: [
-          _buildGlobalChat(),
-          Divider(thickness: 1.5),
-          _buildContactChats()
-        ],
-      ),
+      body: _buildContactChats(),
     );
   }
 

@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
 import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
 
+import 'package:WhatsAppClone/helpers/datetime.dart';
+
 import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 
 class StatusPage extends StatefulWidget {
@@ -19,13 +21,11 @@ class StatusPage extends StatefulWidget {
 
 class _StatusPageState extends State<StatusPage>
     with AutomaticKeepAliveClientMixin {
-  bool _isLight; // theme mode
+  // theme mode
   Stream<QuerySnapshot> _statusStream; // status stream
 
   @override
   initState() {
-    // get theme mode from main model
-    _isLight = context.read<MainModel>().isLight;
     // set status stream to firestore snapshots
     _statusStream = FirebaseFirestore.instance
         .collection('users_status')
@@ -39,6 +39,7 @@ class _StatusPageState extends State<StatusPage>
     return Selector<MainModel, String>(
         selector: (context, model) => model.userStatus,
         builder: (context, value, child) {
+          bool _isLight = Theme.of(context).brightness == Brightness.light;
           return ListTile(
             leading: CircleAvatar(
               backgroundColor:
@@ -61,9 +62,8 @@ class _StatusPageState extends State<StatusPage>
 
   // build users status widget
   Widget _buildStatus(Status status) {
-    String timeAgo = status.timestamp.toString().split(' ')[1].substring(0, 5);
-    bool allowDelete = status.userName.toLowerCase().trim() ==
-        PrefsService.userName.toLowerCase().trim();
+    String timeAgo = formatDateTime(status.timestamp);
+    bool allowDelete = PrefsService.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,

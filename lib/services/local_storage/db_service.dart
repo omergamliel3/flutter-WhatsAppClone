@@ -81,6 +81,7 @@ class DBservice {
           id INTEGER PRIMARY KEY, 
           foreignID INTEGER,
           text TEXT,
+          fromUser INTEGER,
           timestamp INTEGER
           )
         ''');
@@ -148,12 +149,14 @@ class DBservice {
         ( 
           foreignID,
           text,
+          fromUser,
           timestamp
         ) 
         VALUES
         (
           "${message.foreignID}",
           "${message.text}",
+          "${message.fromUser ? 0 : 1}",
           "${message.timestamp.millisecondsSinceEpoch}"
         )
         ''');

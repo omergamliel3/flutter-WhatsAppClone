@@ -9,8 +9,9 @@ import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/core/models/message.dart';
 
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+import 'package:WhatsAppClone/core/shared/constants.dart';
 
-import 'package:WhatsAppClone/helpers/strings.dart';
+import 'package:WhatsAppClone/helpers/datetime.dart';
 
 import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
@@ -89,21 +90,46 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
             padding: const EdgeInsets.all(4.0),
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-              String timestamp =
-                  convertDateTimeToText(snapshot.data[index].timestamp);
-              return Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: ListTile(
-                  title: Text(snapshot.data[index].text),
-                  trailing: Text(timestamp),
-                ),
-              );
+              return _buildMessage(snapshot.data[index]);
             },
           )));
         }
         return Center(child: SpinkitLoadingIndicator());
       },
+    );
+  }
+
+  // build message listile widget
+  Widget _buildMessage(Message message) {
+    String timestamp = formatDateTime(message.timestamp);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment:
+            message.fromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Container(
+              child: RichText(
+                text: TextSpan(children: [
+                  TextSpan(text: message.text),
+                  TextSpan(text: '  '),
+                  TextSpan(
+                      text: timestamp,
+                      style: TextStyle(
+                          color: Colors.grey[300],
+                          fontStyle: FontStyle.italic,
+                          fontSize: 12.0))
+                ]),
+              ),
+              padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+              decoration: BoxDecoration(
+                  color: message.fromUser ? kPrimaryColor : Colors.grey[800],
+                  borderRadius: BorderRadius.circular(10.0)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -136,6 +162,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
     Message message = Message(
         foreignID: widget.contactEntity.id,
         text: msg.trim(),
+        fromUser: true,
         timestamp: DateTime.now());
     // insert message to local db
     await DBservice.insertMessage(message);

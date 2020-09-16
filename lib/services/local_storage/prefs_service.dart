@@ -30,6 +30,11 @@ class PrefsService {
     _sharedPreferences.setString(_kUserNameKey, username.trim());
   }
 
+  /// return [true/false] if [name argument] is the current username (validation)
+  static bool allowDelete(String name) {
+    return name.trim().toLowerCase() == userName.trim().toLowerCase();
+  }
+
   /// username getter
   static String get userName => _sharedPreferences.getString(_kUserNameKey);
 

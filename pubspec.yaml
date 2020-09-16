@@ -21,13 +21,15 @@ dependencies:
   firebase_auth: ^0.18.0+1
   cloud_firestore: ^0.14.0+2
   firebase_core: ^0.5.0
+  # dialogflow chat bot
+  flutter_dialogflow: ^0.1.3
   # state managment
   provider: ^4.3.2+1
   # storage
   shared_preferences: ^0.5.10
   sqflite: ^1.3.1+1
   # helpers
-  timeago: ^2.0.27
+  intl: ^0.16.1
   android_intent: ^0.3.7+3
   url_launcher: ^5.5.0
   fluttertoast: ^7.0.4

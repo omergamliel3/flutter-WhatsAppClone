@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               title: 'WhatsApp',
               theme: lightTheme,
               darkTheme: darkTheme,
-              themeMode: value ?? ThemeMode.system,
+              themeMode: value ?? ThemeMode.dark,
               onGenerateRoute: Routes.onGenerateRoute,
             );
           },
