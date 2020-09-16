@@ -20,15 +20,17 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<MainModel>(
       create: (_) => MainModel(),
       builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'WhatsApp',
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          themeMode: ThemeMode.dark,
-          routes: Routes.routes,
-          onGenerateRoute: (RouteSettings settings) {
-            return Routes.onGenerateRoute(settings, context);
+        return Selector<MainModel, bool>(
+          selector: (context, model) => model.isLight,
+          builder: (context, value, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'WhatsApp',
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: value ?? ThemeMode.system,
+              onGenerateRoute: Routes.onGenerateRoute,
+            );
           },
         );
       },

@@ -20,29 +20,43 @@ class Routes {
   static const String privateChat = '/privateChat';
   static const String contacts = '/contatcs';
 
-  // top level app routes
-  static final routes = <String, WidgetBuilder>{
-    splash: (BuildContext context) => LoadingPage(),
-    login: (BuildContext context) => LoginPage(),
-    main: (BuildContext context) => MainPage()
-  };
-
-  // on generate named routes handler
-  static Route<dynamic> onGenerateRoute(
-      RouteSettings settings, BuildContext context) {
-    Map<String, dynamic> arguments = settings.arguments;
-    if (settings.name == contacts) {
-      return MaterialPageRoute(builder: (context) {
-        return SelectContactScreen(arguments['mode']);
-      });
-    } else if (settings.name == privateChat) {
-      return MaterialPageRoute(builder: (context) {
-        return PrivateChatPage(ContactEntity.fromJsonMap(arguments));
-      });
+  // top level app routes settings
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case main:
+        return MaterialPageRoute(builder: (context) {
+          return MainPage();
+        });
+        break;
+      case splash:
+        return MaterialPageRoute(builder: (context) {
+          return LoadingPage();
+        });
+        break;
+      case login:
+        return MaterialPageRoute(builder: (context) {
+          return LoginPage();
+        });
+        break;
+      case contacts:
+        // pass mode argument
+        Map<String, dynamic> arguments = settings.arguments;
+        return MaterialPageRoute(builder: (context) {
+          return SelectContactScreen(arguments['mode']);
+        });
+        break;
+      case privateChat:
+        // pass contact entity argument
+        Map<String, dynamic> arguments = settings.arguments;
+        return MaterialPageRoute(builder: (context) {
+          return PrivateChatPage(ContactEntity.fromJsonMap(arguments));
+        });
+        break;
+      default:
+        return MaterialPageRoute(builder: (context) {
+          return MainPage();
+        });
     }
-    return MaterialPageRoute(builder: (context) {
-      return MainPage();
-    });
   }
 
   /// navigate main page

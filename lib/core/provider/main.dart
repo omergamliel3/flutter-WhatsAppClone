@@ -64,6 +64,6 @@ class MainModel extends ChangeNotifier {
       _userStatus = await FirestoreService.getUserStatus(PrefsService.userName);
     }
     // set isLight attribute
-    _isLight = Theme.of(context).brightness == Brightness.light;
+    _isLight = null;
   }
 }
