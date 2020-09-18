@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
+import '../../../services/network/connectivity.dart';
+
 import '../../../services/locator.dart';
 import '../../../services/firebase/firestore_service.dart';
 import '../../../services/firebase/auth_service.dart';
@@ -26,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   final _prefsService = locator<PrefsService>();
   final authService = locator<AuthService>();
   final firestoreService = locator<FirestoreService>();
-
+  final connectivityService = locator<ConnectivityService>();
   // form global keys
   GlobalKey<FormState> _formKeyAuth;
   GlobalKey<FormState> _formKeyUserName;
@@ -220,6 +222,13 @@ class _LoginPageState extends State<LoginPage> {
       });
       // save phone num value
       _formKeyAuth.currentState.save();
+      if (!connectivityService.connectivity) {
+        showNoConnectionDialog(context);
+        setState(() {
+          _responsiveWidget = _buildPhoneNumForm();
+        });
+        return;
+      }
       // register user
       if (foundation.kDebugMode) {
         await authService.mockRegisterUser();
@@ -235,8 +244,6 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _responsiveWidget = _buildPhoneNumForm();
         });
-        // show alert dialog
-        showFailedAuthDialog(context);
       }
     }
   }
@@ -249,6 +256,13 @@ class _LoginPageState extends State<LoginPage> {
         _responsiveWidget = _buildProgressBarIndicator();
       });
       _formKeyUserName.currentState.save();
+      if (!connectivityService.connectivity) {
+        showNoConnectionDialog(context);
+        setState(() {
+          _responsiveWidget = _buildUserNameForm();
+        });
+        return;
+      }
       var validateUserWithDB =
           await firestoreService.validateUserName(_userName.trim());
       if (!validateUserWithDB) {

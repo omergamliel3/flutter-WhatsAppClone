@@ -3,20 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../core/models/status.dart';
 
-import '../network/connectivity_helper.dart';
-
 class FirestoreService {
   final _kUsersStatusCollection = 'users_status';
   final _kUserNamesCollection = 'user_names';
 
   /// add new user status to firestore db collection
   Future<bool> uploadStatus(Status status) async {
-    // checks for internet connectivity
-    var connectivity = await ConnectivityService.internetConnectivity();
-    // return false if there is no connectivity
-    if (!connectivity) {
-      return false;
-    }
     try {
       // add new status object to users_status db collection
       var docRef = await FirebaseFirestore.instance
@@ -33,12 +25,6 @@ class FirestoreService {
 
   /// delete status from firestore db users_status collection
   Future<bool> deleteStatus(Status status) async {
-    // checks for internet connectivity
-    var connectivity = await ConnectivityService.internetConnectivity();
-    // return false if there is no connectivity
-    if (!connectivity) {
-      return false;
-    }
     try {
       await FirebaseFirestore.instance
           .collection(_kUsersStatusCollection)
@@ -54,12 +40,6 @@ class FirestoreService {
   /// get the most recent user status, if there is one
   /// return null if there is no status
   Future<String> getUserStatus(String username) async {
-    // checks for internet connectivity
-    var connectivity = await ConnectivityService.internetConnectivity();
-    // return null if there is no connectivity
-    if (!connectivity) {
-      return null;
-    }
     try {
       // get all user status, order by timestamp (descending)
       var querySnapshot = await FirebaseFirestore.instance
@@ -90,12 +70,6 @@ class FirestoreService {
 
   /// add new username to firestore db user_names collection
   Future<bool> addUserName(String username) async {
-    // checks for internet connectivity
-    var connectivity = await ConnectivityService.internetConnectivity();
-    // return false if there is no connectivity
-    if (!connectivity) {
-      return false;
-    }
     try {
       // add new username object to user_names db collection
       var docRef = await FirebaseFirestore.instance
@@ -113,12 +87,6 @@ class FirestoreService {
   /// compare username argument with user_names collection
   /// returns true if do not exists in collection, false if exists
   Future<bool> validateUserName(String username) async {
-    // checks for internet connectivity
-    var connectivity = await ConnectivityService.internetConnectivity();
-    // return false if there is no connectivity
-    if (!connectivity) {
-      return false;
-    }
     try {
       // get query db collection
       var query = await FirebaseFirestore.instance

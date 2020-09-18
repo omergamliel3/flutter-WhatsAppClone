@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'services/locator.dart';
-import 'services/network/connectivity_helper.dart';
 
 import 'core/provider/main.dart';
 import 'core/shared/theme.dart';
@@ -21,27 +20,22 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<MainModel>(create: (_) => MainModel()),
-        StreamProvider<ConnectivityState>(
-            create: (_) => ConnectivityService().connectivityStream)
-      ],
-      builder: (context, child) {
-        return Selector<MainModel, bool>(
-          selector: (context, model) => model.isLight,
-          builder: (context, value, child) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'WhatsApp',
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: value ?? ThemeMode.dark,
-              onGenerateRoute: Routes.onGenerateRoute,
-            );
-          },
-        );
-      },
-    );
+    return ChangeNotifierProvider<MainModel>(
+        create: (_) => MainModel(),
+        builder: (context, child) {
+          return Selector<MainModel, bool>(
+            selector: (context, model) => model.isLight,
+            builder: (context, value, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'WhatsApp',
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: value ?? ThemeMode.dark,
+                onGenerateRoute: Routes.onGenerateRoute,
+              );
+            },
+          );
+        });
   }
 }

@@ -16,6 +16,21 @@ void showUserIsTakenDialog(BuildContext context) {
   );
 }
 
+void showNoConnectionDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('THERE IS NO INTERNET CONNECTION'),
+        content: Text('Please connect your device to network'),
+        actions: [
+          FlatButton(child: Text('OK'), onPressed: () => Navigator.pop(context))
+        ],
+      );
+    },
+  );
+}
+
 // show authentication failed dialog
 void showFailedAuthDialog(BuildContext context) {
   showDialog(

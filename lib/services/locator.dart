@@ -7,6 +7,7 @@ import 'firebase/firestore_service.dart';
 import 'firebase/auth_service.dart';
 import 'local_storage/prefs_service.dart';
 import 'local_storage/db_service.dart';
+import 'network/connectivity.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -18,4 +19,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => DialogFlowAPI());
   locator.registerLazySingleton(() => ContactsHandler());
+  locator.registerLazySingleton(() => ConnectivityService());
 }

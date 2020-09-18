@@ -205,7 +205,9 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   // submit message response from DialogFlow API
   void evokeMsgResponse(String query) async {
     var msgResponse = await dialogflowAPI.response(query);
-    _onTextMsgSubmitted(msgResponse, fromUser: false);
+    if (msgResponse != null && msgResponse.isNotEmpty) {
+      _onTextMsgSubmitted(msgResponse, fromUser: false);
+    }
   }
 
   // animate to bottom of messages listview

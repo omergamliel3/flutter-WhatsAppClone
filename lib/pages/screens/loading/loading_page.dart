@@ -9,7 +9,7 @@ import '../../../core/provider/main.dart';
 
 import '../../../services/local_storage/prefs_service.dart';
 import '../../../services/local_storage/db_service.dart';
-
+import '../../../services/network/connectivity.dart';
 import '../../../helpers/navigator_helper.dart';
 
 import '../../../core/shared/constants.dart';
@@ -35,6 +35,7 @@ class _LoadingPageState extends State<LoadingPage>
     final permission = locator<PermissionService>();
     final prefs = locator<PrefsService>();
     final localDB = locator<DBservice>();
+    final connectivity = locator<ConnectivityService>();
     // request device permissions
     await permission.requestPermissions();
     // init prefs service
