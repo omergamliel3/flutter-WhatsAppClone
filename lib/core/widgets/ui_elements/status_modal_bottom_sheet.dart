@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/core/models/status.dart';
-import 'package:WhatsAppClone/core/provider/main.dart';
+import '../../models/status.dart';
+import '../../provider/main.dart';
 
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import '../../../services/firebase/firestore_service.dart';
+import '../../../services/local_storage/prefs_service.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:WhatsAppClone/core/alerts/toast.dart';
+import '../../alerts/toast.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import 'spinkit_loading_indicator.dart';
 
 // parent container border radius
 final borderRadius = RoundedRectangleBorder(
@@ -60,7 +60,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
 
   // build status text field
   Widget _buildTextField(BuildContext context) {
-    final bool isLight = Theme.of(context).brightness == Brightness.light;
+    final isLight = Theme.of(context).brightness == Brightness.light;
     return Container(
       height: 50,
       alignment: Alignment.center,
@@ -93,7 +93,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
   void _updateStatus() async {
     if (_textEditingController.value.text == null ||
         _textEditingController.value.text.isEmpty) return;
-    Status status = Status(
+    var status = Status(
         userName: PrefsService.userName,
         content: _textEditingController.value.text,
         timestamp: DateTime.now().toUtc());
@@ -105,7 +105,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     });
 
     // upload status to firestore db
-    bool upload = await FirestoreService.uploadStatus(status);
+    var upload = await FirestoreService.uploadStatus(status);
     if (upload) {
       // update user status in main model
       context.read<MainModel>().updateUserStatus(status.content);

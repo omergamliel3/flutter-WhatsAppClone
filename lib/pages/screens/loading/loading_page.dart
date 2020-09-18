@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/services/device/permission_handler.dart';
+import '../../../services/device/permission_handler.dart';
 
-import 'package:WhatsAppClone/core/provider/main.dart';
+import '../../../core/provider/main.dart';
 
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+import '../../../services/local_storage/prefs_service.dart';
+import '../../../services/local_storage/db_service.dart';
 
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+import '../../../helpers/navigator_helper.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../../../core/shared/constants.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -93,7 +93,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   @override
   Widget build(BuildContext context) {
-    bool isLight = Theme.of(context).brightness == Brightness.light;
+    var isLight = Theme.of(context).brightness == Brightness.light;
     return SafeArea(
       top: false,
       child: Scaffold(

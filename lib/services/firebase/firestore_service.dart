@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:WhatsAppClone/core/models/status.dart';
+import '../../core/models/status.dart';
 
-import 'package:WhatsAppClone/helpers/connectivity_helper.dart';
+import '../../helpers/connectivity_helper.dart';
 
 class FirestoreService {
   FirestoreService._();
@@ -12,7 +13,7 @@ class FirestoreService {
   /// add new user status to firestore db collection
   static Future<bool> uploadStatus(Status status) async {
     // checks for internet connectivity
-    bool connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityHelper.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
@@ -25,16 +26,16 @@ class FirestoreService {
 
       print('created new firestore recored with id: ${docRef.id}');
       return true;
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e);
       return false;
     }
   }
 
-  /// delete status from firestore db [users_status] collection
+  /// delete status from firestore db users_status collection
   static Future<bool> deleteStatus(Status status) async {
     // checks for internet connectivity
-    bool connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityHelper.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
@@ -45,7 +46,7 @@ class FirestoreService {
           .doc(status.id)
           .delete();
       return true;
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e);
       return false;
     }
@@ -55,14 +56,14 @@ class FirestoreService {
   /// return null if there is no status
   static Future<String> getUserStatus(String username) async {
     // checks for internet connectivity
-    bool connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityHelper.internetConnectivity();
     // return null if there is no connectivity
     if (!connectivity) {
       return null;
     }
     try {
       // get all user status, order by timestamp (descending)
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      var querySnapshot = await FirebaseFirestore.instance
           .collection(_kUsersStatusCollection)
           .orderBy('timestamp', descending: true)
           .get();
@@ -82,16 +83,16 @@ class FirestoreService {
       return null;
     }
     // return null if error has occurred
-    catch (e) {
+    on FirebaseException catch (e) {
       print(e);
       return null;
     }
   }
 
-  /// add new username to firestore db [user_names] collection
+  /// add new username to firestore db user_names collection
   static Future<bool> addUserName(String username) async {
     // checks for internet connectivity
-    bool connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityHelper.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
@@ -104,38 +105,39 @@ class FirestoreService {
 
       print('created new firestore recored with id: ${docRef.id}');
       return true;
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e);
       return false;
     }
   }
 
-  /// compare [username] argument with [user_names] collection
-  /// returns [true] if do not exists in collection, [false] if exists
+  /// compare username argument with user_names collection
+  /// returns true if do not exists in collection, false if exists
   static Future<bool> validateUserName(String username) async {
     // checks for internet connectivity
-    bool connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityHelper.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
     }
     try {
       // get query db collection
-      QuerySnapshot query = await FirebaseFirestore.instance
+      var query = await FirebaseFirestore.instance
           .collection(_kUserNamesCollection)
           .get();
       // get query docs
-      List<QueryDocumentSnapshot> usernames = query.docs;
+      var usernames = query.docs;
       // username flag
-      bool flag = false;
+      var flag = false;
       // iterate usernames query docs list
-      usernames.forEach((element) {
-        String elementName = element.data()['username'];
-        if (elementName.toLowerCase() == username.toLowerCase()) {
+      for (var user in usernames) {
+        var name = user.data()['username'] as String;
+        if (name.toLowerCase() == username.toLowerCase()) {
           flag = true;
-          return;
+          break;
         }
-      });
+      }
+
       // username is taken, not valid.
       if (flag) {
         return false;
@@ -144,7 +146,7 @@ class FirestoreService {
       return true;
     }
     // return false if catch error
-    catch (e) {
+    on FirebaseException catch (e) {
       print(e);
       return false;
     }

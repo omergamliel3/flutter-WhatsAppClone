@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/core/models/contact_entity.dart';
-import 'package:WhatsAppClone/core/provider/main.dart';
+import '../../../core/models/contact_entity.dart';
+import '../../../core/provider/main.dart';
 
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
-import 'package:WhatsAppClone/helpers/datetime.dart';
+import '../../../helpers/navigator_helper.dart';
+import '../../../helpers/datetime.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -27,10 +27,10 @@ class _ChatsPageState extends State<ChatsPage>
 
   // build contact list tile widget
   Widget _buildContactListTile(ContactEntity contactEntity, int index) {
-    String name = contactEntity.displayName ?? 'unKnown';
-    String lastMessage =
+    var name = contactEntity.displayName ?? 'unKnown';
+    var lastMessage =
         contactEntity.lastMsg == 'null' ? '' : contactEntity.lastMsg;
-    String timeAgo = contactEntity.lastMsgTime == null
+    var timeAgo = contactEntity.lastMsgTime == null
         ? ''
         : formatDateTime(contactEntity.lastMsgTime);
 
@@ -57,7 +57,7 @@ class _ChatsPageState extends State<ChatsPage>
       selector: (context, model) => model.activeContacts,
       builder: (context, data, child) {
         // order contacts data by date time decending
-        List<ContactEntity> contacts = data;
+        var contacts = data;
         if (contacts.isEmpty) {
           return _buildEmptyContact();
         }

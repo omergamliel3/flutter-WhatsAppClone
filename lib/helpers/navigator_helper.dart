@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/models/contact_entity.dart';
+import '../core/models/contact_entity.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../core/shared/constants.dart';
 
-import 'package:WhatsAppClone/pages/main/main_page.dart';
-import 'package:WhatsAppClone/pages/screens/shared/select_contact_screen.dart';
-import 'package:WhatsAppClone/pages/screens/chats/private_chat_page.dart';
-import 'package:WhatsAppClone/pages/screens/login/login_page.dart';
-import 'package:WhatsAppClone/pages/screens/loading/loading_page.dart';
+import '../pages/main/main_page.dart';
+import '../pages/screens/shared/select_contact_screen.dart';
+import '../pages/screens/chats/private_chat_page.dart';
+import '../pages/screens/login/login_page.dart';
+import '../pages/screens/loading/loading_page.dart';
 
 class Routes {
   Routes._();

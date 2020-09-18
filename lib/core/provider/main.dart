@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
+import '../../services/device/contacts_service.dart';
+import '../../services/firebase/firestore_service.dart';
+import '../../services/local_storage/db_service.dart';
+import '../../services/local_storage/prefs_service.dart';
 
-import 'package:WhatsAppClone/services/device/contacts_service.dart';
-
-import 'package:WhatsAppClone/core/models/contact_entity.dart';
-
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import '../models/contact_entity.dart';
 
 class MainModel extends ChangeNotifier {
   // contacts data

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:WhatsAppClone/core/provider/main.dart';
-import 'package:WhatsAppClone/core/shared/theme.dart';
+import 'core/provider/main.dart';
+import 'core/shared/theme.dart';
 
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+import 'helpers/navigator_helper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

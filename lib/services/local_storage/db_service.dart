@@ -5,8 +5,8 @@ import 'package:async/async.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:WhatsAppClone/core/models/contact_entity.dart';
-import 'package:WhatsAppClone/core/models/message.dart';
+import '../../core/models/contact_entity.dart';
+import '../../core/models/message.dart';
 
 class DBservice {
   DBservice._();
@@ -39,13 +39,13 @@ class DBservice {
       _db = await openDatabase(
         dbPath,
         version: 1,
-        onCreate: (Database db, int version) async {
+        onCreate: (db, version) async {
           await _initDBtables(db);
         },
       );
       // success init db
       return true;
-    } catch (e) {
+    } on DatabaseException catch (e) {
       // failed to init db
       print(e);
       return false;
@@ -105,8 +105,8 @@ class DBservice {
   static Future<bool> insertContactEntity(ContactEntity contactEntity) async {
     try {
       await _db.transaction(
-        (Transaction txn) async {
-          int id = await txn.rawInsert('''
+        (txn) async {
+          var id = await txn.rawInsert('''
           INSERT INTO $_kDBTableContacts 
           (
           displayName,
@@ -126,7 +126,7 @@ class DBservice {
 
       // success created new chat in db chats table
       return true;
-    } catch (e) {
+    } on DatabaseException catch (e) {
       print(e);
       // failed to create new chat in db chats table
       return false;
@@ -144,8 +144,8 @@ class DBservice {
   static Future<bool> insertMessage(Message message) async {
     try {
       // insert new message to messages table
-      await _db.transaction((Transaction txn) async {
-        int id = await txn.rawInsert('''INSERT INTO $_kDBTableMsgs
+      await _db.transaction((txn) async {
+        var id = await txn.rawInsert('''INSERT INTO $_kDBTableMsgs
         ( 
           foreignID,
           text,
@@ -163,7 +163,7 @@ class DBservice {
         print('create new record with id: $id');
       });
       // update lastMsg, lastMsgTime to the related contact entity
-      int count = await _db.rawUpdate(
+      var count = await _db.rawUpdate(
         '''UPDATE $_kDBTableContacts
                     SET lastMsg = ?,
                     lastMsgTime = ?
@@ -176,7 +176,7 @@ class DBservice {
       );
       print('Updated $count records in db.');
       return true;
-    } catch (e) {
+    } on DatabaseException catch (e) {
       print(e);
       return false;
     }

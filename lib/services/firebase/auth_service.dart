@@ -2,28 +2,26 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import '../local_storage/prefs_service.dart';
 
 class AuthService {
   AuthService._();
 
   /// register user with phone number [FirebaseAuth]
   static Future registerUser(String mobile, BuildContext context) async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
+    var _auth = FirebaseAuth.instance;
 
     await _auth.verifyPhoneNumber(
       phoneNumber: mobile,
       timeout: Duration(minutes: 1),
-      verificationCompleted: (PhoneAuthCredential authCredential) {
+      verificationCompleted: (authCredential) {
         print('verificationCompleted');
         _auth.signInWithCredential(authCredential).then((_) {
           // save authentication in prefs service
           PrefsService.saveAuthentication(auth: true);
-        }).catchError((e) {
-          print(e);
-        });
+        }).catchError(print);
       },
-      verificationFailed: (FirebaseAuthException authException) {
+      verificationFailed: (authException) {
         print('verificationFailed');
         showDialog(
           context: context,
@@ -35,9 +33,9 @@ class AuthService {
           },
         );
       },
-      codeSent: (String verificationId, int forceResendingToken) {
+      codeSent: (verificationId, forceResendingToken) {
         print('codeSent');
-        TextEditingController _codeController = TextEditingController();
+        var _codeController = TextEditingController();
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -56,16 +54,14 @@ class AuthService {
                 FlatButton(
                   child: Text('DONE'),
                   onPressed: () {
-                    FirebaseAuth auth = FirebaseAuth.instance;
-                    String smsCode = _codeController.text.trim();
-                    AuthCredential _credential = PhoneAuthProvider.credential(
+                    var auth = FirebaseAuth.instance;
+                    var smsCode = _codeController.text.trim();
+                    var _credential = PhoneAuthProvider.credential(
                         verificationId: verificationId, smsCode: smsCode);
                     auth
                         .signInWithCredential(_credential)
                         .then((_) {})
-                        .catchError((e) {
-                      print(e);
-                    });
+                        .catchError(print);
                   },
                 )
               ],
@@ -73,9 +69,9 @@ class AuthService {
           },
         );
       },
-      codeAutoRetrievalTimeout: (String verificationId) {
+      codeAutoRetrievalTimeout: (verificationId) {
         print('codeAutoRetrievalTimeout');
-        print('Timeout ' + verificationId);
+        print('Timeout $verificationId');
       },
     );
   }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../../core/shared/constants.dart';
 
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+import '../../helpers/navigator_helper.dart';
 
-import 'package:WhatsAppClone/pages/screens/calls/calls_page.dart';
-import 'package:WhatsAppClone/pages/screens/chats/chats_page.dart';
-import 'package:WhatsAppClone/pages/screens/status/status_page.dart';
-import 'package:WhatsAppClone/pages/screens/camera/camera_page.dart';
+import '../screens/calls/calls_page.dart';
+import '../screens/chats/chats_page.dart';
+import '../screens/status/status_page.dart';
+import '../screens/camera/camera_page.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
+import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -72,13 +72,13 @@ class _MainPageState extends State<MainPage>
   void _onPressedFAB() {
     if (_pageIndex == 1) {
       // navigate contact screen on CHAT MODE
-      Routes.navigateContactScreen(context, ContactMode.Chat);
+      Routes.navigateContactScreen(context, ContactMode.chat);
     } else if (_pageIndex == 2) {
       // show status modal bottom sheet
       showStatusModalBottomSheet(context);
     } else {
       // navigate contact screen on CALLS MODE
-      Routes.navigateContactScreen(context, ContactMode.Calls);
+      Routes.navigateContactScreen(context, ContactMode.calls);
     }
   }
 

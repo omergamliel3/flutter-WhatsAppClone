@@ -31,6 +31,7 @@ class ContactEntity {
 
   @override
   String toString() {
-    return 'Name: $displayName\nPhone: $phoneNumber\nLastMsg: $lastMsg\nLastMsgTime: $lastMsgTime';
+    return '''Name: $displayName\nPhone: $phoneNumber
+    \nLastMsg: $lastMsg\nLastMsgTime: $lastMsgTime''';
   }
 }

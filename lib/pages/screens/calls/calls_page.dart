@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:call_log/call_log.dart';
 
 class CallsPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _CallsPageState extends State<CallsPage>
 
   // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry) {
-    String name = callLogEntry.name[0] ?? 'Unknown';
+    var name = callLogEntry.name[0] ?? 'Unknown';
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -35,7 +35,7 @@ class _CallsPageState extends State<CallsPage>
       trailing: Icon(Icons.call),
       onTap: () {
         // launch device phone call
-        UrlLauncher.launch('tel:${callLogEntry.number}');
+        url_launcher.launch('tel:${callLogEntry.number}');
       },
     );
   }
@@ -69,10 +69,9 @@ class _CallsPageState extends State<CallsPage>
     return Scaffold(
         body: FutureBuilder<Iterable<CallLogEntry>>(
       future: _callLogFuture,
-      builder: (BuildContext context,
-          AsyncSnapshot<Iterable<CallLogEntry>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<CallLogEntry> callLogsData = snapshot.data.toList();
+          var callLogsData = snapshot.data.toList();
           if (callLogsData.length == 0) {
             return _buildEmptyCallLogs();
           }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/core/models/contact_entity.dart';
-import 'package:WhatsAppClone/core/provider/main.dart';
+import '../../../core/models/contact_entity.dart';
+import '../../../core/provider/main.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../../../core/shared/constants.dart';
 
 class SelectContactScreen extends StatelessWidget {
   //
@@ -105,10 +105,10 @@ class SelectContactScreen extends StatelessWidget {
           backgroundColor: Colors.grey,
         ),
         title: Text(contactEntity.displayName),
-        trailing: _contactMode == ContactMode.Chat
+        trailing: _contactMode == ContactMode.chat
             ? SizedBox()
             : IconButton(icon: Icon(Icons.phone), onPressed: () {}),
-        onTap: _contactMode == ContactMode.Chat
+        onTap: _contactMode == ContactMode.chat
             ? () {
                 _createContactEntity(contactEntity, context);
               }
@@ -128,7 +128,7 @@ class SelectContactScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // get contacts datas from main model
-    List<ContactEntity> contacts =
+    var contacts =
         Provider.of<MainModel>(context, listen: false).unActiveContacts;
     return SafeArea(
       top: false,

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' as Foundation;
+import 'package:flutter/foundation.dart' as foundation;
 
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
-import 'package:WhatsAppClone/services/firebase/auth_service.dart';
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
+import '../../../services/firebase/firestore_service.dart';
+import '../../../services/firebase/auth_service.dart';
+import '../../../services/local_storage/prefs_service.dart';
 
-import 'package:WhatsAppClone/helpers/navigator_helper.dart';
+import '../../../helpers/navigator_helper.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../../../core/shared/constants.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
-import 'package:WhatsAppClone/pages/screens/login/widgets/dialogs.dart';
-import 'package:WhatsAppClone/pages/screens/login/widgets/whatapp_image.dart';
+import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import 'widgets/dialogs.dart';
+import 'widgets/whatapp_image.dart';
 
-enum FormMode { PhoneNum, UserName }
+enum FormMode { phoneNum, userName }
 
 class LoginPage extends StatefulWidget {
   @override
@@ -60,14 +60,14 @@ class _LoginPageState extends State<LoginPage> {
                 borderSide: BorderSide(
                     width: .7, color: Theme.of(context).accentColor))),
         keyboardType: TextInputType.phone,
-        validator: (String value) {
+        validator: (value) {
           if (!value.contains(
               RegExp(r'^\+?(972|0)(\-)?0?(([23489]{1}\d{7})|[5]{1}\d{8})$'))) {
             return 'Invalid phone number';
           }
           return null;
         },
-        onSaved: (String value) {
+        onSaved: (value) {
           _phoneNum = value;
         });
   }
@@ -88,14 +88,14 @@ class _LoginPageState extends State<LoginPage> {
                 borderSide: BorderSide(
                     width: .7, color: Theme.of(context).accentColor))),
         keyboardType: TextInputType.text,
-        validator: (String value) {
+        validator: (value) {
           if (!value.contains(
               RegExp(r"""^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$"""))) {
             return 'Invalid username';
           }
           return null;
         },
-        onSaved: (String value) {
+        onSaved: (value) {
           _userName = value;
         });
   }
@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
   // build Form phone num auth
   Widget _buildPhoneNumForm() {
     _formKeyAuth = GlobalKey<FormState>();
-    _formMode = FormMode.PhoneNum;
+    _formMode = FormMode.phoneNum;
     return Form(
       key: _formKeyAuth,
       child: Container(
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
   // build user name form
   Widget _buildUserNameForm() {
     _formKeyUserName = GlobalKey<FormState>();
-    _formMode = FormMode.UserName;
+    _formMode = FormMode.userName;
     return Form(
       key: _formKeyUserName,
       child: Container(
@@ -196,9 +196,9 @@ class _LoginPageState extends State<LoginPage> {
 
   // submit form according to formMode [PhoneNum/UserName]
   void _submitForm() {
-    if (_formMode == FormMode.PhoneNum) {
+    if (_formMode == FormMode.phoneNum) {
       _submitPhoneNumForm();
-    } else if (_formMode == FormMode.UserName) {
+    } else if (_formMode == FormMode.userName) {
       _submitUserNameForm();
     }
   }
@@ -213,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
       // save phone num value
       _formKeyAuth.currentState.save();
       // register user
-      if (Foundation.kDebugMode) {
+      if (foundation.kDebugMode) {
         await AuthService.mockRegisterUser();
       } else {
         await AuthService.registerUser(_phoneNum, context);
@@ -241,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
         _responsiveWidget = _buildProgressBarIndicator();
       });
       _formKeyUserName.currentState.save();
-      bool validateUserWithDB =
+      var validateUserWithDB =
           await FirestoreService.validateUserName(_userName.trim());
       if (!validateUserWithDB) {
         setState(() {

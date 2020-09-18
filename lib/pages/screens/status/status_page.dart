@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/provider/main.dart';
-import 'package:WhatsAppClone/core/models/status.dart';
+import '../../../core/provider/main.dart';
+import '../../../core/models/status.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import 'package:WhatsAppClone/services/local_storage/prefs_service.dart';
-import 'package:WhatsAppClone/services/firebase/firestore_service.dart';
+import '../../../services/local_storage/prefs_service.dart';
+import '../../../services/firebase/firestore_service.dart';
 
-import 'package:WhatsAppClone/helpers/datetime.dart';
+import '../../../helpers/datetime.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/status_modal_bottom_sheet.dart';
+import '../../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 
 class StatusPage extends StatefulWidget {
   // build user status listile
@@ -39,7 +39,7 @@ class _StatusPageState extends State<StatusPage>
     return Selector<MainModel, String>(
         selector: (context, model) => model.userStatus,
         builder: (context, value, child) {
-          bool _isLight = Theme.of(context).brightness == Brightness.light;
+          var _isLight = Theme.of(context).brightness == Brightness.light;
           return ListTile(
             leading: CircleAvatar(
               backgroundColor:
@@ -62,8 +62,8 @@ class _StatusPageState extends State<StatusPage>
 
   // build users status widget
   Widget _buildStatus(Status status) {
-    String timeAgo = formatDateTime(status.timestamp);
-    bool allowDelete = PrefsService.allowDelete(status.userName);
+    var timeAgo = formatDateTime(status.timestamp);
+    var allowDelete = PrefsService.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -97,7 +97,7 @@ class _StatusPageState extends State<StatusPage>
   Widget _buildUsersStatus() {
     return StreamBuilder<QuerySnapshot>(
       stream: _statusStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
         }
@@ -110,8 +110,7 @@ class _StatusPageState extends State<StatusPage>
           child: ListView.builder(
             itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
-              Status status = Status.fromJsonMap(
-                  snapshot.data.docs[index].data(),
+              var status = Status.fromJsonMap(snapshot.data.docs[index].data(),
                   snapshot.data.docs[index].id);
               return _buildStatus(status);
             },
@@ -124,7 +123,7 @@ class _StatusPageState extends State<StatusPage>
   // delete status, update latest user status
   void _handleDeleteStatus(Status status) async {
     await FirestoreService.deleteStatus(status);
-    String updatedStatus =
+    var updatedStatus =
         await FirestoreService.getUserStatus(PrefsService.userName);
     context.read<MainModel>().updateUserStatus(updatedStatus);
   }

@@ -6,17 +6,17 @@ class PermissionHandler {
   /// request device permissions (contacts, call logs, camera)
   static Future<void> requestPermissions() async {
     // request contacts permission
-    PermissionStatus contactsStatus = await Permission.contacts.request();
+    var contactsStatus = await Permission.contacts.request();
     while (contactsStatus != PermissionStatus.granted) {
       contactsStatus = await Permission.contacts.request();
     }
     // request camera permission
-    PermissionStatus cameraStatus = await Permission.camera.request();
+    var cameraStatus = await Permission.camera.request();
     while (cameraStatus != PermissionStatus.granted) {
       cameraStatus = await Permission.contacts.request();
     }
     // request phone permission
-    PermissionStatus phoneStatus = await Permission.phone.request();
+    var phoneStatus = await Permission.phone.request();
     while (phoneStatus != PermissionStatus.granted) {
       phoneStatus = await Permission.phone.request();
     }

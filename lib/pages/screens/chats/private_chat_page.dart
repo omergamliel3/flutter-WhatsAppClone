@@ -3,21 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-import 'package:WhatsAppClone/core/provider/main.dart';
+import '../../../core/provider/main.dart';
 
-import 'package:WhatsAppClone/core/models/contact_entity.dart';
-import 'package:WhatsAppClone/core/models/message.dart';
+import '../../../core/models/contact_entity.dart';
+import '../../../core/models/message.dart';
 
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
-import 'package:WhatsAppClone/services/api/dialogflow.dart';
+import '../../../services/local_storage/db_service.dart';
+import '../../../services/api/dialogflow.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../../../core/shared/constants.dart';
 
-import 'package:WhatsAppClone/helpers/datetime.dart';
+import '../../../helpers/datetime.dart';
 
-import 'package:WhatsAppClone/core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class PrivateChatPage extends StatefulWidget {
   @override
@@ -112,7 +112,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // build message listile widget
   Widget _buildMessage(Message message) {
-    String timestamp = formatDateTime(message.timestamp);
+    var timestamp = formatDateTime(message.timestamp);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -176,7 +176,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
       _textEditingController.clear();
     }
     // create new Message instacne
-    Message message = Message(
+    var message = Message(
         foreignID: widget.contactEntity.id,
         text: msg.trim(),
         fromUser: fromUser,
@@ -200,7 +200,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // submit message response from DialogFlow API
   void evokeMsgResponse(String query) async {
-    String msgResponse = await DialogFlowAPI.response(query);
+    var msgResponse = await DialogFlowAPI.response(query);
     _onTextMsgSubmitted(msgResponse, fromUser: false);
   }
 
@@ -224,7 +224,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
           IconButton(
             icon: Icon(Icons.call),
             onPressed: () =>
-                UrlLauncher.launch('tel:${widget.contactEntity.phoneNumber}'),
+                url_launcher.launch('tel:${widget.contactEntity.phoneNumber}'),
           ),
           _buildPopUpMenuButton()
         ],

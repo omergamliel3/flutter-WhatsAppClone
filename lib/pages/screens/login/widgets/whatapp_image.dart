@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:WhatsAppClone/core/shared/constants.dart';
+import '../../../../core/shared/constants.dart';
 
 class WhatsAppImage extends StatelessWidget {
   @override
