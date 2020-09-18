@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/locator.dart';
+
 import '../../services/device/contacts_service.dart';
 import '../../services/firebase/firestore_service.dart';
 import '../../services/local_storage/db_service.dart';
@@ -8,6 +10,12 @@ import '../../services/local_storage/prefs_service.dart';
 import '../models/contact_entity.dart';
 
 class MainModel extends ChangeNotifier {
+  // services
+  final prefsService = locator<PrefsService>();
+  final dbService = locator<DBservice>();
+  final firestoreService = locator<FirestoreService>();
+  final contactHandler = locator<ContactsHandler>();
+
   // contacts data
   List<ContactEntity> _unActiveContacts;
   List<ContactEntity> get unActiveContacts => List.from(_unActiveContacts);
@@ -18,16 +26,16 @@ class MainModel extends ChangeNotifier {
 
   /// get active contacts entities from local db
   Future<void> getActiveContacts() async {
-    _activeContacts = await DBservice.getContactEntites();
+    _activeContacts = await dbService.getContactEntites();
     notifyListeners();
   }
 
   // activate contact entity
   Future<void> activeContact(ContactEntity contactEntity) async {
     // create new contact in local db
-    await DBservice.insertContactEntity(contactEntity);
+    await dbService.insertContactEntity(contactEntity);
     // get active contacts from local db
-    _activeContacts = await DBservice.getContactEntites();
+    _activeContacts = await dbService.getContactEntites();
     // remove newly added contact from unActiveContacts
     _unActiveContacts.removeWhere((contact) =>
         contact.displayName.toLowerCase() ==
@@ -53,13 +61,13 @@ class MainModel extends ChangeNotifier {
   /// init model data
   Future<void> initModel(BuildContext context) async {
     // get active contacts entities
-    _activeContacts = await DBservice.getContactEntites();
+    _activeContacts = await dbService.getContactEntites();
     // get unactive contacts entities
     _unActiveContacts =
-        await ContactsHandler.getUnActiveContacts(_activeContacts);
-    if (PrefsService.userName != null) {
+        await contactHandler.getUnActiveContacts(_activeContacts);
+    if (prefsService.userName != null) {
       // set user status from prefs local storage
-      _userStatus = await FirestoreService.getUserStatus(PrefsService.userName);
+      _userStatus = await firestoreService.getUserStatus(prefsService.userName);
     }
   }
 }

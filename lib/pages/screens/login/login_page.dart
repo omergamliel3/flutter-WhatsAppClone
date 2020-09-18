@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
+import '../../../services/locator.dart';
 import '../../../services/firebase/firestore_service.dart';
 import '../../../services/firebase/auth_service.dart';
 import '../../../services/local_storage/prefs_service.dart';
@@ -21,6 +22,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // get services
+  final _prefsService = locator<PrefsService>();
+  final authService = locator<AuthService>();
+  final firestoreService = locator<FirestoreService>();
+
   // form global keys
   GlobalKey<FormState> _formKeyAuth;
   GlobalKey<FormState> _formKeyUserName;
@@ -31,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _responsiveWidget;
   // holds the current form mode [PhoneNum/UserName]
   FormMode _formMode;
+  // busy bool flag to controll loading
   bool busy = false;
 
   @override
@@ -163,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // build user profile
+  // ignore: unused_element
   Widget _buildUserProfile() {
     return Container(
       padding: EdgeInsets.only(
@@ -214,12 +222,12 @@ class _LoginPageState extends State<LoginPage> {
       _formKeyAuth.currentState.save();
       // register user
       if (foundation.kDebugMode) {
-        await AuthService.mockRegisterUser();
+        await authService.mockRegisterUser();
       } else {
-        await AuthService.registerUser(_phoneNum, context);
+        await authService.registerUser(_phoneNum, context);
       }
 
-      if (PrefsService.isAuthenticated) {
+      if (_prefsService.isAuthenticated) {
         setState(() {
           _responsiveWidget = _buildUserNameForm();
         });
@@ -242,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKeyUserName.currentState.save();
       var validateUserWithDB =
-          await FirestoreService.validateUserName(_userName.trim());
+          await firestoreService.validateUserName(_userName.trim());
       if (!validateUserWithDB) {
         setState(() {
           _responsiveWidget = _buildUserNameForm();
@@ -251,14 +259,12 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       // add username to firestore usernames collection
-      await FirestoreService.addUserName(_userName);
+      await firestoreService.addUserName(_userName);
       // save username in prefs service
-      PrefsService.saveUserName(username: _userName);
+      _prefsService.saveUserName(username: _userName);
       // delay to show loading indicator
       await Future.delayed(Duration(seconds: 1));
-      setState(() {
-        _responsiveWidget = _buildUserProfile();
-      });
+      Routes.navigateMainPage(context);
     }
   }
 
@@ -277,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   SizedBox(height: 15),
                   Container(
-                    height: 150,
+                    height: 60,
                     child: AnimatedSwitcher(
                       duration: Duration(milliseconds: 500),
                       child: _responsiveWidget,

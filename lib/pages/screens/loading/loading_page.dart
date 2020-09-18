@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../../services/device/permission_handler.dart';
+import '../../../services/locator.dart';
+import '../../../services/device/permission_service.dart';
 
 import '../../../core/provider/main.dart';
 
@@ -31,16 +32,19 @@ class _LoadingPageState extends State<LoadingPage>
 
   // run init tasks before navigate main page
   void runInitTasks() async {
+    final permission = locator<PermissionService>();
+    final prefs = locator<PrefsService>();
+    final localDB = locator<DBservice>();
     // request device permissions
-    await PermissionHandler.requestPermissions();
+    await permission.requestPermissions();
     // init prefs service
-    await PrefsService.initPrefs();
+    await prefs.initPrefs();
     // init local storage sqlite db
-    await DBservice.asyncInitDB();
+    await localDB.asyncInitDB();
     // init main model data
     await context.read<MainModel>().initModel(context);
     // if authenticated navigate main page, else navigate log-in page
-    if (PrefsService.isAuthenticated) {
+    if (prefs.isAuthenticated) {
       // navigate main page
       Routes.navigateMainPage(context);
     } else {

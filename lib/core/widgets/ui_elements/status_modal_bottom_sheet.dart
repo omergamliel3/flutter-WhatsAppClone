@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../models/status.dart';
 import '../../provider/main.dart';
 
+import '../../../services/locator.dart';
 import '../../../services/firebase/firestore_service.dart';
 import '../../../services/local_storage/prefs_service.dart';
 
@@ -40,6 +41,9 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   // responsive widget
   Widget _responsiveWidget;
+  // get services
+  final prefsService = locator<PrefsService>();
+  final firestoreService = locator<FirestoreService>();
 
   @override
   void initState() {
@@ -94,7 +98,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     if (_textEditingController.value.text == null ||
         _textEditingController.value.text.isEmpty) return;
     var status = Status(
-        userName: PrefsService.userName,
+        userName: prefsService.userName,
         content: _textEditingController.value.text,
         timestamp: DateTime.now().toUtc());
 
@@ -105,7 +109,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     });
 
     // upload status to firestore db
-    var upload = await FirestoreService.uploadStatus(status);
+    var upload = await firestoreService.uploadStatus(status);
     if (upload) {
       // update user status in main model
       context.read<MainModel>().updateUserStatus(status.content);

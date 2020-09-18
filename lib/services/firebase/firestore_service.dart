@@ -3,17 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../core/models/status.dart';
 
-import '../../helpers/connectivity_helper.dart';
+import '../network/connectivity_helper.dart';
 
 class FirestoreService {
-  FirestoreService._();
-  static const _kUsersStatusCollection = 'users_status';
-  static const _kUserNamesCollection = 'user_names';
+  final _kUsersStatusCollection = 'users_status';
+  final _kUserNamesCollection = 'user_names';
 
   /// add new user status to firestore db collection
-  static Future<bool> uploadStatus(Status status) async {
+  Future<bool> uploadStatus(Status status) async {
     // checks for internet connectivity
-    var connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityService.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
@@ -33,9 +32,9 @@ class FirestoreService {
   }
 
   /// delete status from firestore db users_status collection
-  static Future<bool> deleteStatus(Status status) async {
+  Future<bool> deleteStatus(Status status) async {
     // checks for internet connectivity
-    var connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityService.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
@@ -54,9 +53,9 @@ class FirestoreService {
 
   /// get the most recent user status, if there is one
   /// return null if there is no status
-  static Future<String> getUserStatus(String username) async {
+  Future<String> getUserStatus(String username) async {
     // checks for internet connectivity
-    var connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityService.internetConnectivity();
     // return null if there is no connectivity
     if (!connectivity) {
       return null;
@@ -90,9 +89,9 @@ class FirestoreService {
   }
 
   /// add new username to firestore db user_names collection
-  static Future<bool> addUserName(String username) async {
+  Future<bool> addUserName(String username) async {
     // checks for internet connectivity
-    var connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityService.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;
@@ -113,9 +112,9 @@ class FirestoreService {
 
   /// compare username argument with user_names collection
   /// returns true if do not exists in collection, false if exists
-  static Future<bool> validateUserName(String username) async {
+  Future<bool> validateUserName(String username) async {
     // checks for internet connectivity
-    var connectivity = await ConnectivityHelper.internetConnectivity();
+    var connectivity = await ConnectivityService.internetConnectivity();
     // return false if there is no connectivity
     if (!connectivity) {
       return false;

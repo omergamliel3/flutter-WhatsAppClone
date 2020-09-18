@@ -2,8 +2,6 @@ import '../../core/models/contact_entity.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 class ContactsHandler {
-  ContactsHandler._();
-
   /// FIRST, FETCH RAW [Contact] FROM CONTACTS SERVICE.
   /// CONVERT ITERABLE TO LIST OF [Contact]
   /// SECOND, FETCH [ContactEntity] FROM LOCAL SQLITE DB.
@@ -14,7 +12,7 @@ class ContactsHandler {
   /// WHICH REPRESENTS UNACTIVE CONTACTS DATA.
 
   /// get un-active contacts
-  static Future<List<ContactEntity>> getUnActiveContacts(
+  Future<List<ContactEntity>> getUnActiveContacts(
       List<ContactEntity> activeContacts) async {
     // get raw contacts from contacts service plugin
     var contacts = await ContactsService.getContacts(orderByGivenName: false);

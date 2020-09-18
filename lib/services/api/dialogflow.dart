@@ -1,9 +1,7 @@
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 
 class DialogFlowAPI {
-  DialogFlowAPI._();
-
-  static Future<String> response(String query) async {
+  Future<String> response(String query) async {
     var authGoogle =
         await AuthGoogle(fileJson: "private/credentials.json").build();
     var dialogflow =

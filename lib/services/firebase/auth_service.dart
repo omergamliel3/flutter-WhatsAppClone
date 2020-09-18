@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../locator.dart';
 import '../local_storage/prefs_service.dart';
 
 class AuthService {
-  AuthService._();
+  final _prefsService = locator<PrefsService>();
 
   /// register user with phone number [FirebaseAuth]
-  static Future registerUser(String mobile, BuildContext context) async {
+  Future registerUser(String mobile, BuildContext context) async {
     var _auth = FirebaseAuth.instance;
 
     await _auth.verifyPhoneNumber(
@@ -18,7 +19,7 @@ class AuthService {
         print('verificationCompleted');
         _auth.signInWithCredential(authCredential).then((_) {
           // save authentication in prefs service
-          PrefsService.saveAuthentication(auth: true);
+          _prefsService.saveAuthentication(auth: true);
         }).catchError(print);
       },
       verificationFailed: (authException) {
@@ -77,9 +78,9 @@ class AuthService {
   }
 
   /// mock register user
-  static Future mockRegisterUser({int delay = 3, bool auth = true}) async {
+  Future mockRegisterUser({int delay = 3, bool auth = true}) async {
     await Future.delayed(Duration(seconds: delay), () {
-      PrefsService.saveAuthentication(auth: auth);
+      _prefsService.saveAuthentication(auth: auth);
     });
   }
 }

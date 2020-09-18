@@ -12,11 +12,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
+  # dependency injection
+  get_it: ^5.0.0
   # device
   permission_handler: ^5.0.1+1
   contacts_service: ^0.4.6
   call_log: ^2.1.0
+  # network
+  connectivity: ^0.4.9+2
   # firebase
   firebase_auth: ^0.18.0+1
   cloud_firestore: ^0.14.0+2

@@ -10,6 +10,7 @@ import '../../../core/provider/main.dart';
 import '../../../core/models/contact_entity.dart';
 import '../../../core/models/message.dart';
 
+import '../../../services/locator.dart';
 import '../../../services/local_storage/db_service.dart';
 import '../../../services/api/dialogflow.dart';
 
@@ -28,6 +29,9 @@ class PrivateChatPage extends StatefulWidget {
 }
 
 class _PrivateChatPageState extends State<PrivateChatPage> {
+  // get services
+  final dbService = locator<DBservice>();
+  final dialogflowAPI = locator<DialogFlowAPI>();
   TextEditingController _textEditingController; // text controller
   ScrollController _scrollController;
   Future<List<Message>> _msgs; // msgs data
@@ -38,7 +42,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
     _textEditingController = TextEditingController();
     _scrollController = ScrollController();
     // init chat messages
-    _msgs = DBservice.getMessages(widget.contactEntity);
+    _msgs = dbService.getMessages(widget.contactEntity);
     // scroll messsages to the bottom of the listview
     _scrollToBottom(500);
     super.initState();
@@ -182,13 +186,13 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         fromUser: fromUser,
         timestamp: DateTime.now());
     // insert message to local db
-    await DBservice.insertMessage(message);
+    await dbService.insertMessage(message);
     // update active contacts
     Provider.of<MainModel>(context, listen: false).getActiveContacts();
 
     setState(() {
       // get messages from local db and rebuild msgs list
-      _msgs = DBservice.getMessages(widget.contactEntity);
+      _msgs = dbService.getMessages(widget.contactEntity);
       // scroll to bottom listview
       _scrollToBottom(0);
       // reponse from bot if message from user
@@ -200,7 +204,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // submit message response from DialogFlow API
   void evokeMsgResponse(String query) async {
-    var msgResponse = await DialogFlowAPI.response(query);
+    var msgResponse = await dialogflowAPI.response(query);
     _onTextMsgSubmitted(msgResponse, fromUser: false);
   }
 

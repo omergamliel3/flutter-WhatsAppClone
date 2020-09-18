@@ -6,6 +6,7 @@ import '../../../core/models/status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/locator.dart';
 import '../../../services/local_storage/prefs_service.dart';
 import '../../../services/firebase/firestore_service.dart';
 
@@ -23,6 +24,8 @@ class _StatusPageState extends State<StatusPage>
     with AutomaticKeepAliveClientMixin {
   // theme mode
   Stream<QuerySnapshot> _statusStream; // status stream
+  final _prefsService = locator<PrefsService>();
+  final firestoreService = locator<FirestoreService>();
 
   @override
   initState() {
@@ -45,7 +48,7 @@ class _StatusPageState extends State<StatusPage>
               backgroundColor:
                   _isLight ? Theme.of(context).primaryColor : Colors.blue,
               child: Text(
-                PrefsService.userName[0].toUpperCase(),
+                _prefsService.userName[0].toUpperCase(),
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
@@ -63,7 +66,7 @@ class _StatusPageState extends State<StatusPage>
   // build users status widget
   Widget _buildStatus(Status status) {
     var timeAgo = formatDateTime(status.timestamp);
-    var allowDelete = PrefsService.allowDelete(status.userName);
+    var allowDelete = _prefsService.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -122,9 +125,9 @@ class _StatusPageState extends State<StatusPage>
 
   // delete status, update latest user status
   void _handleDeleteStatus(Status status) async {
-    await FirestoreService.deleteStatus(status);
+    await firestoreService.deleteStatus(status);
     var updatedStatus =
-        await FirestoreService.getUserStatus(PrefsService.userName);
+        await firestoreService.getUserStatus(_prefsService.userName);
     context.read<MainModel>().updateUserStatus(updatedStatus);
   }
 
