@@ -16,6 +16,7 @@ This app is a clone version of WhatsApp with Flutter. Real contacts replaced wit
 ### Front-end
 
 - **Flutter SDK**
+- **MVVM Architecture**
 - **Provider and Change Notifier for state management**
 
 ### Storage

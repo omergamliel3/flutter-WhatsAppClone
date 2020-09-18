@@ -59,7 +59,7 @@ class MainModel extends ChangeNotifier {
   bool get isLight => _isLight;
 
   /// init model data
-  Future<void> initModel(BuildContext context) async {
+  Future<void> initModel() async {
     // get active contacts entities
     _activeContacts = await dbService.getContactEntites();
     // get unactive contacts entities

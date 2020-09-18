@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../../core/provider/main.dart';
 import '../../../core/models/status.dart';
@@ -6,39 +7,20 @@ import '../../../core/models/status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/locator.dart';
-import '../../../services/local_storage/prefs_service.dart';
-import '../../../services/firebase/firestore_service.dart';
-
 import '../../../helpers/datetime.dart';
 
 import '../../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
+import 'status_viewmodel.dart';
 
 class StatusPage extends StatefulWidget {
-  // build user status listile
   @override
   _StatusPageState createState() => _StatusPageState();
 }
 
 class _StatusPageState extends State<StatusPage>
     with AutomaticKeepAliveClientMixin {
-  // theme mode
-  Stream<QuerySnapshot> _statusStream; // status stream
-  final _prefsService = locator<PrefsService>();
-  final firestoreService = locator<FirestoreService>();
-
-  @override
-  initState() {
-    // set status stream to firestore snapshots
-    _statusStream = FirebaseFirestore.instance
-        .collection('users_status')
-        .orderBy('timestamp', descending: true)
-        .snapshots();
-    super.initState();
-  }
-
   // build personal status listile
-  Widget _buildPersonalStatus() {
+  Widget _buildPersonalStatus(StatusViewModel model) {
     return Selector<MainModel, String>(
         selector: (context, model) => model.userStatus,
         builder: (context, value, child) {
@@ -48,7 +30,7 @@ class _StatusPageState extends State<StatusPage>
               backgroundColor:
                   _isLight ? Theme.of(context).primaryColor : Colors.blue,
               child: Text(
-                _prefsService.userName[0].toUpperCase(),
+                model.username[0].toUpperCase(),
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
@@ -64,9 +46,9 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // build users status widget
-  Widget _buildStatus(Status status) {
+  Widget _buildStatus(Status status, StatusViewModel model) {
     var timeAgo = formatDateTime(status.timestamp);
-    var allowDelete = _prefsService.allowDelete(status.userName);
+    var allowDelete = model.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -84,12 +66,13 @@ class _StatusPageState extends State<StatusPage>
         style: Theme.of(context).textTheme.caption,
       ),
       // only user can delete its own status
-      onTap: allowDelete ? () => _handleDeleteStatus(status) : null,
+      onTap:
+          allowDelete ? () => model.handleDeleteStatus(status, context) : null,
     );
   }
 
   // build divider text widget
-  Widget _buildDividerText() {
+  Widget _buildDividerText(StatusViewModel model) {
     return Container(
         padding: EdgeInsets.fromLTRB(15, 6, 0, 6),
         alignment: Alignment.centerLeft,
@@ -97,9 +80,9 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // build users status widgets from firestore collection snapthots
-  Widget _buildUsersStatus() {
+  Widget _buildUsersStatus(StatusViewModel model) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _statusStream,
+      stream: model.statusStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -115,7 +98,7 @@ class _StatusPageState extends State<StatusPage>
             itemBuilder: (context, index) {
               var status = Status.fromJsonMap(snapshot.data.docs[index].data(),
                   snapshot.data.docs[index].id);
-              return _buildStatus(status);
+              return _buildStatus(status, model);
             },
           ),
         ));
@@ -123,25 +106,23 @@ class _StatusPageState extends State<StatusPage>
     );
   }
 
-  // delete status, update latest user status
-  void _handleDeleteStatus(Status status) async {
-    await firestoreService.deleteStatus(status);
-    var updatedStatus =
-        await firestoreService.getUserStatus(_prefsService.userName);
-    context.read<MainModel>().updateUserStatus(updatedStatus);
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-        body: Column(
-      children: [
-        _buildPersonalStatus(),
-        _buildDividerText(),
-        _buildUsersStatus()
-      ],
-    ));
+    return ViewModelBuilder<StatusViewModel>.nonReactive(
+      viewModelBuilder: () => StatusViewModel(),
+      onModelReady: (model) => model.initalise(context),
+      builder: (context, model, child) {
+        return Scaffold(
+            body: Column(
+          children: [
+            _buildPersonalStatus(model),
+            _buildDividerText(model),
+            _buildUsersStatus(model)
+          ],
+        ));
+      },
+    );
   }
 
   @override

@@ -13,6 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
   
+  # mvvm architecture 
+  stacked: ^1.7.6
   # dependency injection
   get_it: ^5.0.0
   # device

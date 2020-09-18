@@ -8,7 +8,7 @@ import '../pages/main/main_page.dart';
 import '../pages/screens/shared/select_contact_screen.dart';
 import '../pages/screens/chats/private_chat_page.dart';
 import '../pages/screens/login/login_page.dart';
-import '../pages/screens/loading/loading_page.dart';
+import '../pages/screens/loading/loading_view.dart';
 
 class Routes {
   Routes._();

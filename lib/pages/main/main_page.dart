@@ -6,7 +6,7 @@ import '../../helpers/navigator_helper.dart';
 
 import '../screens/calls/calls_page.dart';
 import '../screens/chats/chats_page.dart';
-import '../screens/status/status_page.dart';
+import '../screens/status/status_view.dart';
 import '../screens/camera/camera_page.dart';
 
 import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
