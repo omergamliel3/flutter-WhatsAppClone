@@ -21,11 +21,12 @@ class _CallsPageState extends State<CallsPage>
 
   // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry) {
+    String name = callLogEntry.name[0] ?? 'Unknown';
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         child: Text(
-          callLogEntry.name[0].toUpperCase() ?? 'Unknown',
+          name.toUpperCase(),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),

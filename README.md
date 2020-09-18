@@ -2,7 +2,7 @@
 
 A WhatsApp clone project.
 
-This app is my own version for WhatsApp with Flutter. Real contacts replaced with Firebase ML kit bots.
+This app is a clone version of WhatsApp with Flutter. Real contacts replaced with DialogFlow API small-talk agents
 
 ## Screenshots
 
@@ -20,13 +20,13 @@ This app is my own version for WhatsApp with Flutter. Real contacts replaced wit
 
 ### Storage
  - **Firebase Could Firestore**
- - **Firebase Realtime Database**
  - **Firebase Storage**
  - **SQLite**
  - **Shared preferences**
 
 ### Back-end
-- **Firebase (Auth, Storage, Cloud functions, ML kit)**
+- **Firebase (Auth, Storage)**
+- **DialogFlow API (Google Cloud Platform)**
 
 # Author 🙋
 

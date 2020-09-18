@@ -162,6 +162,38 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // build user profile
+  Widget _buildUserProfile() {
+    return Container(
+      padding: EdgeInsets.only(
+        left: 10,
+        right: 10,
+      ),
+      child: Column(
+        children: [
+          Text('Pick your profile picture'),
+          SizedBox(height: 5.0),
+          CircleAvatar(backgroundColor: Colors.grey),
+          SizedBox(height: 10.0),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlatButton(
+                    child: Text('FROM GALLERY'),
+                    onPressed: () => Routes.navigateMainPage(context)),
+                SizedBox(width: 5.0),
+                FlatButton(
+                    child: Text('TAKE A NEW PICTURE'),
+                    onPressed: () => Routes.navigateMainPage(context)),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   // submit form according to formMode [PhoneNum/UserName]
   void _submitForm() {
     if (_formMode == FormMode.PhoneNum) {
@@ -224,8 +256,9 @@ class _LoginPageState extends State<LoginPage> {
       PrefsService.saveUserName(username: _userName);
       // delay to show loading indicator
       await Future.delayed(Duration(seconds: 1));
-      // navigate main page
-      Routes.navigateMainPage(context);
+      setState(() {
+        _responsiveWidget = _buildUserProfile();
+      });
     }
   }
 
@@ -244,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   SizedBox(height: 15),
                   Container(
-                    height: 60,
+                    height: 150,
                     child: AnimatedSwitcher(
                       duration: Duration(milliseconds: 500),
                       child: _responsiveWidget,

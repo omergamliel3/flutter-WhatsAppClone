@@ -142,7 +142,10 @@ class SelectContactScreen extends StatelessWidget {
               }),
           actions: [
             IconButton(icon: Icon(Icons.search), onPressed: () {}),
-            _buildPopUpMenuButton()
+            _buildPopUpMenuButton(),
+            SizedBox(
+              width: 4.0,
+            ),
           ],
         ),
         body: Scrollbar(

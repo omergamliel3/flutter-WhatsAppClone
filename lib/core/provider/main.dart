@@ -63,7 +63,5 @@ class MainModel extends ChangeNotifier {
       // set user status from prefs local storage
       _userStatus = await FirestoreService.getUserStatus(PrefsService.userName);
     }
-    // set isLight attribute
-    _isLight = null;
   }
 }

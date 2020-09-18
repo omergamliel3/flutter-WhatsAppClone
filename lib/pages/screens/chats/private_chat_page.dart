@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -9,6 +11,8 @@ import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/core/models/message.dart';
 
 import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+import 'package:WhatsAppClone/services/api/dialogflow.dart';
+
 import 'package:WhatsAppClone/core/shared/constants.dart';
 
 import 'package:WhatsAppClone/helpers/datetime.dart';
@@ -25,12 +29,18 @@ class PrivateChatPage extends StatefulWidget {
 
 class _PrivateChatPageState extends State<PrivateChatPage> {
   TextEditingController _textEditingController; // text controller
+  ScrollController _scrollController;
   Future<List<Message>> _msgs; // msgs data
 
   @override
   initState() {
+    // init controllers
     _textEditingController = TextEditingController();
+    _scrollController = ScrollController();
+    // init chat messages
     _msgs = DBservice.getMessages(widget.contactEntity);
+    // scroll messsages to the bottom of the listview
+    _scrollToBottom(500);
     super.initState();
   }
 
@@ -87,6 +97,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
           return Flexible(
               child: Scrollbar(
                   child: ListView.builder(
+            controller: _scrollController,
             padding: const EdgeInsets.all(4.0),
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
@@ -157,22 +168,51 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   }
 
   // submitted text message
-  void _onTextMsgSubmitted(String msg) async {
+  void _onTextMsgSubmitted(String msg, {bool fromUser = true}) async {
+    // non null of empty validation
     if (msg == null || msg.isEmpty) return;
+    // clear text field
+    if (fromUser) {
+      _textEditingController.clear();
+    }
+    // create new Message instacne
     Message message = Message(
         foreignID: widget.contactEntity.id,
         text: msg.trim(),
-        fromUser: true,
+        fromUser: fromUser,
         timestamp: DateTime.now());
     // insert message to local db
     await DBservice.insertMessage(message);
     // update active contacts
     Provider.of<MainModel>(context, listen: false).getActiveContacts();
-    _textEditingController.clear();
-    // get messages from local db and rebuild msgs list
+
     setState(() {
+      // get messages from local db and rebuild msgs list
       _msgs = DBservice.getMessages(widget.contactEntity);
+      // scroll to bottom listview
+      _scrollToBottom(0);
+      // reponse from bot if message from user
+      if (fromUser) {
+        evokeMsgResponse(msg);
+      }
     });
+  }
+
+  // submit message response from DialogFlow API
+  void evokeMsgResponse(String query) async {
+    String msgResponse = await DialogFlowAPI.response(query);
+    _onTextMsgSubmitted(msgResponse, fromUser: false);
+  }
+
+  // animate to bottom of messages listview
+  void _scrollToBottom(int milliseconds) {
+    Timer(
+        Duration(milliseconds: 500),
+        () => _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.fastOutSlowIn,
+            ));
   }
 
   @override
