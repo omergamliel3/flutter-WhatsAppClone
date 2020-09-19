@@ -12,21 +12,17 @@ This app is a clone version of WhatsApp with Flutter. Real contacts replaced wit
 -------------------
 
 ## Technologies
+ 
+### Architecture
+- **MVVM design pattern**
 
 ### Front-end
-
 - **Flutter SDK**
-- **MVVM Architecture**
 - **Provider and Change Notifier for state management**
 
-### Storage
- - **Firebase Could Firestore**
- - **Firebase Storage**
- - **SQLite**
- - **Shared preferences**
-
 ### Back-end
-- **Firebase (Auth, Storage)**
+- **SQLite**
+- **Firebase (Auth, Storage, Firestore)**
 - **DialogFlow API (Google Cloud Platform)**
 
 # Author 🙋
