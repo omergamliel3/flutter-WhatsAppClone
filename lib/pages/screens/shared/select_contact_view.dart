@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
+import 'package:stacked/stacked.dart';
+import 'select_contact_viewmodel.dart';
 
 import '../../../core/models/contact_entity.dart';
-import '../../../core/provider/main.dart';
 
 import '../../../core/shared/constants.dart';
 
 class SelectContactScreen extends StatelessWidget {
-  //
   final ContactMode _contactMode;
   SelectContactScreen(this._contactMode);
 
@@ -93,8 +92,8 @@ class SelectContactScreen extends StatelessWidget {
   }
 
   // build contact list tile
-  Widget _buildContactListTile(
-      ContactEntity contactEntity, BuildContext context) {
+  Widget _buildContactListTile(ContactEntity contactEntity,
+      BuildContext context, SelectContactViewModel model) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
@@ -109,54 +108,57 @@ class SelectContactScreen extends StatelessWidget {
             ? SizedBox()
             : IconButton(icon: Icon(Icons.phone), onPressed: () {}),
         onTap: _contactMode == ContactMode.chat
-            ? () {
-                _createContactEntity(contactEntity, context);
+            ? () async {
+                // create new contact entity
+                await model.createContactEntity(contactEntity, context);
+                Navigator.pop(context);
               }
             : null,
       ),
     );
   }
 
-  // create new contactEntity
-  void _createContactEntity(
-      ContactEntity contactEntity, BuildContext context) async {
-    // activate contactEntity
-    await context.read<MainModel>().activeContact(contactEntity);
-    Navigator.pop(context);
+  // build scaffold appbar
+  Widget _buildAppBar(context, contacts) {
+    return AppBar(
+      title: _buildAppBarTitle(context, contacts.length),
+      leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          }),
+      actions: [
+        IconButton(icon: Icon(Icons.search), onPressed: () {}),
+        _buildPopUpMenuButton(),
+        SizedBox(
+          width: 4.0,
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // get contacts datas from main model
-    var contacts =
-        Provider.of<MainModel>(context, listen: false).unActiveContacts;
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: _buildAppBarTitle(context, contacts.length),
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          actions: [
-            IconButton(icon: Icon(Icons.search), onPressed: () {}),
-            _buildPopUpMenuButton(),
-            SizedBox(
-              width: 4.0,
+    return ViewModelBuilder<SelectContactViewModel>.nonReactive(
+      viewModelBuilder: () => SelectContactViewModel(),
+      builder: (context, model, child) {
+        var contacts = model.getUnActiveContacts(context);
+        return SafeArea(
+          top: false,
+          child: Scaffold(
+            appBar: _buildAppBar(context, contacts),
+            body: Scrollbar(
+              child: ListView.builder(
+                  physics: ScrollPhysics(),
+                  itemCount: contacts.length,
+                  itemBuilder: (context, index) {
+                    return _buildContactListTile(
+                        contacts[index], context, model);
+                  }),
             ),
-          ],
-        ),
-        body: Scrollbar(
-          child: ListView.builder(
-              physics: ScrollPhysics(),
-              itemCount: contacts.length,
-              itemBuilder: (context, index) {
-                return _buildContactListTile(contacts[index], context);
-              }),
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

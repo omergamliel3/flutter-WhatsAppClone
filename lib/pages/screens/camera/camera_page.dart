@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
+import 'camera_viewmodel.dart';
 
 class CameraPage extends StatefulWidget {
   @override
@@ -10,8 +12,11 @@ class _CameraPageState extends State<CameraPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Center(
-      child: Text('CAMERA PAGE'),
+    return ViewModelBuilder<CameraViewModel>.nonReactive(
+      viewModelBuilder: () => CameraViewModel(),
+      builder: (context, model, child) => Center(
+        child: Text('CAMERA PAGE'),
+      ),
     );
   }
 

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../core/shared/constants.dart';
+import 'package:stacked/stacked.dart';
+import 'main_viewmodel.dart';
 
-import '../../helpers/navigator_helper.dart';
-
-import '../screens/calls/calls_page.dart';
+import '../screens/calls/calls_view.dart';
 import '../screens/chats/chats_page.dart';
 import '../screens/status/status_view.dart';
 import '../screens/camera/camera_page.dart';
 
-import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
+import 'widgets/popupmenubutton.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -68,20 +67,6 @@ class _MainPageState extends State<MainPage>
     setState(() {});
   }
 
-  // handle FAB onPressed method, based on [_pageIndex]
-  void _onPressedFAB() {
-    if (_pageIndex == 1) {
-      // navigate contact screen on CHAT MODE
-      Routes.navigateContactScreen(context, ContactMode.chat);
-    } else if (_pageIndex == 2) {
-      // show status modal bottom sheet
-      showStatusModalBottomSheet(context);
-    } else {
-      // navigate contact screen on CALLS MODE
-      Routes.navigateContactScreen(context, ContactMode.calls);
-    }
-  }
-
   // returns AppBar action widget
   List<Widget> _buildAppBarAction() {
     return <Widget>[
@@ -90,55 +75,7 @@ class _MainPageState extends State<MainPage>
         onPressed: () => print('search button pressed'),
         tooltip: 'Search',
       ),
-      PopupMenuButton(
-        tooltip: 'More',
-        icon: Icon(Icons.more_vert),
-        padding: EdgeInsets.zero,
-        itemBuilder: (context) {
-          return [
-            PopupMenuItem<int>(
-                value: 0,
-                child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'New group',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ))),
-            PopupMenuItem<int>(
-                value: 1,
-                child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'New broadcast',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ))),
-            PopupMenuItem<int>(
-                value: 2,
-                child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'WhatsApp Web',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ))),
-            PopupMenuItem<int>(
-                value: 3,
-                child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'Starred messages',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ))),
-            PopupMenuItem<int>(
-                value: 4,
-                child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'Settings',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ))),
-          ];
-        },
-      )
+      PopUpMenuButton()
     ];
   }
 
@@ -172,7 +109,7 @@ class _MainPageState extends State<MainPage>
   }
 
   // returns AppBar FAB widget
-  Widget _buildAppBarFAB() {
+  Widget _buildAppBarFAB(MainViewModel model) {
     return AnimatedOpacity(
       duration: Duration(milliseconds: 300),
       opacity: _fabVisible ? 1.0 : 0.0,
@@ -181,21 +118,26 @@ class _MainPageState extends State<MainPage>
             _fabIconData,
             color: Colors.white,
           ),
-          onPressed: _onPressedFAB),
+          onPressed: () => model.handlePressedFAB(context, _pageIndex)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: FittedBox(fit: BoxFit.fitWidth, child: Text('WhatsApp')),
-        actions: _buildAppBarAction(),
-        bottom: _buildAppBarBottom(),
-      ),
-      body: _buildAppBarBody(),
-      floatingActionButton: _buildAppBarFAB(),
+    return ViewModelBuilder<MainViewModel>.nonReactive(
+      viewModelBuilder: () => MainViewModel(),
+      builder: (context, model, child) {
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: FittedBox(fit: BoxFit.fitWidth, child: Text('WhatsApp')),
+            actions: _buildAppBarAction(),
+            bottom: _buildAppBarBottom(),
+          ),
+          body: _buildAppBarBody(),
+          floatingActionButton: _buildAppBarFAB(model),
+        );
+      },
     );
   }
 }

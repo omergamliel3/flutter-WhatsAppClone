@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:stacked/stacked.dart';
+
+import 'calls_viewmodel.dart';
+
 import 'package:call_log/call_log.dart';
 
 class CallsPage extends StatefulWidget {
@@ -10,15 +13,8 @@ class CallsPage extends StatefulWidget {
 
 class _CallsPageState extends State<CallsPage>
     with AutomaticKeepAliveClientMixin {
-  // call logs future
-  Future<Iterable<CallLogEntry>> _callLogFuture;
-  @override
-  initState() {
-    // init future
-    _callLogFuture = CallLog.get();
-    super.initState();
-  }
-
+  // view model reference
+  CallsViewModel _model;
   // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry) {
     var name = callLogEntry.name[0] ?? 'Unknown';
@@ -35,7 +31,7 @@ class _CallsPageState extends State<CallsPage>
       trailing: Icon(Icons.call),
       onTap: () {
         // launch device phone call
-        url_launcher.launch('tel:${callLogEntry.number}');
+        _model.launchCall(callLogEntry.number);
       },
     );
   }
@@ -66,20 +62,26 @@ class _CallsPageState extends State<CallsPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-        body: FutureBuilder<Iterable<CallLogEntry>>(
-      future: _callLogFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var callLogsData = snapshot.data.toList();
-          if (callLogsData.length == 0) {
-            return _buildEmptyCallLogs();
-          }
-          return _buildCallLogsListView(callLogsData);
-        }
-        return Center(child: CircularProgressIndicator());
-      },
-    ));
+    return ViewModelBuilder<CallsViewModel>.nonReactive(
+        viewModelBuilder: () => CallsViewModel(),
+        builder: (context, model, child) {
+          // global class reference to the model
+          _model = model;
+          return Scaffold(
+              body: FutureBuilder<Iterable<CallLogEntry>>(
+            future: model.getCallLogs(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var callLogsData = snapshot.data.toList();
+                if (callLogsData.length == 0) {
+                  return _buildEmptyCallLogs();
+                }
+                return _buildCallLogsListView(callLogsData);
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          ));
+        });
   }
 
   @override
