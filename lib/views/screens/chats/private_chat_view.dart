@@ -3,20 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:stacked/stacked.dart';
+import 'private_chat_viewmodel.dart';
 
 import '../../../core/provider/main.dart';
-
 import '../../../core/models/contact_entity.dart';
 import '../../../core/models/message.dart';
-
-import '../../../services/locator.dart';
-import '../../../services/local_storage/db_service.dart';
-import '../../../services/api/dialogflow.dart';
-
 import '../../../core/shared/constants.dart';
 
-import '../../../helpers/datetime.dart';
+import '../../../utils/datetime.dart';
 
 import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
@@ -29,20 +24,16 @@ class PrivateChatPage extends StatefulWidget {
 }
 
 class _PrivateChatPageState extends State<PrivateChatPage> {
-  // get services
-  final dbService = locator<DBservice>();
-  final dialogflowAPI = locator<DialogFlowAPI>();
-  TextEditingController _textEditingController; // text controller
+  PrivateChatViewModel _model;
+  TextEditingController _textEditingController;
   ScrollController _scrollController;
-  Future<List<Message>> _msgs; // msgs data
+  Future<List<Message>> _msgs;
 
   @override
   initState() {
     // init controllers
     _textEditingController = TextEditingController();
     _scrollController = ScrollController();
-    // init chat messages
-    _msgs = dbService.getMessages(widget.contactEntity);
     // scroll messsages to the bottom of the listview
     _scrollToBottom(500);
     super.initState();
@@ -186,13 +177,12 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         fromUser: fromUser,
         timestamp: DateTime.now());
     // insert message to local db
-    await dbService.insertMessage(message);
+    await _model.insertMessage(message);
     // update active contacts
     Provider.of<MainModel>(context, listen: false).getActiveContacts();
-
     setState(() {
       // get messages from local db and rebuild msgs list
-      _msgs = dbService.getMessages(widget.contactEntity);
+      //_msgs = _model.getMessages(widget.contactEntity);
       // scroll to bottom listview
       _scrollToBottom(0);
       // reponse from bot if message from user
@@ -204,7 +194,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // submit message response from DialogFlow API
   void evokeMsgResponse(String query) async {
-    var msgResponse = await dialogflowAPI.response(query);
+    var msgResponse = await _model.msgResponse(query);
     if (msgResponse != null && msgResponse.isNotEmpty) {
       _onTextMsgSubmitted(msgResponse, fromUser: false);
     }
@@ -223,28 +213,34 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.contactEntity.displayName),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.call),
-            onPressed: () =>
-                url_launcher.launch('tel:${widget.contactEntity.phoneNumber}'),
-          ),
-          _buildPopUpMenuButton()
-        ],
-      ),
-      body: Column(
-        children: [
-          _buildMsgList(),
-          Divider(
-            height: 2.0,
-            thickness: 1.0,
-          ),
-          _buildComposeMsg()
-        ],
-      ),
-    );
+    return ViewModelBuilder<PrivateChatViewModel>.nonReactive(
+        viewModelBuilder: () => PrivateChatViewModel(),
+        builder: (context, model, child) {
+          _model = model;
+          _msgs = model.getMessages(widget.contactEntity);
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(widget.contactEntity.displayName),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.call),
+                  onPressed: () =>
+                      _model.launchCall(widget.contactEntity.phoneNumber),
+                ),
+                _buildPopUpMenuButton()
+              ],
+            ),
+            body: Column(
+              children: [
+                _buildMsgList(),
+                Divider(
+                  height: 2.0,
+                  thickness: 1.0,
+                ),
+                _buildComposeMsg()
+              ],
+            ),
+          );
+        });
   }
 }

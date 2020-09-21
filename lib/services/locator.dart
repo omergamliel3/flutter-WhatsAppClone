@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../core/routes/navigation_service%20.dart';
 import 'api/dialogflow.dart';
 import 'device/permission_service.dart';
 import 'device/contacts_service.dart';
@@ -12,6 +13,7 @@ import 'network/connectivity.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => PermissionService());
   locator.registerLazySingleton(() => PrefsService());
   locator.registerLazySingleton(() => DBservice());

@@ -4,10 +4,11 @@ import 'package:stacked/stacked.dart';
 import 'main_viewmodel.dart';
 
 import '../screens/calls/calls_view.dart';
-import '../screens/chats/chats_page.dart';
+import '../screens/chats/chats_view.dart';
 import '../screens/status/status_view.dart';
 import '../screens/camera/camera_page.dart';
 
+import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 import 'widgets/popupmenubutton.dart';
 
 class MainPage extends StatefulWidget {
@@ -118,8 +119,14 @@ class _MainPageState extends State<MainPage>
             _fabIconData,
             color: Colors.white,
           ),
-          onPressed: () => model.handlePressedFAB(context, _pageIndex)),
+          onPressed: () => model.handlePressedFAB(_pageIndex, showStatusModal)),
     );
+  }
+
+  // launch status model bottom sheet widget
+  void showStatusModal() {
+    // show status modal bottom sheet
+    showStatusModalBottomSheet(context);
   }
 
   @override

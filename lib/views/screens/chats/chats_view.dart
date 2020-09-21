@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
+
+import 'chats_viewmodel.dart';
 
 import 'package:provider/provider.dart';
 
 import '../../../core/models/contact_entity.dart';
 import '../../../core/provider/main.dart';
 
-import '../../../helpers/navigator_helper.dart';
-import '../../../helpers/datetime.dart';
+import '../../../utils/datetime.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatsPageState extends State<ChatsPage>
     with AutomaticKeepAliveClientMixin {
+  ChatsViewModel _model;
   Widget _buildEmptyContact() {
     return Container(
         padding: const EdgeInsets.only(top: 20),
@@ -46,7 +49,7 @@ class _ChatsPageState extends State<ChatsPage>
       subtitle: Text(lastMessage),
       trailing: Text(timeAgo),
       onTap: () {
-        Routes.navigatePrivateChatSceen(context, contactEntity);
+        _model.navigatePrivateChatView(contactEntity);
       },
     );
   }
@@ -82,9 +85,14 @@ class _ChatsPageState extends State<ChatsPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      body: _buildContactChats(),
-    );
+    return ViewModelBuilder<ChatsViewModel>.nonReactive(
+        builder: (context, model, child) {
+          _model = model;
+          return Scaffold(
+            body: _buildContactChats(),
+          );
+        },
+        viewModelBuilder: () => ChatsViewModel());
   }
 
   @override

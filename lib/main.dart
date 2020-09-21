@@ -8,7 +8,7 @@ import 'services/locator.dart';
 import 'core/provider/main.dart';
 import 'core/shared/theme.dart';
 
-import 'helpers/navigator_helper.dart';
+import 'core/routes/navigation_service .dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,18 +23,15 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<MainModel>(
         create: (_) => MainModel(),
         builder: (context, child) {
-          return Selector<MainModel, bool>(
-            selector: (context, model) => model.isLight,
-            builder: (context, value, child) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'WhatsApp',
-                theme: lightTheme,
-                darkTheme: darkTheme,
-                themeMode: value ?? ThemeMode.dark,
-                onGenerateRoute: Routes.onGenerateRoute,
-              );
-            },
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'WhatsApp',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: ThemeMode.system,
+            navigatorKey: locator<NavigationService>().navigatorKey,
+            initialRoute: locator<NavigationService>().initialRoute,
+            onGenerateRoute: locator<NavigationService>().onGenerateRoute,
           );
         });
   }

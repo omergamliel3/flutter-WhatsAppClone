@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:stacked/stacked.dart';
 import 'package:provider/provider.dart';
 
@@ -11,27 +10,23 @@ import '../../../services/network/connectivity.dart';
 
 import '../../../core/provider/main.dart';
 
-import '../../../helpers/navigator_helper.dart';
+import '../../../core/routes/navigation_service .dart';
 
 class LoadingViewModel extends BaseViewModel {
-  // Class Attributes
   bool _isLight;
   bool get isLight => _isLight;
-  BuildContext _context;
 
   /// call once after the model is construct
   void initalise(BuildContext context) {
-    // set context
-    _context = context;
-    // set isLight
-    _isLight = Theme.of(_context).brightness == Brightness.light;
+    _isLight = Theme.of(context).brightness == Brightness.light;
     // evoke init tasks
-    runInitTasks();
+    runInitTasks(context);
   }
 
   /// run app services initial tasks
-  void runInitTasks() async {
+  void runInitTasks(BuildContext context) async {
     // get all services
+    final navigator = locator<NavigationService>();
     final permission = locator<PermissionService>();
     final prefs = locator<PrefsService>();
     final localDB = locator<DBservice>();
@@ -45,14 +40,14 @@ class LoadingViewModel extends BaseViewModel {
     // init local storage sqlite db
     await localDB.asyncInitDB();
     // init main model data
-    await _context.read<MainModel>().initModel();
+    await context.read<MainModel>().initModel();
     // if authenticated navigate main page, else navigate log-in page
     if (prefs.isAuthenticated) {
       // navigate main page
-      Routes.navigateMainPage(_context);
+      navigator.navigateMainPage();
     } else {
       // navigate login page
-      Routes.navigateLoginPage(_context);
+      navigator.navigateLoginPage();
     }
   }
 }

@@ -7,7 +7,7 @@ import '../../../core/models/status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/datetime.dart';
+import '../../../utils/datetime.dart';
 
 import '../../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 import 'status_viewmodel.dart';
@@ -111,7 +111,7 @@ class _StatusPageState extends State<StatusPage>
     super.build(context);
     return ViewModelBuilder<StatusViewModel>.nonReactive(
       viewModelBuilder: () => StatusViewModel(),
-      onModelReady: (model) => model.initalise(context),
+      onModelReady: (model) => model.initalise(),
       builder: (context, model, child) {
         return Scaffold(
             body: Column(

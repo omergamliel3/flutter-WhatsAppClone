@@ -23,7 +23,7 @@ class StatusViewModel extends BaseViewModel {
   String get username => _username;
 
   /// call once after the model is construct
-  void initalise(BuildContext context) {
+  void initalise() {
     _username = _prefsService.userName;
     // set status stream to firestore snapshots
     _statusStream = FirebaseFirestore.instance

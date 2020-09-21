@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
-import '../../../services/network/connectivity.dart';
+import 'package:stacked/stacked.dart';
+import 'login_viewmodel.dart';
 
 import '../../../services/locator.dart';
-import '../../../services/firebase/firestore_service.dart';
 import '../../../services/firebase/auth_service.dart';
-import '../../../services/local_storage/prefs_service.dart';
-
-import '../../../helpers/navigator_helper.dart';
 
 import '../../../core/shared/constants.dart';
 
@@ -24,11 +21,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // get services
-  final _prefsService = locator<PrefsService>();
-  final authService = locator<AuthService>();
-  final firestoreService = locator<FirestoreService>();
-  final connectivityService = locator<ConnectivityService>();
+  // viewmodel
+  LoginViewModel _model;
   // form global keys
   GlobalKey<FormState> _formKeyAuth;
   GlobalKey<FormState> _formKeyUserName;
@@ -191,11 +185,11 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 FlatButton(
                     child: Text('FROM GALLERY'),
-                    onPressed: () => Routes.navigateMainPage(context)),
+                    onPressed: () => _model.navigateMainPage()),
                 SizedBox(width: 5.0),
                 FlatButton(
                     child: Text('TAKE A NEW PICTURE'),
-                    onPressed: () => Routes.navigateMainPage(context)),
+                    onPressed: () => _model.navigateMainPage()),
               ],
             ),
           )
@@ -222,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       // save phone num value
       _formKeyAuth.currentState.save();
-      if (!connectivityService.connectivity) {
+      if (!_model.connectivity) {
         showNoConnectionDialog(context);
         setState(() {
           _responsiveWidget = _buildPhoneNumForm();
@@ -231,12 +225,12 @@ class _LoginPageState extends State<LoginPage> {
       }
       // register user
       if (foundation.kDebugMode) {
-        await authService.mockRegisterUser();
+        await locator<AuthService>().mockRegisterUser();
       } else {
-        await authService.registerUser(_phoneNum, context);
+        await locator<AuthService>().registerUser(_phoneNum, context);
       }
 
-      if (_prefsService.isAuthenticated) {
+      if (_model.isAuthenticated) {
         setState(() {
           _responsiveWidget = _buildUserNameForm();
         });
@@ -256,15 +250,14 @@ class _LoginPageState extends State<LoginPage> {
         _responsiveWidget = _buildProgressBarIndicator();
       });
       _formKeyUserName.currentState.save();
-      if (!connectivityService.connectivity) {
+      if (!_model.connectivity) {
         showNoConnectionDialog(context);
         setState(() {
           _responsiveWidget = _buildUserNameForm();
         });
         return;
       }
-      var validateUserWithDB =
-          await firestoreService.validateUserName(_userName.trim());
+      var validateUserWithDB = await _model.isUserValid(_userName.trim());
       if (!validateUserWithDB) {
         setState(() {
           _responsiveWidget = _buildUserNameForm();
@@ -273,42 +266,47 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       // add username to firestore usernames collection
-      await firestoreService.addUserName(_userName);
+      await _model.addUsername(_userName);
       // save username in prefs service
-      _prefsService.saveUserName(username: _userName);
+      _model.saveUsername(_userName);
       // delay to show loading indicator
       await Future.delayed(Duration(seconds: 1));
-      Routes.navigateMainPage(context);
+      _model.navigateMainPage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text('Sign Up'),
-          ),
-          body: Container(
-              padding: EdgeInsets.all(4.0),
-              child: Column(
-                children: [
-                  SizedBox(height: 15),
-                  Container(
-                    height: 60,
-                    child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 500),
-                      child: _responsiveWidget,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  _buildContinueButton(),
-                  Spacer(),
-                  WhatsAppImage()
-                ],
-              ))),
-    );
+    return ViewModelBuilder<LoginViewModel>.nonReactive(
+        viewModelBuilder: () => LoginViewModel(),
+        builder: (context, model, child) {
+          _model = model;
+          return SafeArea(
+            top: false,
+            child: Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Text('Sign Up'),
+                ),
+                body: Container(
+                    padding: EdgeInsets.all(4.0),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 15),
+                        Container(
+                          height: 60,
+                          child: AnimatedSwitcher(
+                            duration: Duration(milliseconds: 500),
+                            child: _responsiveWidget,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        _buildContinueButton(),
+                        Spacer(),
+                        WhatsAppImage()
+                      ],
+                    ))),
+          );
+        });
   }
 }

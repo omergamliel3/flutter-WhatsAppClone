@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:stacked/stacked.dart';
-import 'select_contact_viewmodel.dart';
+import 'package:provider/provider.dart';
 
+import '../../../core/provider/main.dart';
 import '../../../core/models/contact_entity.dart';
 
 import '../../../core/shared/constants.dart';
@@ -92,8 +92,8 @@ class SelectContactScreen extends StatelessWidget {
   }
 
   // build contact list tile
-  Widget _buildContactListTile(ContactEntity contactEntity,
-      BuildContext context, SelectContactViewModel model) {
+  Widget _buildContactListTile(
+      ContactEntity contactEntity, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
@@ -110,7 +110,7 @@ class SelectContactScreen extends StatelessWidget {
         onTap: _contactMode == ContactMode.chat
             ? () async {
                 // create new contact entity
-                await model.createContactEntity(contactEntity, context);
+                await context.read<MainModel>().activeContact(contactEntity);
                 Navigator.pop(context);
               }
             : null,
@@ -139,26 +139,20 @@ class SelectContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SelectContactViewModel>.nonReactive(
-      viewModelBuilder: () => SelectContactViewModel(),
-      builder: (context, model, child) {
-        var contacts = model.getUnActiveContacts(context);
-        return SafeArea(
-          top: false,
-          child: Scaffold(
-            appBar: _buildAppBar(context, contacts),
-            body: Scrollbar(
-              child: ListView.builder(
-                  physics: ScrollPhysics(),
-                  itemCount: contacts.length,
-                  itemBuilder: (context, index) {
-                    return _buildContactListTile(
-                        contacts[index], context, model);
-                  }),
-            ),
-          ),
-        );
-      },
+    var contacts = context.read<MainModel>().unActiveContacts;
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: _buildAppBar(context, contacts),
+        body: Scrollbar(
+          child: ListView.builder(
+              physics: ScrollPhysics(),
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                return _buildContactListTile(contacts[index], context);
+              }),
+        ),
+      ),
     );
   }
 }

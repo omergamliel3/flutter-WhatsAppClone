@@ -54,10 +54,6 @@ class MainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // theme data
-  bool _isLight;
-  bool get isLight => _isLight;
-
   /// init model data
   Future<void> initModel() async {
     // get active contacts entities
