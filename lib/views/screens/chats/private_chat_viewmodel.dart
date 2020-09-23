@@ -3,6 +3,7 @@ import 'package:stacked/stacked.dart';
 import '../../../services/locator.dart';
 import '../../../services/api/dialogflow.dart';
 import '../../../services/local_storage/db_service.dart';
+import '../../../repositories/contacts_repo/contacts_repository.dart';
 
 import '../../../core/models/message.dart';
 import '../../../core/models/contact_entity.dart';
@@ -13,10 +14,16 @@ class PrivateChatViewModel extends BaseViewModel {
   // get services
   final dbService = locator<DBservice>();
   final dialogflowAPI = locator<DialogFlowAPI>();
+  final contactsRepo = locator<ContactsRepository>();
 
   // launch call via url launcher
   void launchCall(String number) {
     url_launcher.launch('tel:$number');
+  }
+
+  // set active contacts via contacts repository
+  Future<void> setActiveContacts() async {
+    await contactsRepo.setActiveContacts();
   }
 
   // get chat messages data according to contact entity via local db service

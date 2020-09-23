@@ -5,7 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'login_viewmodel.dart';
 
 import '../../../services/locator.dart';
-import '../../../services/firebase/auth_service.dart';
+import '../../../services/auth/auth_service.dart';
 
 import '../../../core/shared/constants.dart';
 

@@ -21,7 +21,7 @@ class ContactsRepository
 
   @override
   Future<void> initalise() async {
-    listenToReactiveValues([_activeContacts, _unActiveContacts]);
+    listenToReactiveValues([_activeContacts]);
     await setActiveContacts();
     await setUnActiveContacts();
   }

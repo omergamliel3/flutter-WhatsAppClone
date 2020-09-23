@@ -15,6 +15,8 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage>
     with TickerProviderStateMixin {
+  bool _isLight;
+
   // build whatsapp image asset
   Widget _buildWhatsAppImage() {
     return Expanded(
@@ -59,14 +61,15 @@ class _LoadingPageState extends State<LoadingPage>
 
   @override
   Widget build(BuildContext context) {
+    _isLight = Theme.of(context).brightness == Brightness.light;
     return ViewModelBuilder<LoadingViewModel>.nonReactive(
         viewModelBuilder: () => LoadingViewModel(),
-        onModelReady: (model) => model.initalise(context),
+        onModelReady: (model) => model.initalise(),
         builder: (context, model, child) {
           return SafeArea(
             top: false,
             child: Scaffold(
-              backgroundColor: model.isLight ? Colors.white : Colors.grey[900],
+              backgroundColor: _isLight ? Colors.white : Colors.grey[900],
               body: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[

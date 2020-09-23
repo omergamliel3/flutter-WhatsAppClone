@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'private_chat_viewmodel.dart';
 
-import '../../../core/provider/main.dart';
 import '../../../core/models/contact_entity.dart';
 import '../../../core/models/message.dart';
 import '../../../core/shared/constants.dart';
@@ -179,7 +177,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
     // insert message to local db
     await _model.insertMessage(message);
     // update active contacts
-    Provider.of<MainModel>(context, listen: false).getActiveContacts();
+    await _model.setActiveContacts();
     setState(() {
       // get messages from local db and rebuild msgs list
       //_msgs = _model.getMessages(widget.contactEntity);

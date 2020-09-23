@@ -1,48 +1,48 @@
-import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:provider/provider.dart';
 
 import '../../../services/locator.dart';
 import '../../../services/device/permission_service.dart';
-import '../../../services/local_storage/user_service.dart';
+import '../../../services/auth/user_service.dart';
 import '../../../services/local_storage/db_service.dart';
 import '../../../services/network/connectivity.dart';
-
-import '../../../core/provider/main.dart';
+import '../../../services/auth/auth_service.dart';
+import '../../../repositories/contacts_repo/contacts_repository.dart';
 
 import '../../../core/routes/navigation_service .dart';
 
 class LoadingViewModel extends BaseViewModel {
-  bool _isLight;
-  bool get isLight => _isLight;
-
   /// call once after the model is construct
-  void initalise(BuildContext context) {
-    _isLight = Theme.of(context).brightness == Brightness.light;
+  void initalise() {
     // evoke init tasks
-    runInitTasks(context);
+    runInitTasks();
   }
 
   /// run app services initial tasks
-  void runInitTasks(BuildContext context) async {
+  void runInitTasks() async {
     // get all services
     final navigator = locator<NavigationService>();
     final permission = locator<PermissionService>();
-    final prefs = locator<UserService>();
+    final user = locator<UserService>();
     final localDB = locator<DBservice>();
-    // construct connectivity service
+    final auth = locator<AuthService>();
+    final contactsRepo = locator<ContactsRepository>();
     // ignore: unused_local_variable
     final connectivity = locator<ConnectivityService>();
-    // request device permissions
-    await permission.requestPermissions();
-    // init prefs service
-    await prefs.initPrefs();
+
     // init local storage sqlite db
     await localDB.asyncInitDB();
-    // init main model data
-    await context.read<MainModel>().initModel();
+    // request device permissions
+    await permission.requestPermissions();
+    // init user service
+    await user.initUserService();
+    // init auth service
+    await auth.initAuth();
+
+    // init contacts repo
+    await contactsRepo.initalise();
+
     // if authenticated navigate main page, else navigate log-in page
-    if (prefs.isAuthenticated) {
+    if (auth.isAuthenticated) {
       // navigate main page
       navigator.navigateMainPage();
     } else {

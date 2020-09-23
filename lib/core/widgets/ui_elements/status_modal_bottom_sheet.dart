@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import '../../models/status.dart';
-import '../../provider/main.dart';
 
 import '../../../services/locator.dart';
-import '../../../services/firebase/firestore_service.dart';
-import '../../../services/local_storage/user_service.dart';
+import '../../../services/auth/user_service.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../alerts/toast.dart';
@@ -42,8 +38,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
   // responsive widget
   Widget _responsiveWidget;
   // get services
-  final prefsService = locator<UserService>();
-  final firestoreService = locator<FirestoreService>();
+  final userService = locator<UserService>();
 
   @override
   void initState() {
@@ -98,7 +93,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     if (_textEditingController.value.text == null ||
         _textEditingController.value.text.isEmpty) return;
     var status = Status(
-        userName: prefsService.userName,
+        userName: userService.userName,
         content: _textEditingController.value.text,
         timestamp: DateTime.now().toUtc());
 
@@ -109,10 +104,8 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     });
 
     // upload status to firestore db
-    var upload = await firestoreService.uploadStatus(status);
+    var upload = await userService.uploadStatus(status);
     if (upload) {
-      // update user status in main model
-      context.read<MainModel>().updateUserStatus(status.content);
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }

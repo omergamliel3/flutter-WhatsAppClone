@@ -1,37 +1,36 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../services/firebase/auth_service.dart';
-import '../../../services/firebase/firestore_service.dart';
-import '../../../services/local_storage/user_service.dart';
+import '../../../services/auth/auth_service.dart';
+import '../../../services/auth/user_service.dart';
 import '../../../services/locator.dart';
 import '../../../services/network/connectivity.dart';
 import '../../../core/routes/navigation_service%20.dart';
 
 class LoginViewModel extends BaseViewModel {
   // get services
-  final prefsService = locator<UserService>();
+  final user = locator<UserService>();
   final authService = locator<AuthService>();
-  final firestoreService = locator<FirestoreService>();
   final connectivityService = locator<ConnectivityService>();
   final navigator = locator<NavigationService>();
+  final auth = locator<AuthService>();
 
   // return the latest connectivity status
   bool get connectivity => connectivityService.connectivity;
-  bool get isAuthenticated => prefsService.isAuthenticated;
+  bool get isAuthenticated => auth.isAuthenticated;
 
   // validate username via firestore service
   Future<bool> isUserValid(String username) async {
-    return await firestoreService.validateUserName(username);
+    return await auth.validateUserName(username);
   }
 
   // add username via firestore service
   Future<void> addUsername(String username) async {
-    return await firestoreService.addUserName(username);
+    return await auth.addUserName(username);
   }
 
   // save username localy via prefs service
   void saveUsername(String username) {
-    prefsService.saveUserName(username: username);
+    user.saveUserName(username);
   }
 
   // navigate main page via navigator service

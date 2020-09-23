@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../core/provider/main.dart';
 import '../../../core/models/status.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 
 import '../../../utils/datetime.dart';
 
@@ -19,36 +17,32 @@ class StatusPage extends StatefulWidget {
 
 class _StatusPageState extends State<StatusPage>
     with AutomaticKeepAliveClientMixin {
+  StatusViewModel _model;
   // build personal status listile
-  Widget _buildPersonalStatus(StatusViewModel model) {
-    return Selector<MainModel, String>(
-        selector: (context, model) => model.userStatus,
-        builder: (context, value, child) {
-          var _isLight = Theme.of(context).brightness == Brightness.light;
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor:
-                  _isLight ? Theme.of(context).primaryColor : Colors.blue,
-              child: Text(
-                model.username[0].toUpperCase(),
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-            title: Text('My status'),
-            subtitle: Text(value ?? 'Tap to add status update'),
-            onTap: () {
-              // show status modal bottom sheet
-              showStatusModalBottomSheet(context);
-            },
-          );
-        });
+  Widget _buildPersonalStatus() {
+    var _isLight = Theme.of(context).brightness == Brightness.light;
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor:
+            _isLight ? Theme.of(context).primaryColor : Colors.blue,
+        child: Text(
+          _model.username[0].toUpperCase(),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+      title: Text('My status'),
+      subtitle: Text(_model.userStatus ?? 'Tap to add status update'),
+      onTap: () {
+        // show status modal bottom sheet
+        showStatusModalBottomSheet(context);
+      },
+    );
   }
 
   // build users status widget
-  Widget _buildStatus(Status status, StatusViewModel model) {
+  Widget _buildStatus(Status status) {
     var timeAgo = formatDateTime(status.timestamp);
-    var allowDelete = model.allowDelete(status.userName);
+    var allowDelete = _model.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -66,13 +60,12 @@ class _StatusPageState extends State<StatusPage>
         style: Theme.of(context).textTheme.caption,
       ),
       // only user can delete its own status
-      onTap:
-          allowDelete ? () => model.handleDeleteStatus(status, context) : null,
+      onTap: allowDelete ? () => _model.handleDeleteStatus(status) : null,
     );
   }
 
   // build divider text widget
-  Widget _buildDividerText(StatusViewModel model) {
+  Widget _buildDividerText() {
     return Container(
         padding: EdgeInsets.fromLTRB(15, 6, 0, 6),
         alignment: Alignment.centerLeft,
@@ -80,9 +73,9 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // build users status widgets from firestore collection snapthots
-  Widget _buildUsersStatus(StatusViewModel model) {
+  Widget _buildUsersStatus() {
     return StreamBuilder<QuerySnapshot>(
-      stream: model.statusStream,
+      stream: _model.statusStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -98,7 +91,7 @@ class _StatusPageState extends State<StatusPage>
             itemBuilder: (context, index) {
               var status = Status.fromJsonMap(snapshot.data.docs[index].data(),
                   snapshot.data.docs[index].id);
-              return _buildStatus(status, model);
+              return _buildStatus(status);
             },
           ),
         ));
@@ -109,17 +102,17 @@ class _StatusPageState extends State<StatusPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ViewModelBuilder<StatusViewModel>.nonReactive(
+    return ViewModelBuilder<StatusViewModel>.reactive(
       viewModelBuilder: () => StatusViewModel(),
       onModelReady: (model) => model.initalise(),
+      staticChild: Column(
+        children: [_buildDividerText(), _buildUsersStatus()],
+      ),
       builder: (context, model, child) {
+        _model = model;
         return Scaffold(
             body: Column(
-          children: [
-            _buildPersonalStatus(model),
-            _buildDividerText(model),
-            _buildUsersStatus(model)
-          ],
+          children: [_buildPersonalStatus(), child],
         ));
       },
     );

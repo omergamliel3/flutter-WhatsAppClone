@@ -3,10 +3,7 @@ import 'package:stacked/stacked.dart';
 
 import 'chats_viewmodel.dart';
 
-import 'package:provider/provider.dart';
-
 import '../../../core/models/contact_entity.dart';
-import '../../../core/provider/main.dart';
 
 import '../../../utils/datetime.dart';
 
@@ -56,36 +53,31 @@ class _ChatsPageState extends State<ChatsPage>
 
   // build contact chats listview
   Widget _buildContactChats() {
-    return Selector<MainModel, List<ContactEntity>>(
-      selector: (context, model) => model.activeContacts,
-      builder: (context, data, child) {
-        // order contacts data by date time decending
-        var contacts = data;
-        if (contacts.isEmpty) {
-          return _buildEmptyContact();
-        }
-        contacts.sort((a, b) => a.lastMsgTime.compareTo(b.lastMsgTime));
-        contacts = contacts.reversed.toList();
+    // order contacts data by date time decending
+    var contacts = _model.activeContacts;
+    if (contacts.isEmpty) {
+      return _buildEmptyContact();
+    }
+    contacts.sort((a, b) => a.lastMsgTime.compareTo(b.lastMsgTime));
+    contacts = contacts.reversed.toList();
 
-        return ListView.separated(
-            separatorBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 70.0, right: 10),
-                child: Divider(thickness: 2.0),
-              );
-            },
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              return _buildContactListTile(contacts[index], index);
-            });
-      },
-    );
+    return ListView.separated(
+        separatorBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 70.0, right: 10),
+            child: Divider(thickness: 2.0),
+          );
+        },
+        itemCount: contacts.length,
+        itemBuilder: (context, index) {
+          return _buildContactListTile(contacts[index], index);
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ViewModelBuilder<ChatsViewModel>.nonReactive(
+    return ViewModelBuilder<ChatsViewModel>.reactive(
         builder: (context, model, child) {
           _model = model;
           return Scaffold(
