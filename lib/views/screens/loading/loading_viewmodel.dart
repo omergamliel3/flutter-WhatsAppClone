@@ -37,7 +37,6 @@ class LoadingViewModel extends BaseViewModel {
     await user.initUserService();
     // init auth service
     await auth.initAuth();
-
     // init contacts repo
     await contactsRepo.initalise();
 

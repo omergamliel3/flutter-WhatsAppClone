@@ -105,14 +105,15 @@ class _StatusPageState extends State<StatusPage>
     return ViewModelBuilder<StatusViewModel>.reactive(
       viewModelBuilder: () => StatusViewModel(),
       onModelReady: (model) => model.initalise(),
-      staticChild: Column(
-        children: [_buildDividerText(), _buildUsersStatus()],
-      ),
       builder: (context, model, child) {
         _model = model;
         return Scaffold(
             body: Column(
-          children: [_buildPersonalStatus(), child],
+          children: [
+            _buildPersonalStatus(),
+            _buildDividerText(),
+            _buildUsersStatus()
+          ],
         ));
       },
     );

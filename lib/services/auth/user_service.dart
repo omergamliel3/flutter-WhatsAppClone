@@ -13,7 +13,7 @@ class UserService with ReactiveServiceMixin {
 
   // storage ref
   SharedPreferences _sharedPreferences;
-  RxValue<String> _userStatus;
+  final RxValue<String> _userStatus = RxValue<String>(initial: '');
 
   /// initialise service
   Future<void> initUserService() async {
@@ -102,9 +102,3 @@ class UserService with ReactiveServiceMixin {
   /// username getter
   String get userName => _sharedPreferences.getString(_kUserNameKey);
 }
-
-// /// save user status in prefs
-// void saveUserStatus({String status}) {
-//   if (status == null || status.isEmpty) return;
-//   _sharedPreferences.setString(_kUserStatusNameKey, status.trim());
-// }

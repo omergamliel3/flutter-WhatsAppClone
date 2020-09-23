@@ -17,7 +17,8 @@ class ContactsRepository
   // contacts data
   List<ContactEntity> _unActiveContacts;
   // active chats data
-  RxValue<List<ContactEntity>> _activeContacts;
+  final RxValue<List<ContactEntity>> _activeContacts =
+      RxValue<List<ContactEntity>>();
 
   @override
   Future<void> initalise() async {

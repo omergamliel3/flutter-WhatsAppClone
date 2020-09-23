@@ -267,11 +267,6 @@ class _LoginPageState extends State<LoginPage> {
       }
       // add username to firestore usernames collection
       await _model.addUsername(_userName);
-      // save username in prefs service
-      _model.saveUsername(_userName);
-      // delay to show loading indicator
-      await Future.delayed(Duration(seconds: 1));
-      _model.navigateMainPage();
     }
   }
 

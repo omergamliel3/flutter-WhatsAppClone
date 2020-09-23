@@ -7,7 +7,7 @@ import '../../../services/locator.dart';
 
 class StatusViewModel extends ReactiveViewModel {
   // services
-  final _user = locator<UserService>();
+  final _userService = locator<UserService>();
 
   // status stream
   Stream<QuerySnapshot> _statusStream;
@@ -25,25 +25,25 @@ class StatusViewModel extends ReactiveViewModel {
   /// evoke status delete methods
   Future<void> handleDeleteStatus(Status status) async {
     // delete status from firestore service
-    var deleted = await _user.deleteStatus(status);
+    var deleted = await _userService.deleteStatus(status);
     // stops method if failed to delete status
     if (!deleted) return;
     // get user last status
-    await _user.getUserStatus();
+    await _userService.getUserStatus();
   }
 
   // whatever the user allow to delete status
   bool allowDelete(String username) {
-    var allowed = _user.allowDelete(username);
+    var allowed = _userService.allowDelete(username);
     return allowed;
   }
 
   // username getter
-  String get username => _user.userName;
+  String get username => _userService.userName;
   // reactive user status getter
-  String get userStatus => _user.userStatus;
+  String get userStatus => _userService.userStatus;
 
   // listen to _user service changes
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_user];
+  List<ReactiveServiceMixin> get reactiveServices => [_userService];
 }

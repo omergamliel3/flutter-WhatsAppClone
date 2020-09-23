@@ -10,6 +10,7 @@ class CallsViewModel extends BaseViewModel {
 
   // launch device phone call
   void launchCall(String number) {
+    print('launchCall');
     url_launcher.launch('tel:$number');
   }
 }

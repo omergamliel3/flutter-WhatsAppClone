@@ -56,7 +56,6 @@ class NavigationService {
 
   /// navigate main page
   Future<dynamic> navigateMainPage() {
-    print('navigate main page');
     return navigatorKey.currentState.pushReplacementNamed(mainRoute);
   }
 

@@ -18,20 +18,23 @@ class SelectContactScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
-        leading: CircleAvatar(
-          child: Text(contactEntity.displayName[0].toUpperCase(),
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          backgroundColor: Colors.grey,
-        ),
-        title: Text(contactEntity.displayName),
-        trailing: _contactMode == ContactMode.chat
-            ? SizedBox()
-            : IconButton(icon: Icon(Icons.phone), onPressed: () {}),
-        onTap: _contactMode == ContactMode.chat
-            ? () => model.activateContact(contactEntity)
-            : null,
-      ),
+          leading: CircleAvatar(
+            child: Text(contactEntity.displayName[0].toUpperCase(),
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+            backgroundColor: Colors.grey,
+          ),
+          title: Text(contactEntity.displayName),
+          trailing: _contactMode == ContactMode.chat
+              ? SizedBox()
+              : IconButton(
+                  icon: Icon(Icons.phone),
+                  onPressed: _contactMode == ContactMode.calls
+                      ? () => model.launchCall(contactEntity.phoneNumber)
+                      : null),
+          onTap: _contactMode == ContactMode.chat
+              ? () => model.activateContact(contactEntity)
+              : null),
     );
   }
 

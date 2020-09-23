@@ -8,7 +8,7 @@ import '../../../core/routes/navigation_service%20.dart';
 
 class LoginViewModel extends BaseViewModel {
   // get services
-  final user = locator<UserService>();
+  final userService = locator<UserService>();
   final authService = locator<AuthService>();
   final connectivityService = locator<ConnectivityService>();
   final navigator = locator<NavigationService>();
@@ -23,14 +23,16 @@ class LoginViewModel extends BaseViewModel {
     return await auth.validateUserName(username);
   }
 
-  // add username via firestore service
+  // save username in local, cloud storage
   Future<void> addUsername(String username) async {
-    return await auth.addUserName(username);
-  }
-
-  // save username localy via prefs service
-  void saveUsername(String username) {
-    user.saveUserName(username);
+    // save username in cloud firestore
+    await auth.addUserName(username);
+    // save username localy
+    userService.saveUserName(username);
+    // delay to show loading indicator
+    await Future.delayed(Duration(seconds: 1));
+    // navigate main page
+    navigateMainPage();
   }
 
   // navigate main page via navigator service
