@@ -7,7 +7,7 @@ import '../../provider/main.dart';
 
 import '../../../services/locator.dart';
 import '../../../services/firebase/firestore_service.dart';
-import '../../../services/local_storage/prefs_service.dart';
+import '../../../services/local_storage/user_service.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../alerts/toast.dart';
@@ -42,7 +42,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
   // responsive widget
   Widget _responsiveWidget;
   // get services
-  final prefsService = locator<PrefsService>();
+  final prefsService = locator<UserService>();
   final firestoreService = locator<FirestoreService>();
 
   @override

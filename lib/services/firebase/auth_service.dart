@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../locator.dart';
-import '../local_storage/prefs_service.dart';
+import '../local_storage/user_service.dart';
 
 class AuthService {
-  final _prefsService = locator<PrefsService>();
+  final _prefsService = locator<UserService>();
 
   /// register user with phone number [FirebaseAuth]
   Future registerUser(String mobile, BuildContext context) async {

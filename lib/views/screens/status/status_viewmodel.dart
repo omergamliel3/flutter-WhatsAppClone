@@ -7,12 +7,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../core/models/status.dart';
 import '../../../core/provider/main.dart';
 import '../../../services/firebase/firestore_service.dart';
-import '../../../services/local_storage/prefs_service.dart';
+import '../../../services/local_storage/user_service.dart';
 import '../../../services/locator.dart';
 
 class StatusViewModel extends BaseViewModel {
   // services
-  final _prefsService = locator<PrefsService>();
+  final _prefsService = locator<UserService>();
   final _firestoreService = locator<FirestoreService>();
   // status stream
   Stream<QuerySnapshot> _statusStream;

@@ -2,14 +2,14 @@ import 'package:stacked/stacked.dart';
 
 import '../../../services/firebase/auth_service.dart';
 import '../../../services/firebase/firestore_service.dart';
-import '../../../services/local_storage/prefs_service.dart';
+import '../../../services/local_storage/user_service.dart';
 import '../../../services/locator.dart';
 import '../../../services/network/connectivity.dart';
 import '../../../core/routes/navigation_service%20.dart';
 
 class LoginViewModel extends BaseViewModel {
   // get services
-  final prefsService = locator<PrefsService>();
+  final prefsService = locator<UserService>();
   final authService = locator<AuthService>();
   final firestoreService = locator<FirestoreService>();
   final connectivityService = locator<ConnectivityService>();

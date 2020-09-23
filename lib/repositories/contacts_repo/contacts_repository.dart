@@ -1,0 +1,58 @@
+import 'package:stacked/stacked.dart';
+import 'package:observable_ish/observable_ish.dart';
+
+import 'contacts_repository_interface.dart';
+
+import '../../services/device/contacts_service.dart';
+import '../../services/local_storage/db_service.dart';
+import '../../services/locator.dart';
+import '../../core/models/contact_entity.dart';
+
+class ContactsRepository
+    with ReactiveServiceMixin
+    implements IContactsRepository {
+  // services
+  final contactHandler = locator<ContactsHandler>();
+  final dbService = locator<DBservice>();
+  // contacts data
+  List<ContactEntity> _unActiveContacts;
+  // active chats data
+  RxValue<List<ContactEntity>> _activeContacts;
+
+  @override
+  Future<void> initalise() async {
+    listenToReactiveValues([_activeContacts, _unActiveContacts]);
+    await setActiveContacts();
+    await setUnActiveContacts();
+  }
+
+  @override
+  Future<void> setActiveContacts() async {
+    _activeContacts.value = await dbService.getContactEntites();
+  }
+
+  @override
+  Future<void> setUnActiveContacts() async {
+    _unActiveContacts =
+        await contactHandler.getUnActiveContacts(_activeContacts.value);
+  }
+
+  @override
+  Future<void> activateContact(ContactEntity contactEntity) async {
+    // create new contact in local db
+    await dbService.insertContactEntity(contactEntity);
+    // get active contacts from local db
+    await setActiveContacts();
+    // remove newly added contact from unActiveContacts
+    _unActiveContacts
+      ..removeWhere((contact) =>
+          contact.displayName.toLowerCase() ==
+          contactEntity.displayName.toLowerCase());
+  }
+
+  @override
+  List<ContactEntity> get activeContacts => _activeContacts.value;
+
+  @override
+  List<ContactEntity> get unActiveContacts => _unActiveContacts;
+}

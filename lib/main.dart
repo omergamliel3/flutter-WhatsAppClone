@@ -28,9 +28,8 @@ class MyApp extends StatelessWidget {
             title: 'WhatsApp',
             theme: lightTheme,
             darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
+            themeMode: ThemeMode.dark,
             navigatorKey: locator<NavigationService>().navigatorKey,
-            initialRoute: locator<NavigationService>().initialRoute,
             onGenerateRoute: locator<NavigationService>().onGenerateRoute,
           );
         });

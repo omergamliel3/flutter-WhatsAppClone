@@ -15,7 +15,6 @@ import 'undefined_route.dart';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  final String initialRoute = splashRoute;
   // top level app routes settings
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -57,6 +56,7 @@ class NavigationService {
 
   /// navigate main page
   Future<dynamic> navigateMainPage() {
+    print('navigate main page');
     return navigatorKey.currentState.pushReplacementNamed(mainRoute);
   }
 

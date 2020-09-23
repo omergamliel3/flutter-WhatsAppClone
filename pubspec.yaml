@@ -13,9 +13,10 @@ dependencies:
   flutter:
     sdk: flutter
   
-  # mvvm architecture 
+  # state managment 
   stacked: ^1.7.6
-  # dependency injection
+  provider: ^4.3.2+1
+  # inversion of control
   get_it: ^5.0.0
   # device
   permission_handler: ^5.0.1+1
@@ -23,14 +24,11 @@ dependencies:
   call_log: ^2.1.0
   # network
   connectivity: ^0.4.9+2
+  flutter_dialogflow: ^0.1.3
   # firebase
   firebase_auth: ^0.18.0+1
   cloud_firestore: ^0.14.0+2
   firebase_core: ^0.5.0
-  # dialogflow chat bot
-  flutter_dialogflow: ^0.1.3
-  # state managment
-  provider: ^4.3.2+1
   # storage
   shared_preferences: ^0.5.10
   sqflite: ^1.3.1+1

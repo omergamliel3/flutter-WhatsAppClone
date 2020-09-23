@@ -5,13 +5,13 @@ import '../../services/locator.dart';
 import '../../services/device/contacts_service.dart';
 import '../../services/firebase/firestore_service.dart';
 import '../../services/local_storage/db_service.dart';
-import '../../services/local_storage/prefs_service.dart';
+import '../../services/local_storage/user_service.dart';
 
 import '../models/contact_entity.dart';
 
 class MainModel extends ChangeNotifier {
   // services
-  final prefsService = locator<PrefsService>();
+  final prefsService = locator<UserService>();
   final dbService = locator<DBservice>();
   final firestoreService = locator<FirestoreService>();
   final contactHandler = locator<ContactsHandler>();

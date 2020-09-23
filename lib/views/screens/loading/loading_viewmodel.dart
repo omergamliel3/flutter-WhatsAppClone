@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../services/locator.dart';
 import '../../../services/device/permission_service.dart';
-import '../../../services/local_storage/prefs_service.dart';
+import '../../../services/local_storage/user_service.dart';
 import '../../../services/local_storage/db_service.dart';
 import '../../../services/network/connectivity.dart';
 
@@ -28,7 +28,7 @@ class LoadingViewModel extends BaseViewModel {
     // get all services
     final navigator = locator<NavigationService>();
     final permission = locator<PermissionService>();
-    final prefs = locator<PrefsService>();
+    final prefs = locator<UserService>();
     final localDB = locator<DBservice>();
     // construct connectivity service
     // ignore: unused_local_variable
