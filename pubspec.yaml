@@ -46,6 +46,7 @@ dev_dependencies:
     sdk: flutter
   
   effective_dart: ^1.2.0
+  mockito:
 
 flutter:
 

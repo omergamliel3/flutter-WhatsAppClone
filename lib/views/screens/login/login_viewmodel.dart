@@ -24,7 +24,7 @@ class LoginViewModel extends BaseViewModel {
   }
 
   // save username in local, cloud storage
-  Future<void> addUsername(String username) async {
+  Future<void> saveUsername(String username) async {
     // save username in cloud firestore
     await auth.addUserName(username);
     // save username localy

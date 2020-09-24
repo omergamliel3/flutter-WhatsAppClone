@@ -8,7 +8,6 @@ import '../../../services/locator.dart';
 class StatusViewModel extends ReactiveViewModel {
   // services
   final _userService = locator<UserService>();
-
   // status stream
   Stream<QuerySnapshot> _statusStream;
   Stream<QuerySnapshot> get statusStream => _statusStream;
@@ -34,8 +33,7 @@ class StatusViewModel extends ReactiveViewModel {
 
   // whatever the user allow to delete status
   bool allowDelete(String username) {
-    var allowed = _userService.allowDelete(username);
-    return allowed;
+    return _userService.allowDelete(username);
   }
 
   // username getter

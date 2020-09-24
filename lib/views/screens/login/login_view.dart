@@ -266,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       // add username to firestore usernames collection
-      await _model.addUsername(_userName);
+      await _model.saveUsername(_userName);
     }
   }
 
