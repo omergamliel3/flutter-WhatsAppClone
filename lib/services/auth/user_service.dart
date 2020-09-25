@@ -39,6 +39,7 @@ class UserService with ReactiveServiceMixin {
           .get();
       // if snapshot is empty return null
       if (querySnapshot.docs.isEmpty) {
+        _userStatus.value = null;
         return null;
       }
       // iterate docs from query
@@ -46,15 +47,18 @@ class UserService with ReactiveServiceMixin {
         // only compare doc with the same username as user
         if (doc.data()['username'].toLowerCase() == userName.toLowerCase()) {
           // set user status to reactive value
+          _userStatus.value = querySnapshot.docs.first.data()['status'];
           return querySnapshot.docs.first.data()['status'] as String;
         }
       }
       // did not find any user status, return null
+      _userStatus.value = null;
       return null;
     }
     // return null if error has occurred
     on Exception catch (e) {
       print(e);
+      _userStatus.value = null;
       return null;
     }
   }

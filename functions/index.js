@@ -15,7 +15,7 @@ exports.detectBadStatus = functions.firestore
        
        
                if (filter.isProfane(status)) {
-                   logger.log('detect bad status', username, status);
+                   //logger.log('detect bad status', username, status);
                    const cleaned = filter.clean(status);
                    await doc.ref.update({'status': cleaned});
                    await db.collection('bad_words').add({'username': username, 'status': status});
