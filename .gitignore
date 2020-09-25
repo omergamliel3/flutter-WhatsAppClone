@@ -79,7 +79,6 @@ WhatAppClone.iml
 
 
 # ignore private files
-/test
 /Assets
 /build
 /lib/shared/keys.dart
