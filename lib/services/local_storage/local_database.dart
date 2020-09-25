@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../core/models/contact_entity.dart';
 import '../../core/models/message.dart';
 
-class DBservice {
+class LocalDatabase {
   // static name constants
   final _kDbFileName = 'sqflite_ex.db';
   final _kDBTableContacts = 'contacts_table';

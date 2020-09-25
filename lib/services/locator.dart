@@ -6,7 +6,8 @@ import 'device/permission_service.dart';
 import 'device/contacts_service.dart';
 import 'auth/auth_service.dart';
 import 'auth/user_service.dart';
-import 'local_storage/db_service.dart';
+import 'local_storage/local_database.dart';
+import 'cloud_storage/cloud_database.dart';
 import 'network/connectivity.dart';
 
 import '../repositories/contacts_repo/contacts_repository.dart';
@@ -17,7 +18,8 @@ void setupLocator() {
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => PermissionService());
   locator.registerLazySingleton(() => UserService());
-  locator.registerLazySingleton(() => DBservice());
+  locator.registerLazySingleton(() => LocalDatabase());
+  locator.registerLazySingleton(() => CloudDatabase());
   locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => DialogFlowAPI());
   locator.registerLazySingleton(() => ContactsHandler());

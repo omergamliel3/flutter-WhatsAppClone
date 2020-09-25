@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../cloud_storage/cloud_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../locator.dart';
 
 class AuthService {
   final _kAuthKeyName = 'authenticate';
-  final _kUserNamesCollection = 'user_names';
+  final database = locator<CloudDatabase>();
+
   SharedPreferences _sharedPreferences;
 
   /// initialise service
@@ -29,6 +32,7 @@ class AuthService {
         }).catchError(print);
       },
       verificationFailed: (authException) {
+        // TODO: IMPLEMENT STACKED DIALOG SERVICE
         print('verificationFailed');
         showDialog(
           context: context,
@@ -41,6 +45,7 @@ class AuthService {
         );
       },
       codeSent: (verificationId, forceResendingToken) {
+        // TODO: IMPLEMENT STACKED DIALOG SERVICE
         print('codeSent');
         var _codeController = TextEditingController();
         showDialog(
@@ -92,53 +97,13 @@ class AuthService {
 
   /// add new username to firestore db user_names collection
   Future<bool> addUserName(String username) async {
-    try {
-      // add new username object to user_names db collection
-      var docRef = await FirebaseFirestore.instance
-          .collection(_kUserNamesCollection)
-          .add({'username': username});
-
-      print('created new firestore recored with id: ${docRef.id}');
-      return true;
-    } on Exception catch (e) {
-      print(e);
-      return false;
-    }
+    return database.addUserName(username);
   }
 
   /// compare username argument with user_names collection
   /// returns true if do not exists in collection, false if exists
   Future<bool> validateUserName(String username) async {
-    try {
-      // get query db collection
-      var query = await FirebaseFirestore.instance
-          .collection(_kUserNamesCollection)
-          .get();
-      // get query docs
-      var usernames = query.docs;
-      // username flag
-      var flag = false;
-      // iterate usernames query docs list
-      for (var user in usernames) {
-        var name = user.data()['username'] as String;
-        if (name.toLowerCase() == username.toLowerCase()) {
-          flag = true;
-          break;
-        }
-      }
-
-      // username is taken, not valid.
-      if (flag) {
-        return false;
-      }
-      // username is not taken, valid.
-      return true;
-    }
-    // return false if catch error
-    on Exception catch (e) {
-      print(e);
-      return false;
-    }
+    return await database.validateUserName(username);
   }
 
   /// save authentication state in prefs

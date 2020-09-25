@@ -3,7 +3,7 @@ import 'package:WhatsAppClone/repositories/contacts_repo/contacts_repository.dar
 import 'package:WhatsAppClone/services/auth/auth_service.dart';
 import 'package:WhatsAppClone/services/auth/user_service.dart';
 import 'package:WhatsAppClone/services/device/permission_service.dart';
-import 'package:WhatsAppClone/services/local_storage/db_service.dart';
+import 'package:WhatsAppClone/services/local_storage/local_database.dart';
 import 'package:WhatsAppClone/services/locator.dart';
 import 'package:WhatsAppClone/services/network/connectivity.dart';
 import 'package:WhatsAppClone/views/screens/loading/loading_viewmodel.dart';
@@ -16,7 +16,7 @@ class NavigationServiceMock extends Mock implements NavigationService {}
 
 class PermissionServiceMock extends Mock implements PermissionService {}
 
-class DBserviceMock extends Mock implements DBservice {}
+class DBserviceMock extends Mock implements LocalDatabase {}
 
 class AuthServiceMock extends Mock implements AuthService {}
 
@@ -41,7 +41,7 @@ void main() {
         var connectivity = ConnectivityServiceMock();
         // GetIt register services
         locator.registerSingleton<NavigationService>(navigator);
-        locator.registerSingleton<DBservice>(localDb);
+        locator.registerSingleton<LocalDatabase>(localDb);
         locator.registerSingleton<PermissionService>(permmision);
         locator.registerSingleton<UserService>(user);
         locator.registerSingleton<AuthService>(auth);

@@ -3,7 +3,7 @@ import 'package:stacked/stacked.dart';
 import '../../../services/locator.dart';
 import '../../../services/device/permission_service.dart';
 import '../../../services/auth/user_service.dart';
-import '../../../services/local_storage/db_service.dart';
+import '../../../services/local_storage/local_database.dart';
 import '../../../services/network/connectivity.dart';
 import '../../../services/auth/auth_service.dart';
 import '../../../repositories/contacts_repo/contacts_repository.dart';
@@ -15,7 +15,7 @@ class LoadingViewModel extends BaseViewModel {
   final navigator = locator<NavigationService>();
   final permission = locator<PermissionService>();
   final user = locator<UserService>();
-  final localDB = locator<DBservice>();
+  final localDB = locator<LocalDatabase>();
   final auth = locator<AuthService>();
   final contactsRepo = locator<ContactsRepository>();
   final connectivity = locator<ConnectivityService>();

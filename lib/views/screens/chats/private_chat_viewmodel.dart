@@ -2,7 +2,7 @@ import 'package:stacked/stacked.dart';
 
 import '../../../services/locator.dart';
 import '../../../services/api/dialogflow.dart';
-import '../../../services/local_storage/db_service.dart';
+import '../../../services/local_storage/local_database.dart';
 import '../../../repositories/contacts_repo/contacts_repository.dart';
 
 import '../../../core/models/message.dart';
@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class PrivateChatViewModel extends BaseViewModel {
   // get services
-  final dbService = locator<DBservice>();
+  final database = locator<LocalDatabase>();
   final dialogflowAPI = locator<DialogFlowAPI>();
   final contactsRepo = locator<ContactsRepository>();
 
@@ -28,12 +28,12 @@ class PrivateChatViewModel extends BaseViewModel {
 
   // get chat messages data according to contact entity via local db service
   Future<List<Message>> getMessages(ContactEntity contactEntity) {
-    return dbService.getMessages(contactEntity);
+    return database.getMessages(contactEntity);
   }
 
   // insert new message to local db service
   Future<bool> insertMessage(Message message) {
-    return dbService.insertMessage(message);
+    return database.insertMessage(message);
   }
 
   // get message response via dialog flow api

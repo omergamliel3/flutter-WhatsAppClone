@@ -4,7 +4,7 @@ import 'package:observable_ish/observable_ish.dart';
 import 'contacts_repository_interface.dart';
 
 import '../../services/device/contacts_service.dart';
-import '../../services/local_storage/db_service.dart';
+import '../../services/local_storage/local_database.dart';
 import '../../services/locator.dart';
 import '../../core/models/contact_entity.dart';
 
@@ -13,7 +13,7 @@ class ContactsRepository
     implements IContactsRepository {
   // services
   final contactHandler = locator<ContactsHandler>();
-  final dbService = locator<DBservice>();
+  final dbService = locator<LocalDatabase>();
   // contacts data
   List<ContactEntity> _unActiveContacts;
   // active chats data
