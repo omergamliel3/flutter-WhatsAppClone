@@ -11,24 +11,24 @@ import '../../../repositories/contacts_repo/contacts_repository.dart';
 import '../../../core/routes/navigation_service .dart';
 
 class LoadingViewModel extends BaseViewModel {
+  // get all services
+  final navigator = locator<NavigationService>();
+  final permission = locator<PermissionService>();
+  final user = locator<UserService>();
+  final localDB = locator<DBservice>();
+  final auth = locator<AuthService>();
+  final contactsRepo = locator<ContactsRepository>();
+  final connectivity = locator<ConnectivityService>();
+
   /// call once after the model is construct
-  void initalise() {
+  Future<void> initalise() async {
     // evoke init tasks
-    runInitTasks();
+    await runInitTasks();
   }
 
   /// run app services initial tasks
-  void runInitTasks() async {
-    // get all services
-    final navigator = locator<NavigationService>();
-    final permission = locator<PermissionService>();
-    final user = locator<UserService>();
-    final localDB = locator<DBservice>();
-    final auth = locator<AuthService>();
-    final contactsRepo = locator<ContactsRepository>();
-    // ignore: unused_local_variable
-    final connectivity = locator<ConnectivityService>();
-
+  Future<void> runInitTasks() async {
+    await connectivity.initConnectivity();
     // init local storage sqlite db
     await localDB.asyncInitDB();
     // request device permissions
@@ -37,11 +37,12 @@ class LoadingViewModel extends BaseViewModel {
     await user.initUserService();
     // init auth service
     await auth.initAuth();
+
     // init contacts repo
     await contactsRepo.initalise();
 
     // if authenticated navigate main page, else navigate log-in page
-    if (auth.isAuthenticated) {
+    if (auth.isAuthenticated ?? false) {
       // navigate main page
       navigator.navigateMainPage();
     } else {

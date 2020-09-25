@@ -96,6 +96,12 @@ class UserService with ReactiveServiceMixin {
     return name.trim().toLowerCase() == userName.trim().toLowerCase();
   }
 
+  /// status stream getter
+  Stream<QuerySnapshot> get statusStream => FirebaseFirestore.instance
+      .collection('users_status')
+      .orderBy('timestamp', descending: true)
+      .snapshots();
+
   /// user status getter
   String get userStatus => _userStatus.value;
 

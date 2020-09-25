@@ -92,3 +92,9 @@ pubspec.lock
 /.gradle
 /trash
 /private
+firebase.json
+firestore.indexes.json
+firestore.rules
+.firebaserc
+*.json
+node_modules
