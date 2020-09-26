@@ -115,6 +115,7 @@ class _MainPageState extends State<MainPage>
       duration: Duration(milliseconds: 300),
       opacity: _fabVisible ? 1.0 : 0.0,
       child: FloatingActionButton(
+          key: ValueKey('FAB'),
           child: Icon(
             _fabIconData,
             color: Colors.white,

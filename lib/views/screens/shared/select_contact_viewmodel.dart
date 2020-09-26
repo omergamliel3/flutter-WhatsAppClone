@@ -14,9 +14,13 @@ class SelectContactViewModel extends BaseViewModel {
   final _navigator = locator<NavigationService>();
 
   // activate contact via contacts repository
-  void activateContact(ContactEntity contactEntity) async {
-    await _contactsRepo.activateContact(contactEntity);
-    _navigator.pop();
+  Future<void> activateContact(ContactEntity contactEntity) async {
+    final activate = await _contactsRepo.activateContact(contactEntity);
+    if (activate) {
+      _navigator.pop();
+    } else {
+      // TODO: SHOW FALIED TO CREATE CONTACT DIALOG
+    }
   }
 
   // launch device phone call

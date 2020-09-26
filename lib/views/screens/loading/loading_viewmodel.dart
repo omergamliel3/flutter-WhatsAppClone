@@ -33,16 +33,15 @@ class LoadingViewModel extends BaseViewModel {
     await localDB.asyncInitDB();
     // request device permissions
     await permission.requestPermissions();
-    // init user service
-    await user.initUserService();
     // init auth service
     await auth.initAuth();
-
+    // init user service
+    await user.initUserService();
     // init contacts repo
     await contactsRepo.initalise();
 
     // if authenticated navigate main page, else navigate log-in page
-    if (auth.isAuthenticated ?? false) {
+    if (auth.isAuthenticated) {
       // navigate main page
       navigator.navigateMainPage();
     } else {

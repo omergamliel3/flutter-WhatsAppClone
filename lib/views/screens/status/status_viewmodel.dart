@@ -20,7 +20,7 @@ class StatusViewModel extends ReactiveViewModel {
   /// evoke status delete methods
   Future<void> handleDeleteStatus(Status status) async {
     // delete status from firestore service
-    var deleted = await _userService.deleteStatus(status) ?? false;
+    var deleted = await _userService.deleteStatus(status);
     // stops method if failed to delete status
     if (!deleted) return;
     // get user last status

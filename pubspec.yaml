@@ -44,7 +44,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  
+  flutter_driver:
+    sdk: flutter
+  test: any
   effective_dart: ^1.2.0
   mockito:
 

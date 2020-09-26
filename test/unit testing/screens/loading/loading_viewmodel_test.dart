@@ -26,44 +26,65 @@ class ConnectivityServiceMock extends Mock implements ConnectivityService {}
 
 void main() {
   group('LoadingViewModel Test', () {
-    group('initialise model', () {
-      test('''
- After constructed call initialise method to initial all services,
- then navigate main page if user authenticated, if not navigate login page''',
-          () async {
-        // construct mock services
-        var navigator = NavigationServiceMock();
-        var localDb = DBserviceMock();
-        var permmision = PermissionServiceMock();
-        var user = UserServiceMock();
-        var auth = AuthServiceMock();
-        var repo = ContactsRepositoryMock();
-        var connectivity = ConnectivityServiceMock();
-        // GetIt register services
-        locator.registerSingleton<NavigationService>(navigator);
-        locator.registerSingleton<LocalDatabase>(localDb);
-        locator.registerSingleton<PermissionService>(permmision);
-        locator.registerSingleton<UserService>(user);
-        locator.registerSingleton<AuthService>(auth);
-        locator.registerSingleton<ContactsRepository>(repo);
-        locator.registerSingleton<ConnectivityService>(connectivity);
+    // construct mock services
+    var navigator = NavigationServiceMock();
+    var localDb = DBserviceMock();
+    var permmision = PermissionServiceMock();
+    var user = UserServiceMock();
+    var auth = AuthServiceMock();
+    var repo = ContactsRepositoryMock();
+    var connectivity = ConnectivityServiceMock();
+    // GetIt register services
+    locator.registerSingleton<NavigationService>(navigator);
+    locator.registerSingleton<LocalDatabase>(localDb);
+    locator.registerSingleton<PermissionService>(permmision);
+    locator.registerSingleton<UserService>(user);
+    locator.registerSingleton<AuthService>(auth);
+    locator.registerSingleton<ContactsRepository>(repo);
+    locator.registerSingleton<ConnectivityService>(connectivity);
 
-        // construct viewmodel
-        var model = LoadingViewModel();
-        // call model initalise
-        await model.initalise();
+    test('initialise with authentication, navigate main page', () async {
+      // mock authentication to true
+      when(auth.isAuthenticated).thenAnswer((realInvocation) => true);
+      // construct viewmodel
+      var model = LoadingViewModel();
+      // call model initalise
+      await model.initalise();
+      // authentication
+      expect(model.auth.isAuthenticated, true);
+      // verify async services and repo init calls
+      verifyInOrder([
+        connectivity.initConnectivity(),
+        localDb.asyncInitDB(),
+        permmision.requestPermissions(),
+        user.initUserService(),
+        auth.initAuth(),
+        repo.initalise(),
+        navigator.navigateMainPage()
+      ]);
+      verifyNever(navigator.navigateLoginPage());
+    });
 
-        // verify async services and repo init calls
-        verifyInOrder([
-          connectivity.initConnectivity(),
-          localDb.asyncInitDB(),
-          permmision.requestPermissions(),
-          user.initUserService(),
-          auth.initAuth(),
-          repo.initalise(),
-          navigator.navigateLoginPage()
-        ]);
-      });
+    test('initialise without authentication, navigate login page', () async {
+      // mock authentication to false
+      when(auth.isAuthenticated).thenAnswer((realInvocation) => false);
+      // construct viewmodel
+      var model = LoadingViewModel();
+      // call model initalise
+      await model.initalise();
+      // not authentication
+      expect(model.auth.isAuthenticated, false);
+      // verify async services and repo init calls
+      verifyInOrder([
+        connectivity.initConnectivity(),
+        localDb.asyncInitDB(),
+        permmision.requestPermissions(),
+        user.initUserService(),
+        auth.initAuth(),
+        repo.initalise(),
+        navigator.navigateLoginPage()
+      ]);
+      verifyNever(navigator.navigateMainPage());
     });
   });
 }

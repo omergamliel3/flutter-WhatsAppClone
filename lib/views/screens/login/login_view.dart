@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
   // build phone number text field
   Widget _buildUserNameFormField() {
     return TextFormField(
+        key: ValueKey('UsernameFormField'),
         autofocus: false,
         initialValue: 'omer gamliel',
         decoration: InputDecoration(
@@ -106,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
   // build continue button
   Widget _buildContinueButton() {
     return RaisedButton(
+      key: ValueKey('CONTINUE'),
       onPressed: _submitForm,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
       padding: const EdgeInsets.all(0.0),

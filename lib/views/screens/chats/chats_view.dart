@@ -70,7 +70,9 @@ class _ChatsPageState extends State<ChatsPage>
         },
         itemCount: contacts.length,
         itemBuilder: (context, index) {
-          return _buildContactListTile(contacts[index], index);
+          return Container(
+              key: ValueKey('chat$index'),
+              child: _buildContactListTile(contacts[index], index));
         });
   }
 

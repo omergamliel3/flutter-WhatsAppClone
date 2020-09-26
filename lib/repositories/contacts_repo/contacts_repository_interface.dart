@@ -4,7 +4,7 @@ abstract class IContactsRepository {
   Future<void> initalise();
   List<ContactEntity> get activeContacts;
   List<ContactEntity> get unActiveContacts;
-  Future<void> setActiveContacts();
-  Future<void> setUnActiveContacts();
-  Future<void> activateContact(ContactEntity contactEntity);
+  Future<bool> setActiveContacts();
+  Future<bool> setUnActiveContacts();
+  Future<bool> activateContact(ContactEntity contactEntity);
 }

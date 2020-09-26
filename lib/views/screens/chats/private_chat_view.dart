@@ -81,6 +81,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   // build messages list
   Widget _buildMsgList() {
     return FutureBuilder<List<Message>>(
+      key: ValueKey('LongList'),
       future: _msgs,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -140,6 +141,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   // build compose message
   Widget _buildComposeMsg() {
     return Container(
+      key: ValueKey('compose'),
       padding: EdgeInsets.only(left: 5.0, bottom: 4.0, right: 4.0),
       decoration: BoxDecoration(color: Theme.of(context).canvasColor),
       child: Row(
@@ -153,6 +155,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
             onSubmitted: _onTextMsgSubmitted,
           )),
           IconButton(
+              key: ValueKey('sendMsg'),
               icon: Icon(Icons.send),
               onPressed: () => _onTextMsgSubmitted(_textEditingController.text))
         ],

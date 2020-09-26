@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stacked/stacked.dart';
 import 'package:observable_ish/observable_ish.dart';
+import '../../services/auth/auth_service.dart';
 import '../cloud_storage/cloud_database.dart';
 import '../locator.dart';
 import '../../core/models/status.dart';
@@ -10,6 +11,7 @@ class UserService with ReactiveServiceMixin {
   // static variables
 
   final _kUserNameKey = 'username';
+  final auth = locator<AuthService>();
   final database = locator<CloudDatabase>();
 
   // storage ref
@@ -18,8 +20,13 @@ class UserService with ReactiveServiceMixin {
 
   /// initialise service
   Future<void> initUserService() async {
+    // create prefs instance
     _sharedPreferences = await SharedPreferences.getInstance();
-    await getUserStatus();
+    // only set user status if authenticated
+    if (auth.isAuthenticated) {
+      await getUserStatus();
+    }
+    // set reactive values
     listenToReactiveValues([_userStatus]);
   }
 

@@ -90,7 +90,9 @@ class SelectContactScreen extends StatelessWidget {
                     physics: ScrollPhysics(),
                     itemCount: contacts.length,
                     itemBuilder: (context, index) {
-                      return _buildContactListTile(contacts[index], model);
+                      return Container(
+                          key: ValueKey('contact$index'),
+                          child: _buildContactListTile(contacts[index], model));
                     }),
               ),
             ),

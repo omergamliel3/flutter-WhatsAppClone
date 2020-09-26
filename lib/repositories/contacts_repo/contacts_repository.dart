@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:stacked/stacked.dart';
 import 'package:observable_ish/observable_ish.dart';
 
@@ -28,27 +30,47 @@ class ContactsRepository
   }
 
   @override
-  Future<void> setActiveContacts() async {
-    _activeContacts.value = await dbService.getContactEntites();
+  Future<bool> setActiveContacts() async {
+    try {
+      _activeContacts.value = await dbService.getContactEntites();
+      return true;
+    } on Exception catch (_) {
+      return Future.value(false);
+    }
   }
 
   @override
-  Future<void> setUnActiveContacts() async {
-    _unActiveContacts =
-        await contactHandler.getUnActiveContacts(_activeContacts.value);
+  Future<bool> setUnActiveContacts() async {
+    try {
+      _unActiveContacts =
+          await contactHandler.getUnActiveContacts(_activeContacts.value);
+      return true;
+    } on Exception catch (_) {
+      return Future.value(false);
+    }
   }
 
   @override
-  Future<void> activateContact(ContactEntity contactEntity) async {
-    // create new contact in local db
-    await dbService.insertContactEntity(contactEntity);
-    // get active contacts from local db
-    await setActiveContacts();
-    // remove newly added contact from unActiveContacts
-    _unActiveContacts
-      ..removeWhere((contact) =>
-          contact.displayName.toLowerCase() ==
-          contactEntity.displayName.toLowerCase());
+  Future<bool> activateContact(ContactEntity contactEntity) async {
+    try {
+      // create new contact in local db
+      var inserted = await dbService.insertContactEntity(contactEntity);
+      if (inserted) {
+        // get active contacts from local db
+        var success = await setActiveContacts();
+        if (success) {
+          // remove newly added contact from unActiveContacts
+          _unActiveContacts
+            ..removeWhere((contact) =>
+                contact.displayName.toLowerCase() ==
+                contactEntity.displayName.toLowerCase());
+          return true;
+        }
+      }
+      return false;
+    } on Exception catch (_) {
+      return false;
+    }
   }
 
   @override
