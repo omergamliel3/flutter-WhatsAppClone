@@ -7,7 +7,7 @@ class PopUpMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       tooltip: 'More',
-      icon: Icon(Icons.more_vert),
+      icon: const Icon(Icons.more_vert),
       padding: EdgeInsets.zero,
       itemBuilder: (context) {
         return [

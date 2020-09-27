@@ -43,6 +43,7 @@ void main() {
     locator.registerSingleton<ContactsRepository>(repo);
     locator.registerSingleton<ConnectivityService>(connectivity);
 
+    /// [initalise method method test (with auth)]
     test('initialise with authentication, navigate main page', () async {
       // mock authentication to true
       when(auth.isAuthenticated).thenAnswer((realInvocation) => true);
@@ -65,6 +66,7 @@ void main() {
       verifyNever(navigator.navigateLoginPage());
     });
 
+    /// [initalise method method test (without auth)]
     test('initialise without authentication, navigate login page', () async {
       // mock authentication to false
       when(auth.isAuthenticated).thenAnswer((realInvocation) => false);

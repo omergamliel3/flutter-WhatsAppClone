@@ -28,6 +28,8 @@ void main() {
         id: 0,
         lastMsg: '',
         lastMsgTime: DateTime.now());
+
+    /// [activateContact method test (activate success)]
     test('activate contact with success', () async {
       // mock activate contact to return true (success)
       when(contactsRepo.activateContact(entity))
@@ -40,7 +42,8 @@ void main() {
       verify(navigator.pop());
     });
 
-    test('activate contact with exception', () async {
+    /// [activateContact method test (activate failed)]
+    test('activate contact with failure', () async {
       // mock activate contact to return false (exception)
       when(contactsRepo.activateContact(entity))
           .thenAnswer((realInvocation) => Future.value(false));

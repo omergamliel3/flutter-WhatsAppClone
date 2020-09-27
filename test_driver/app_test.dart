@@ -52,7 +52,7 @@ Future<void> grantPermissions() async {
 }
 
 void main() {
-  group('WhatsAppClone App', () {
+  group('WhatsAppClone App Test -', () {
     // First, define the Finders and use them to locate widgets from the
     // test suite. Note: the Strings provided to the `byValueKey` method must
     // be the same as the Strings we used for the Keys in step 1.

@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
   // build continue button
   Widget _buildContinueButton() {
     return RaisedButton(
-      key: ValueKey('CONTINUE'),
+      key: const ValueKey('CONTINUE'),
       onPressed: _submitForm,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
       padding: const EdgeInsets.all(0.0),
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
     return Form(
       key: _formKeyAuth,
       child: Container(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 10,
           right: 10,
         ),
@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
     return Form(
       key: _formKeyUserName,
       child: Container(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 10,
           right: 10,
         ),
@@ -171,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
   // ignore: unused_element
   Widget _buildUserProfile() {
     return Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 10,
         right: 10,
       ),
@@ -286,10 +286,10 @@ class _LoginPageState extends State<LoginPage> {
                   title: Text('Sign Up'),
                 ),
                 body: Container(
-                    padding: EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: Column(
                       children: [
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         Container(
                           height: 60,
                           child: AnimatedSwitcher(
@@ -297,9 +297,9 @@ class _LoginPageState extends State<LoginPage> {
                             child: _responsiveWidget,
                           ),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         _buildContinueButton(),
-                        Spacer(),
+                        const Spacer(),
                         WhatsAppImage()
                       ],
                     ))),

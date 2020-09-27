@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage>
   List<Widget> _buildAppBarAction() {
     return <Widget>[
       IconButton(
-        icon: Icon(Icons.search),
+        icon: const Icon(Icons.search),
         onPressed: () => print('search button pressed'),
         tooltip: 'Search',
       ),
@@ -83,16 +83,16 @@ class _MainPageState extends State<MainPage>
   // returns AppBar bottom widget
   TabBar _buildAppBarBottom() {
     return TabBar(controller: _tabController, tabs: [
-      Tab(
+      const Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Icon(Icons.camera_alt)),
       ),
-      Tab(
+      const Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Text('CHATS')),
       ),
-      Tab(
+      const Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Text('STATUS')),
       ),
-      Tab(
+      const Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Text('CALLS')),
       ),
     ]);
@@ -101,10 +101,10 @@ class _MainPageState extends State<MainPage>
   // returns AppBar body widget
   Widget _buildAppBarBody() {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: TabBarView(
           controller: _tabController,
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           children: [CameraPage(), ChatsPage(), StatusPage(), CallsPage()]),
     );
   }
@@ -112,10 +112,10 @@ class _MainPageState extends State<MainPage>
   // returns AppBar FAB widget
   Widget _buildAppBarFAB(MainViewModel model) {
     return AnimatedOpacity(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       opacity: _fabVisible ? 1.0 : 0.0,
       child: FloatingActionButton(
-          key: ValueKey('FAB'),
+          key: const ValueKey('FAB'),
           child: Icon(
             _fabIconData,
             color: Colors.white,
@@ -138,7 +138,8 @@ class _MainPageState extends State<MainPage>
         return Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
-            title: FittedBox(fit: BoxFit.fitWidth, child: Text('WhatsApp')),
+            title:
+                const FittedBox(fit: BoxFit.fitWidth, child: Text('WhatsApp')),
             actions: _buildAppBarAction(),
             bottom: _buildAppBarBottom(),
           ),

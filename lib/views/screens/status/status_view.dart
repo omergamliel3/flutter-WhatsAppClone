@@ -41,8 +41,8 @@ class _StatusPageState extends State<StatusPage>
 
   // build users status widget
   Widget _buildStatus(Status status) {
-    var timeAgo = formatDateTime(status.timestamp);
-    var allowDelete = _model.allowDelete(status.userName);
+    final timeAgo = formatDateTime(status.timestamp);
+    final allowDelete = _model.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
@@ -67,9 +67,9 @@ class _StatusPageState extends State<StatusPage>
   // build divider text widget
   Widget _buildDividerText() {
     return Container(
-        padding: EdgeInsets.fromLTRB(15, 6, 0, 6),
+        padding: const EdgeInsets.fromLTRB(15, 6, 0, 6),
         alignment: Alignment.centerLeft,
-        child: Text('Recent updates'));
+        child: const Text('Recent updates'));
   }
 
   // build users status widgets from firestore collection snapthots

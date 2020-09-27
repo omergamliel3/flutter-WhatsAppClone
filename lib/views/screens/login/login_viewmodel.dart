@@ -9,7 +9,6 @@ import '../../../core/routes/navigation_service%20.dart';
 class LoginViewModel extends BaseViewModel {
   // get services
   final userService = locator<UserService>();
-  final authService = locator<AuthService>();
   final connectivityService = locator<ConnectivityService>();
   final navigator = locator<NavigationService>();
   final auth = locator<AuthService>();
@@ -26,7 +25,11 @@ class LoginViewModel extends BaseViewModel {
   // save username in local, cloud storage
   Future<void> saveUsername(String username) async {
     // save username in cloud firestore
-    await auth.addUserName(username);
+    var success = await auth.addUserName(username);
+    if (!success) {
+      // TODO: IMPLEMENT DIALOG SERVICE
+      return;
+    }
     // save username localy
     userService.saveUserName(username);
     // delay to show loading indicator

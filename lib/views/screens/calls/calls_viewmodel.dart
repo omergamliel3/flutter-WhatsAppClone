@@ -9,7 +9,9 @@ class CallsViewModel extends BaseViewModel {
   }
 
   // launch device phone call
-  void launchCall(String number) {
-    url_launcher.launch('tel:$number');
+  void launchCall(String number) async {
+    if (await url_launcher.canLaunch('tel:$number')) {
+      url_launcher.launch('tel:$number');
+    }
   }
 }

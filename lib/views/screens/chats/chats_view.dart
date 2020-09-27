@@ -65,7 +65,7 @@ class _ChatsPageState extends State<ChatsPage>
         separatorBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(left: 70.0, right: 10),
-            child: Divider(thickness: 2.0),
+            child: const Divider(thickness: 2.0),
           );
         },
         itemCount: contacts.length,

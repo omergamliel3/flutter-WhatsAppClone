@@ -127,7 +127,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                           fontSize: 12.0))
                 ]),
               ),
-              padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+              padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
               decoration: BoxDecoration(
                   color: message.fromUser ? kPrimaryColor : Colors.grey[800],
                   borderRadius: BorderRadius.circular(10.0)),

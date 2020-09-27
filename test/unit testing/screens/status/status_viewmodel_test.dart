@@ -19,6 +19,7 @@ void main() {
     // construct status viewmodel
     var model = StatusViewModel();
 
+    /// [initalise method, statusStream getter test]
     test('initialise viewmodel and get user status stream', () async {
       // status stream getter returns empty stream
       when(userService.statusStream)
@@ -30,6 +31,7 @@ void main() {
       expect(await model.statusStream.isEmpty, true);
     });
 
+    /// [allowDelete method test (allow)]
     test('should allow delete', () {
       // mock allowDelete method
       when(userService.allowDelete(username))
@@ -39,6 +41,7 @@ void main() {
       verify(userService.allowDelete(username));
     });
 
+    /// [allowDelete method test (dont allow)]
     test('should not allow delete', () {
       // mock allowDelete method
       when(userService.allowDelete(username))
@@ -48,6 +51,7 @@ void main() {
       verify(userService.allowDelete(username));
     });
 
+    /// [username, userStatus getters test]
     test('should able to print username and status', () {
       var status = 'hello! this is a test status';
       // mock user service username getter
@@ -71,6 +75,7 @@ void main() {
       verify(userService.userStatus);
     });
 
+    /// [deleteStatus method test (success)]
     test('handle delete status with success', () async {
       var status = Status(
           userName: 'username',
@@ -86,7 +91,8 @@ void main() {
           [userService.deleteStatus(status), userService.getUserStatus()]);
     });
 
-    test('fail to handle delete status', () async {
+    /// [deleteStatus method test (failure)]
+    test('failed to handle delete status', () async {
       var status = Status(
           userName: 'username',
           content: 'test',

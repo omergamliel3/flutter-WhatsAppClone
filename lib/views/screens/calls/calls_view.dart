@@ -39,7 +39,7 @@ class _CallsPageState extends State<CallsPage>
   // build empty call logs widget text
   Widget _buildEmptyCallLogs() {
     return Container(
-        padding: EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 20),
         alignment: Alignment.topCenter,
         child: Text(
           'THERE ARE NO CALL LOGS',
