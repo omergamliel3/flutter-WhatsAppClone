@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:stacked/stacked.dart';
-//import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 import '../../../services/auth/auth_service.dart';
 import '../../../services/auth/user_service.dart';
@@ -15,15 +18,15 @@ class LoginViewModel extends BaseViewModel {
   final _auth = locator<AuthService>();
   final _userService = locator<UserService>();
   final _connectivityService = locator<ConnectivityService>();
+  final _dialogService = locator<DialogService>();
 
-  //final _dialogService = locator<DialogService>();
+  final StreamController<ViewState> _stateController =
+      StreamController<ViewState>()..add(ViewState.initial);
 
-  var _state = ViewState.initial;
-  ViewState get state => _state;
+  Stream<ViewState> get viewState => _stateController.stream;
 
   void _setState(ViewState state) {
-    _state = state;
-    notifyListeners();
+    _stateController.add(state);
   }
 
   // return the latest connectivity status
@@ -47,29 +50,65 @@ class LoginViewModel extends BaseViewModel {
     // delay to show loading indicator
     await Future.delayed(Duration(seconds: 1));
     // navigate main page
-    navigateMainPage();
-  }
-
-  // navigate main page via navigator service
-  void navigateMainPage() {
     _router.navigateMainPage();
   }
 
-  void submitPhoneAuth() {
+  // submit phone auth
+  void submitPhoneAuth(String value) async {
+    if (!connectivity) {
+      _showNoConnectionDialog();
+      return;
+    }
     _setState(ViewState.busy);
-    // DO SOME STUFF
+    if (foundation.kDebugMode) {
+      await _auth.mockRegisterUser();
+    } else {
+      await _auth.registerUser(value);
+    }
     _setState(ViewState.username);
   }
 
-  void submitUsernameAuth() {
+  // submit username auth
+  void submitUsernameAuth(String value) async {
+    if (!connectivity) {
+      _showNoConnectionDialog();
+      return;
+    }
     _setState(ViewState.busy);
-    // DO SOME STUFF
-    _setState(ViewState.profilePic);
+    var validate = await _auth.validateUserName(value);
+    if (!validate) {
+      _showInvalidUsernameDialog();
+      _setState(ViewState.username);
+    } else {
+      await _auth.addUserName(value);
+      _setState(ViewState.profilePic);
+    }
   }
 
-  void submitProfilePic() {
+  // submit profile pic
+  void submitProfilePic() async {
+    if (!connectivity) {
+      _showNoConnectionDialog();
+      return;
+    }
     _setState(ViewState.busy);
-    // DO SOME STUFF
-    navigateMainPage();
+    await Future.delayed(Duration(seconds: 2));
+    _router.navigateMainPage();
+  }
+
+  void _showNoConnectionDialog() {
+    _dialogService.showDialog(
+      title: 'No Internet connection',
+      description: 'Please connect your device.',
+      buttonTitle: 'OK',
+    );
+  }
+
+  void _showInvalidUsernameDialog() {
+    _dialogService.showDialog(
+      title: 'Username is taken',
+      description: 'Please enter another username',
+      buttonTitle: 'OK',
+    );
   }
 }

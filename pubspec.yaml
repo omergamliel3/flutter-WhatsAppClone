@@ -40,6 +40,7 @@ dependencies:
   android_intent: ^0.3.7+3
   url_launcher: ^5.5.0
   fluttertoast: ^7.0.4
+  google_fonts: ^1.1.0
   # UI widets
   flutter_spinkit: ^4.1.2
   

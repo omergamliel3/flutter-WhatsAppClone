@@ -22,6 +22,7 @@ class UserService with ReactiveServiceMixin {
   Future<void> initUserService() async {
     // create prefs instance
     _sharedPreferences = await SharedPreferences.getInstance();
+    await _sharedPreferences.clear();
     // only set user status if authenticated
     if (auth.isAuthenticated) {
       await getUserStatus();

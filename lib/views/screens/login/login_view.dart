@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' as foundation;
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:stacked/stacked.dart';
 import 'login_viewmodel.dart';
 
-import '../../../services/locator.dart';
-import '../../../services/auth/auth_service.dart';
-
 import '../../../core/shared/constants.dart';
 
 import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
-import 'widgets/dialogs.dart';
 import 'widgets/whatapp_image.dart';
 
-enum FormMode { phoneNum, userName }
+enum FormMode { phoneNum, userName, profilePic }
 
 class LoginPage extends StatefulWidget {
   @override
@@ -29,33 +25,37 @@ class _LoginPageState extends State<LoginPage> {
   // holds form fields data variables
   String _phoneNum;
   String _userName;
-  // holds the current shown form widget
-  Widget _viewStateWidget;
+
   // holds the current form mode [PhoneNum/UserName]
   FormMode _formMode;
   // busy bool flag to controll loading
   bool busy = false;
 
-  void _setViewState(ViewState state) {
-    switch (state) {
-      case ViewState.initial:
-        _viewStateWidget = _buildPhoneNumForm();
-        break;
-      case ViewState.busy:
-        _viewStateWidget = _buildProgressBarIndicator();
-        break;
-      case ViewState.phone:
-        _viewStateWidget = _buildPhoneNumForm();
-        break;
-      case ViewState.username:
-        _viewStateWidget = _buildUserNameForm();
-        break;
-      case ViewState.profilePic:
-        _viewStateWidget = _buildUserProfile();
-        break;
-      default:
-        _viewStateWidget = _buildProgressBarIndicator();
-    }
+  Widget _buildStateWidget() {
+    return StreamBuilder<ViewState>(
+      stream: _model.viewState,
+      builder: (context, snapshot) {
+        switch (snapshot.data) {
+          case ViewState.initial:
+            return _buildPhoneNumForm();
+            break;
+          case ViewState.busy:
+            return _buildProgressBarIndicator();
+            break;
+          case ViewState.phone:
+            return _buildPhoneNumForm();
+            break;
+          case ViewState.username:
+            return _buildUserNameForm();
+            break;
+          case ViewState.profilePic:
+            return _buildUserProfile();
+            break;
+          default:
+            return _buildProgressBarIndicator();
+        }
+      },
+    );
   }
 
   // build progress indicator widget
@@ -125,14 +125,14 @@ class _LoginPageState extends State<LoginPage> {
     return RaisedButton(
       key: const ValueKey('CONTINUE'),
       onPressed: _submitForm,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       padding: const EdgeInsets.all(0.0),
       child: Ink(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: <Color>[kPrimaryColor, Colors.green],
           ),
-          borderRadius: BorderRadius.all(Radius.circular(80.0)),
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),
         ),
         child: Container(
           width: 150,
@@ -184,8 +184,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // build user profile
-  // ignore: unused_element
   Widget _buildUserProfile() {
+    _formMode = FormMode.profilePic;
     return Container(
       padding: const EdgeInsets.only(
         left: 10,
@@ -201,13 +201,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FlatButton(
-                    child: Text('FROM GALLERY'),
-                    onPressed: () => _model.navigateMainPage()),
+                FlatButton(child: Text('FROM GALLERY'), onPressed: null),
                 SizedBox(width: 5.0),
-                FlatButton(
-                    child: Text('TAKE A NEW PICTURE'),
-                    onPressed: () => _model.navigateMainPage()),
+                FlatButton(child: Text('TAKE A NEW PICTURE'), onPressed: null),
               ],
             ),
           )
@@ -222,6 +218,8 @@ class _LoginPageState extends State<LoginPage> {
       _submitPhoneNumForm();
     } else if (_formMode == FormMode.userName) {
       _submitUserNameForm();
+    } else if (_formMode == FormMode.profilePic) {
+      _model.submitProfilePic();
     }
   }
 
@@ -229,34 +227,9 @@ class _LoginPageState extends State<LoginPage> {
   void _submitPhoneNumForm() async {
     // validate phone num field
     if (_formKeyAuth.currentState.validate()) {
-      setState(() {
-        _viewStateWidget = _buildProgressBarIndicator();
-      });
       // save phone num value
       _formKeyAuth.currentState.save();
-      if (!_model.connectivity) {
-        showNoConnectionDialog(context);
-        setState(() {
-          _viewStateWidget = _buildPhoneNumForm();
-        });
-        return;
-      }
-      // register user
-      if (foundation.kDebugMode) {
-        await locator<AuthService>().mockRegisterUser();
-      } else {
-        await locator<AuthService>().registerUser(_phoneNum, context);
-      }
-
-      if (_model.isAuthenticated) {
-        setState(() {
-          _viewStateWidget = _buildUserNameForm();
-        });
-      } else {
-        setState(() {
-          _viewStateWidget = _buildPhoneNumForm();
-        });
-      }
+      _model.submitPhoneAuth(_phoneNum);
     }
   }
 
@@ -264,62 +237,54 @@ class _LoginPageState extends State<LoginPage> {
   void _submitUserNameForm() async {
     // validate username field
     if (_formKeyUserName.currentState.validate()) {
-      setState(() {
-        _viewStateWidget = _buildProgressBarIndicator();
-      });
       _formKeyUserName.currentState.save();
-      if (!_model.connectivity) {
-        showNoConnectionDialog(context);
-        setState(() {
-          _viewStateWidget = _buildUserNameForm();
-        });
-        return;
-      }
-      var validateUserWithDB = await _model.isUserValid(_userName.trim());
-      if (!validateUserWithDB) {
-        setState(() {
-          _viewStateWidget = _buildUserNameForm();
-        });
-        showUserIsTakenDialog(context);
-        return;
-      }
-      // add username to firestore usernames collection
-      await _model.saveUsername(_userName);
+      _model.submitUsernameAuth(_userName);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<LoginViewModel>.reactive(
+    return ViewModelBuilder<LoginViewModel>.nonReactive(
         viewModelBuilder: () => LoginViewModel(),
         builder: (context, model, child) {
           _model = model;
-          _setViewState(model.state);
           return SafeArea(
             top: false,
             child: Scaffold(
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: Text('Sign Up'),
-                ),
-                body: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 15),
-                        Container(
-                          height: 80,
-                          child: AnimatedSwitcher(
-                            duration: Duration(milliseconds: 500),
-                            child: _viewStateWidget,
-                          ),
+                body: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.05),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'LOGIN',
+                          style: GoogleFonts.raleway().copyWith(fontSize: 35),
                         ),
-                        const SizedBox(height: 15),
-                        _buildContinueButton(),
-                        const Spacer(),
-                        WhatsAppImage()
-                      ],
-                    ))),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        height: 80,
+                        child: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 500),
+                          child: _buildStateWidget(),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Align(
+                          alignment: Alignment.center,
+                          child: _buildContinueButton())
+                    ],
+                  ),
+                ),
+                Align(alignment: Alignment.bottomCenter, child: WhatsAppImage())
+              ],
+            )),
           );
         });
   }

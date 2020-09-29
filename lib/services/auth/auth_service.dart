@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import '../cloud_storage/cloud_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +16,7 @@ class AuthService {
   }
 
   /// register user with phone number [FirebaseAuth]
-  Future registerUser(String mobile, BuildContext context) async {
+  Future registerUser(String mobile) async {
     var _auth = FirebaseAuth.instance;
 
     await _auth.verifyPhoneNumber(
@@ -34,52 +32,52 @@ class AuthService {
       verificationFailed: (authException) {
         // TODO: IMPLEMENT STACKED DIALOG SERVICE
         print('verificationFailed');
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Failed to verify phone number'),
-              content: Text(authException.message),
-            );
-          },
-        );
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Text('Failed to verify phone number'),
+        //       content: Text(authException.message),
+        //     );
+        //   },
+        // );
       },
       codeSent: (verificationId, forceResendingToken) {
         // TODO: IMPLEMENT STACKED DIALOG SERVICE
         print('codeSent');
-        var _codeController = TextEditingController();
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Enter SMS Code'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _codeController,
-                  )
-                ],
-              ),
-              actions: [
-                FlatButton(
-                  child: Text('DONE'),
-                  onPressed: () {
-                    var auth = FirebaseAuth.instance;
-                    var smsCode = _codeController.text.trim();
-                    var _credential = PhoneAuthProvider.credential(
-                        verificationId: verificationId, smsCode: smsCode);
-                    auth
-                        .signInWithCredential(_credential)
-                        .then((_) {})
-                        .catchError(print);
-                  },
-                )
-              ],
-            );
-          },
-        );
+        //var _codeController = TextEditingController();
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: false,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Text('Enter SMS Code'),
+        //       content: Column(
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //           TextField(
+        //             controller: _codeController,
+        //           )
+        //         ],
+        //       ),
+        //       actions: [
+        //         FlatButton(
+        //           child: Text('DONE'),
+        //           onPressed: () {
+        //             var auth = FirebaseAuth.instance;
+        //             var smsCode = _codeController.text.trim();
+        //             var _credential = PhoneAuthProvider.credential(
+        //                 verificationId: verificationId, smsCode: smsCode);
+        //             auth
+        //                 .signInWithCredential(_credential)
+        //                 .then((_) {})
+        //                 .catchError(print);
+        //           },
+        //         )
+        //       ],
+        //     );
+        //   },
+        // );
       },
       codeAutoRetrievalTimeout: (verificationId) {
         print('codeAutoRetrievalTimeout');

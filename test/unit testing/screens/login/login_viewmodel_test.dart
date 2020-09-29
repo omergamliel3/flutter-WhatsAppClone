@@ -128,12 +128,5 @@ void main() {
       // should never navigate to main page
       verifyNever(router.navigateMainPage());
     });
-
-    /// [navigateMainPage method test]
-    test('''when called navigateMainPage should navigate
-           main page from navigator service''', () {
-      model.navigateMainPage();
-      verify(router.navigateMainPage());
-    });
   });
 }
