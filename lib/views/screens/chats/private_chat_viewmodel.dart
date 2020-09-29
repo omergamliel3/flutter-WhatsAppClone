@@ -2,6 +2,7 @@ import 'package:stacked/stacked.dart';
 
 import '../../../services/locator.dart';
 import '../../../services/api/dialogflow.dart';
+import '../../../services/firebase/analytics_service.dart';
 import '../../../services/local_storage/local_database.dart';
 import '../../../repositories/contacts_repo/contacts_repository.dart';
 
@@ -15,6 +16,7 @@ class PrivateChatViewModel extends BaseViewModel {
   final database = locator<LocalDatabase>();
   final dialogflowAPI = locator<DialogFlowAPI>();
   final contactsRepo = locator<ContactsRepository>();
+  final analytics = locator<AnalyticsService>();
 
   // launch call via url launcher
   void launchCall(String number) {
@@ -32,8 +34,13 @@ class PrivateChatViewModel extends BaseViewModel {
   }
 
   // insert new message to local db service
-  Future<bool> insertMessage(Message message) {
-    return database.insertMessage(message);
+  Future<bool> insertMessage(Message message) async {
+    var inserted = await database.insertMessage(message);
+    if (inserted) {
+      analytics.logMsgEvent(message.text.length);
+      await setActiveContacts();
+    }
+    return inserted;
   }
 
   // get message response via dialog flow api

@@ -18,6 +18,8 @@ dependencies:
   provider: ^4.3.2+1
   # inversion of control
   get_it: ^5.0.0
+  # stacked
+  stacked_services: ^0.5.4+4
   # device
   permission_handler: ^5.0.1+1
   contacts_service: ^0.4.6
@@ -28,6 +30,7 @@ dependencies:
   # firebase
   firebase_auth: ^0.18.0+1
   cloud_firestore: ^0.14.0+2
+  firebase_analytics: ^6.0.0
   firebase_core: ^0.5.0
   # storage
   shared_preferences: ^0.5.10

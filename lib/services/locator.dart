@@ -7,6 +7,7 @@ import 'device/permission_service.dart';
 import 'device/contacts_service.dart';
 import 'auth/auth_service.dart';
 import 'auth/user_service.dart';
+import 'firebase/analytics_service.dart';
 import 'local_storage/local_database.dart';
 import 'cloud_storage/cloud_database.dart';
 import 'network/connectivity.dart';
@@ -22,6 +23,7 @@ void setupLocator() {
   locator.registerLazySingleton<UserService>(() => UserService());
   locator.registerLazySingleton<LocalDatabase>(() => LocalDatabase());
   locator.registerLazySingleton<CloudDatabase>(() => CloudDatabase());
+  locator.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
   locator.registerLazySingleton<AuthService>(() => AuthService());
   locator.registerLazySingleton<DialogFlowAPI>(() => DialogFlowAPI());
   locator.registerLazySingleton<ContactsHandler>(() => ContactsHandler());

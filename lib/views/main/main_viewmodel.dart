@@ -4,19 +4,19 @@ import '../../services/locator.dart';
 
 import '../../core/shared/constants.dart';
 
-import '../../core/routes/navigation_service .dart';
+import '../../core/routes/router.dart';
 
 class MainViewModel extends BaseViewModel {
-  final navigator = locator<NavigationService>();
+  final router = locator<Router>();
   void handlePressedFAB(int index, Function showStatusModal) {
     if (index == 1) {
       // navigate contact screen on CHAT MODE
-      navigator.navigateContactScreen(ContactMode.chat);
+      router.navigateContactScreen(ContactMode.chat);
     } else if (index == 2) {
       showStatusModal();
     } else {
       // navigate contact screen on CALLS MODE
-      navigator.navigateContactScreen(ContactMode.calls);
+      router.navigateContactScreen(ContactMode.calls);
     }
   }
 }

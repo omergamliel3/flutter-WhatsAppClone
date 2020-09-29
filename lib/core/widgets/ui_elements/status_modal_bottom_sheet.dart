@@ -4,6 +4,7 @@ import '../../models/status.dart';
 
 import '../../../services/locator.dart';
 import '../../../services/auth/user_service.dart';
+import '../../../services/firebase/analytics_service.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../alerts/toast.dart';
@@ -106,6 +107,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     // upload status to firestore db
     var upload = await userService.uploadStatus(status);
     if (upload) {
+      locator<AnalyticsService>().logStatusEvent(status.content.length);
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }

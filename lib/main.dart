@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import 'services/locator.dart';
 
 import 'core/shared/theme.dart';
 
-import 'core/routes/navigation_service .dart';
+import 'core/routes/router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
       navigatorKey: locator<NavigationService>().navigatorKey,
-      onGenerateRoute: locator<NavigationService>().onGenerateRoute,
+      onGenerateRoute: locator<Router>().onGenerateRoute,
     );
   }
 }

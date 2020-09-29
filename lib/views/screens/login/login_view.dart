@@ -30,16 +30,32 @@ class _LoginPageState extends State<LoginPage> {
   String _phoneNum;
   String _userName;
   // holds the current shown form widget
-  Widget _responsiveWidget;
+  Widget _viewStateWidget;
   // holds the current form mode [PhoneNum/UserName]
   FormMode _formMode;
   // busy bool flag to controll loading
   bool busy = false;
 
-  @override
-  didChangeDependencies() {
-    _responsiveWidget = _buildPhoneNumForm();
-    super.didChangeDependencies();
+  void _setViewState(ViewState state) {
+    switch (state) {
+      case ViewState.initial:
+        _viewStateWidget = _buildPhoneNumForm();
+        break;
+      case ViewState.busy:
+        _viewStateWidget = _buildProgressBarIndicator();
+        break;
+      case ViewState.phone:
+        _viewStateWidget = _buildPhoneNumForm();
+        break;
+      case ViewState.username:
+        _viewStateWidget = _buildUserNameForm();
+        break;
+      case ViewState.profilePic:
+        _viewStateWidget = _buildUserProfile();
+        break;
+      default:
+        _viewStateWidget = _buildProgressBarIndicator();
+    }
   }
 
   // build progress indicator widget
@@ -214,14 +230,14 @@ class _LoginPageState extends State<LoginPage> {
     // validate phone num field
     if (_formKeyAuth.currentState.validate()) {
       setState(() {
-        _responsiveWidget = _buildProgressBarIndicator();
+        _viewStateWidget = _buildProgressBarIndicator();
       });
       // save phone num value
       _formKeyAuth.currentState.save();
       if (!_model.connectivity) {
         showNoConnectionDialog(context);
         setState(() {
-          _responsiveWidget = _buildPhoneNumForm();
+          _viewStateWidget = _buildPhoneNumForm();
         });
         return;
       }
@@ -234,11 +250,11 @@ class _LoginPageState extends State<LoginPage> {
 
       if (_model.isAuthenticated) {
         setState(() {
-          _responsiveWidget = _buildUserNameForm();
+          _viewStateWidget = _buildUserNameForm();
         });
       } else {
         setState(() {
-          _responsiveWidget = _buildPhoneNumForm();
+          _viewStateWidget = _buildPhoneNumForm();
         });
       }
     }
@@ -249,20 +265,20 @@ class _LoginPageState extends State<LoginPage> {
     // validate username field
     if (_formKeyUserName.currentState.validate()) {
       setState(() {
-        _responsiveWidget = _buildProgressBarIndicator();
+        _viewStateWidget = _buildProgressBarIndicator();
       });
       _formKeyUserName.currentState.save();
       if (!_model.connectivity) {
         showNoConnectionDialog(context);
         setState(() {
-          _responsiveWidget = _buildUserNameForm();
+          _viewStateWidget = _buildUserNameForm();
         });
         return;
       }
       var validateUserWithDB = await _model.isUserValid(_userName.trim());
       if (!validateUserWithDB) {
         setState(() {
-          _responsiveWidget = _buildUserNameForm();
+          _viewStateWidget = _buildUserNameForm();
         });
         showUserIsTakenDialog(context);
         return;
@@ -274,10 +290,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<LoginViewModel>.nonReactive(
+    return ViewModelBuilder<LoginViewModel>.reactive(
         viewModelBuilder: () => LoginViewModel(),
         builder: (context, model, child) {
           _model = model;
+          _setViewState(model.state);
           return SafeArea(
             top: false,
             child: Scaffold(
@@ -291,10 +308,10 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         const SizedBox(height: 15),
                         Container(
-                          height: 60,
+                          height: 80,
                           child: AnimatedSwitcher(
                             duration: Duration(milliseconds: 500),
-                            child: _responsiveWidget,
+                            child: _viewStateWidget,
                           ),
                         ),
                         const SizedBox(height: 15),

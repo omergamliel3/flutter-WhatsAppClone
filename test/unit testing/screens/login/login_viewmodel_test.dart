@@ -1,32 +1,21 @@
-import 'package:WhatsAppClone/core/routes/navigation_service%20.dart';
-import 'package:WhatsAppClone/services/auth/auth_service.dart';
-import 'package:WhatsAppClone/services/auth/user_service.dart';
-import 'package:WhatsAppClone/services/locator.dart';
-import 'package:WhatsAppClone/services/network/connectivity.dart';
 import 'package:WhatsAppClone/views/screens/login/login_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class UserServiceMock extends Mock implements UserService {}
-
-class AuthServiceMock extends Mock implements AuthService {}
-
-class ConnectivityServiceeMock extends Mock implements ConnectivityService {}
-
-class NavigationServiceMock extends Mock implements NavigationService {}
+import '../../test_helper.dart';
 
 void main() {
+  // construct mocked services
+  UserServiceMock userService;
+  AuthServiceMock auth;
+  ConnectivityServiceMock connectivity;
+  RouterServiceMock router;
+  router = getAndRegisterRouterServiceMock();
+  auth = getAndRegisterAuthServiceMock();
+  userService = getAndRegisterUserServiceMock();
+  connectivity = getAndRegisterConnectivityServiceMock();
+
   group('LoginViewModel Test -', () {
-    // construct mocked services
-    var userService = UserServiceMock();
-    var auth = AuthServiceMock();
-    var connectivity = ConnectivityServiceeMock();
-    var navigator = NavigationServiceMock();
-    // register services via locator
-    locator.registerSingleton<UserService>(userService);
-    locator.registerSingleton<AuthService>(auth);
-    locator.registerSingleton<ConnectivityService>(connectivity);
-    locator.registerSingleton<NavigationService>(navigator);
     // construct login viewmodel
     var model = LoginViewModel();
 
@@ -120,7 +109,7 @@ void main() {
       verifyInOrder([
         auth.addUserName('omergamliel'),
         userService.saveUserName('omergamliel'),
-        navigator.navigateMainPage()
+        router.navigateMainPage()
       ]);
     });
 
@@ -137,14 +126,14 @@ void main() {
       // should never save username in userService
       verifyNever(userService.saveUserName('omergamliel'));
       // should never navigate to main page
-      verifyNever(navigator.navigateMainPage());
+      verifyNever(router.navigateMainPage());
     });
 
     /// [navigateMainPage method test]
     test('''when called navigateMainPage should navigate
            main page from navigator service''', () {
       model.navigateMainPage();
-      verify(navigator.navigateMainPage());
+      verify(router.navigateMainPage());
     });
   });
 }

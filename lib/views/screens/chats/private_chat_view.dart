@@ -179,8 +179,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         timestamp: DateTime.now());
     // insert message to local db
     await _model.insertMessage(message);
-    // update active contacts
-    await _model.setActiveContacts();
     setState(() {
       // get messages from local db and rebuild msgs list
       //_msgs = _model.getMessages(widget.contactEntity);

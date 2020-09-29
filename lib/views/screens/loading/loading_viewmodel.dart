@@ -8,11 +8,11 @@ import '../../../services/network/connectivity.dart';
 import '../../../services/auth/auth_service.dart';
 import '../../../repositories/contacts_repo/contacts_repository.dart';
 
-import '../../../core/routes/navigation_service .dart';
+import '../../../core/routes/router.dart';
 
 class LoadingViewModel extends BaseViewModel {
   // get all services
-  final navigator = locator<NavigationService>();
+  final router = locator<Router>();
   final permission = locator<PermissionService>();
   final user = locator<UserService>();
   final localDB = locator<LocalDatabase>();
@@ -43,10 +43,10 @@ class LoadingViewModel extends BaseViewModel {
     // if authenticated navigate main page, else navigate log-in page
     if (auth.isAuthenticated) {
       // navigate main page
-      navigator.navigateMainPage();
+      router.navigateMainPage();
     } else {
       // navigate login page
-      navigator.navigateLoginPage();
+      router.navigateLoginPage();
     }
   }
 }

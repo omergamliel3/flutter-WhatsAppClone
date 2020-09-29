@@ -1,21 +1,21 @@
 import 'package:WhatsAppClone/core/models/status.dart';
 import 'package:WhatsAppClone/services/auth/user_service.dart';
-import 'package:WhatsAppClone/services/locator.dart';
 import 'package:WhatsAppClone/views/screens/status/status_viewmodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class UserServiceMock extends Mock implements UserService {}
+import '../../test_helper.dart';
 
 void main() {
+  // construct mocked user service
+  UserServiceMock userService;
+  userService = getAndRegisterUserServiceMock();
+
   group('StatusViewModel Test', () {
     // valid username
     var username = 'omergamliel';
-    // construct mocked user service
-    var userService = UserServiceMock();
-    // setup locator
-    locator.registerSingleton<UserService>(userService);
+
     // construct status viewmodel
     var model = StatusViewModel();
 
