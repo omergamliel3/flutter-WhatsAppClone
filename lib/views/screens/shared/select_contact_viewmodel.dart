@@ -1,4 +1,5 @@
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -14,16 +15,19 @@ class SelectContactViewModel extends BaseViewModel {
   final _contactsRepo = locator<ContactsRepository>();
   final _router = locator<Router>();
   final _analytics = locator<AnalyticsService>();
+  final _dialogService = locator<DialogService>();
 
   // activate contact via contacts repository
   Future<void> activateContact(ContactEntity contactEntity) async {
     final activate = await _contactsRepo.activateContact(contactEntity);
     if (activate) {
       _analytics.logCreateNewContactEvent();
-      _router.pop();
     } else {
-      // TODO: SHOW FALIED TO CREATE CONTACT DIALOG
+      _dialogService.showDialog(
+          title: 'Something went wrong',
+          description: 'failed to create new chat, please try again.');
     }
+    _router.pop();
   }
 
   // launch device phone call

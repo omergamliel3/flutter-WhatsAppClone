@@ -179,16 +179,18 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         timestamp: DateTime.now());
     // insert message to local db
     await _model.insertMessage(message);
-    setState(() {
-      // get messages from local db and rebuild msgs list
-      //_msgs = _model.getMessages(widget.contactEntity);
-      // scroll to bottom listview
-      _scrollToBottom(0);
-      // reponse from bot if message from user
-      if (fromUser) {
-        evokeMsgResponse(msg);
-      }
-    });
+    if (mounted) {
+      setState(() {
+        // get messages from local db and rebuild msgs list
+        //_msgs = _model.getMessages(widget.contactEntity);
+        // scroll to bottom listview
+        _scrollToBottom(0);
+        // reponse from bot if message from user
+        if (fromUser) {
+          evokeMsgResponse(msg);
+        }
+      });
+    }
   }
 
   // submit message response from DialogFlow API
@@ -201,13 +203,15 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // animate to bottom of messages listview
   void _scrollToBottom(int milliseconds) {
-    Timer(
-        Duration(milliseconds: 500),
-        () => _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.fastOutSlowIn,
-            ));
+    Timer(Duration(milliseconds: 500), () {
+      if (mounted) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn,
+        );
+      }
+    });
   }
 
   @override

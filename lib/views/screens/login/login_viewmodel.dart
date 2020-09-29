@@ -38,25 +38,10 @@ class LoginViewModel extends BaseViewModel {
     return await _auth.validateUserName(username);
   }
 
-  // save username in local, cloud storage
-  Future<void> saveUsername(String username) async {
-    // save username in cloud firestore
-    var success = await _auth.addUserName(username);
-    if (!success) {
-      return;
-    }
-    // save username localy
-    _userService.saveUserName(username);
-    // delay to show loading indicator
-    await Future.delayed(Duration(seconds: 1));
-    // navigate main page
-    _router.navigateMainPage();
-  }
-
   // submit phone auth
   void submitPhoneAuth(String value) async {
     if (!connectivity) {
-      _showNoConnectionDialog();
+      _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
     _setState(ViewState.busy);
@@ -71,16 +56,22 @@ class LoginViewModel extends BaseViewModel {
   // submit username auth
   void submitUsernameAuth(String value) async {
     if (!connectivity) {
-      _showNoConnectionDialog();
+      _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
     _setState(ViewState.busy);
     var validate = await _auth.validateUserName(value);
     if (!validate) {
-      _showInvalidUsernameDialog();
+      _showErrorDialog('Username is taken', 'Please enter another username.');
       _setState(ViewState.username);
     } else {
-      await _auth.addUserName(value);
+      var success = await _auth.addUserName(value);
+      if (!success) {
+        _showErrorDialog('Something went wrnog', 'Please try again.');
+        _setState(ViewState.username);
+        return;
+      }
+      _userService.saveUserName(value);
       _setState(ViewState.profilePic);
     }
   }
@@ -88,7 +79,7 @@ class LoginViewModel extends BaseViewModel {
   // submit profile pic
   void submitProfilePic() async {
     if (!connectivity) {
-      _showNoConnectionDialog();
+      _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
     _setState(ViewState.busy);
@@ -96,15 +87,7 @@ class LoginViewModel extends BaseViewModel {
     _router.navigateMainPage();
   }
 
-  void _showNoConnectionDialog() {
-    _dialogService.showDialog(
-      title: 'No Internet connection',
-      description: 'Please connect your device.',
-      buttonTitle: 'OK',
-    );
-  }
-
-  void _showInvalidUsernameDialog() {
+  void _showErrorDialog(String title, String description) {
     _dialogService.showDialog(
       title: 'Username is taken',
       description: 'Please enter another username',

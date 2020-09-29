@@ -20,17 +20,15 @@ class _LoginPageState extends State<LoginPage> {
   // viewmodel
   LoginViewModel _model;
   // form global keys
-  GlobalKey<FormState> _formKeyAuth;
-  GlobalKey<FormState> _formKeyUserName;
+  final GlobalKey<FormState> _formKeyAuth = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyUserName = GlobalKey<FormState>();
   // holds form fields data variables
   String _phoneNum;
   String _userName;
-
-  // holds the current form mode [PhoneNum/UserName]
+  // holds the current form mode
   FormMode _formMode;
-  // busy bool flag to controll loading
-  bool busy = false;
 
+  // response to viewmodel state changes
   Widget _buildStateWidget() {
     return StreamBuilder<ViewState>(
       stream: _model.viewState,
@@ -153,7 +151,6 @@ class _LoginPageState extends State<LoginPage> {
 
   // build Form phone num auth
   Widget _buildPhoneNumForm() {
-    _formKeyAuth = GlobalKey<FormState>();
     _formMode = FormMode.phoneNum;
     return Form(
       key: _formKeyAuth,
@@ -169,7 +166,6 @@ class _LoginPageState extends State<LoginPage> {
 
   // build user name form
   Widget _buildUserNameForm() {
-    _formKeyUserName = GlobalKey<FormState>();
     _formMode = FormMode.userName;
     return Form(
       key: _formKeyUserName,
@@ -188,25 +184,27 @@ class _LoginPageState extends State<LoginPage> {
     _formMode = FormMode.profilePic;
     return Container(
       padding: const EdgeInsets.only(
+        top: 10,
         left: 10,
         right: 10,
       ),
       child: Column(
         children: [
-          Text('Pick your profile picture'),
-          SizedBox(height: 5.0),
-          CircleAvatar(backgroundColor: Colors.grey),
+          CircleAvatar(
+            backgroundColor: Colors.grey,
+            minRadius: 45,
+          ),
           SizedBox(height: 10.0),
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FlatButton(child: Text('FROM GALLERY'), onPressed: null),
-                SizedBox(width: 5.0),
-                FlatButton(child: Text('TAKE A NEW PICTURE'), onPressed: null),
-              ],
-            ),
-          )
+          FlatButton(
+              child: Text('PICK PROFILE PIC'), onPressed: () => print('pick')),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+
+          //     SizedBox(width: 5.0),
+          //     FlatButton(child: Text('TAKE A NEW PICTURE'), onPressed: null),
+          //   ],
+          // )
         ],
       ),
     );
@@ -255,25 +253,20 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05),
+                      top: MediaQuery.of(context).size.height * 0.1),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: Text(
-                          'LOGIN',
-                          style: GoogleFonts.raleway().copyWith(fontSize: 35),
+                          'ACCOUNT SETUP',
+                          style: GoogleFonts.raleway().copyWith(fontSize: 30),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
                       Container(
-                        height: 80,
-                        child: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 500),
-                          child: _buildStateWidget(),
-                        ),
+                        child: _buildStateWidget(),
                       ),
                       const SizedBox(height: 15),
                       Align(

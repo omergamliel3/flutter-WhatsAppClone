@@ -16,7 +16,7 @@ class UserService with ReactiveServiceMixin {
 
   // storage ref
   SharedPreferences _sharedPreferences;
-  final RxValue<String> _userStatus = RxValue<String>(initial: '');
+  final RxValue<String> _userStatus = RxValue<String>(initial: null);
 
   /// initialise service
   Future<void> initUserService() async {

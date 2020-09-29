@@ -96,37 +96,5 @@ void main() {
       // expected value
       expect(valid, false);
     });
-
-    /// [saveUsername method test (success save username)]
-    test('''when called saveUsername and success should save username
-           in userService, authService, and navigate to main page''', () async {
-      // mock addUserName to return true when called
-      when(auth.addUserName('omergamliel'))
-          .thenAnswer((realInvocation) => Future.value(true));
-      // call and await for saveUsername from model
-      await model.saveUsername('omergamliel');
-      // verify in services calls
-      verifyInOrder([
-        auth.addUserName('omergamliel'),
-        userService.saveUserName('omergamliel'),
-        router.navigateMainPage()
-      ]);
-    });
-
-    /// [saveUsername method test (failed to save username)]
-    test('''when called saveUsername and failed should call dialog service''',
-        () async {
-      // mock addUserName to return false when called
-      when(auth.addUserName('omergamliel'))
-          .thenAnswer((realInvocation) => Future.value(false));
-      // call and await for saveUserName from model
-      await model.saveUsername('omergamliel');
-      // verify service call
-      verify(auth.addUserName('omergamliel'));
-      // should never save username in userService
-      verifyNever(userService.saveUserName('omergamliel'));
-      // should never navigate to main page
-      verifyNever(router.navigateMainPage());
-    });
   });
 }

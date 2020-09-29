@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../cloud_storage/cloud_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +8,7 @@ import '../locator.dart';
 class AuthService {
   final _kAuthKeyName = 'authenticate';
   final database = locator<CloudDatabase>();
+  final dialogService = locator<DialogService>();
 
   SharedPreferences _sharedPreferences;
 
@@ -23,24 +25,15 @@ class AuthService {
       phoneNumber: mobile,
       timeout: Duration(minutes: 1),
       verificationCompleted: (authCredential) {
-        print('verificationCompleted');
         _auth.signInWithCredential(authCredential).then((_) {
           // save authentication in prefs service
           saveAuthentication(auth: true);
         }).catchError(print);
       },
       verificationFailed: (authException) {
-        // TODO: IMPLEMENT STACKED DIALOG SERVICE
-        print('verificationFailed');
-        // showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog(
-        //       title: Text('Failed to verify phone number'),
-        //       content: Text(authException.message),
-        //     );
-        //   },
-        // );
+        dialogService.showDialog(
+            title: 'Failed to verify phone number',
+            description: authException.message);
       },
       codeSent: (verificationId, forceResendingToken) {
         // TODO: IMPLEMENT STACKED DIALOG SERVICE
