@@ -37,7 +37,6 @@ class AuthService {
       },
       codeSent: (verificationId, forceResendingToken) {
         // TODO: IMPLEMENT STACKED DIALOG SERVICE
-        print('codeSent');
         //var _codeController = TextEditingController();
         // showDialog(
         //   context: context,
