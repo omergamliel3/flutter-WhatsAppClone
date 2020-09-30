@@ -15,6 +15,7 @@ class AuthService {
   /// initialise service
   Future<void> initAuth() async {
     _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.clear();
   }
 
   /// register user with phone number [FirebaseAuth]
