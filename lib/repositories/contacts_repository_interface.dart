@@ -1,6 +1,6 @@
-import '../../core/models/message.dart';
+import '../core/models/message.dart';
 
-import '../../core/models/contact_entity.dart';
+import '../core/models/contact_entity.dart';
 
 abstract class IContactsRepository {
   Future<void> initalise();

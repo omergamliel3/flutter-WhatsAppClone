@@ -5,10 +5,10 @@ import 'package:observable_ish/observable_ish.dart';
 
 import 'contacts_repository_interface.dart';
 
-import '../../services/device/contacts_service.dart';
-import '../../data/local_storage/local_database.dart';
-import '../../core/models/contact_entity.dart';
-import '../../core/models/message.dart';
+import '../services/device/contacts_service.dart';
+import '../data/local_storage/local_database.dart';
+import '../core/models/contact_entity.dart';
+import '../core/models/message.dart';
 
 class ContactsRepository
     with ReactiveServiceMixin
