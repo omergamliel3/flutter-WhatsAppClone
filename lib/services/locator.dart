@@ -13,7 +13,7 @@ import 'firebase/analytics_service.dart';
 import 'network/connectivity.dart';
 
 // repos
-import '../repositories/contacts_repo/contacts_repository.dart';
+import '../repositories/contacts_repository.dart';
 
 // data layer
 import '../data/cloud_storage/cloud_database.dart';

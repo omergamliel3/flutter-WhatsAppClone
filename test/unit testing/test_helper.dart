@@ -1,5 +1,5 @@
 import 'package:WhatsAppClone/core/routes/router.dart';
-import 'package:WhatsAppClone/repositories/contacts_repo/contacts_repository.dart';
+import 'package:WhatsAppClone/repositories/contacts_repository.dart';
 import 'package:WhatsAppClone/services/api/dialogflow.dart';
 import 'package:WhatsAppClone/services/auth/auth_service.dart';
 import 'package:WhatsAppClone/services/auth/user_service.dart';

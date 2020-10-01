@@ -1,7 +1,7 @@
 import 'package:stacked/stacked.dart';
 
 import '../../../services/locator.dart';
-import '../../../repositories/contacts_repo/contacts_repository.dart';
+import '../../../repositories/contacts_repository.dart';
 
 import '../../../core/models/contact_entity.dart';
 import '../../../core/routes/router.dart';

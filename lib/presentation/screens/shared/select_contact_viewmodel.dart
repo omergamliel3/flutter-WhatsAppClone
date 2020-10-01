@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import '../../../services/locator.dart';
 import '../../../services/firebase/analytics_service.dart';
-import '../../../repositories/contacts_repo/contacts_repository.dart';
+import '../../../repositories/contacts_repository.dart';
 
 import '../../../core/routes/router.dart';
 import '../../../core/models/contact_entity.dart';
