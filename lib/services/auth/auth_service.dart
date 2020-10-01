@@ -1,22 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
-import '../cloud_storage/cloud_database.dart';
+import '../../data/cloud_storage/cloud_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:meta/meta.dart';
 import '../locator.dart';
 
 class AuthService {
+  AuthService({@required this.cloudDatabase, @required this.sharedPreferences});
   final _kAuthKeyName = 'authenticate';
-  final database = locator<CloudDatabase>();
+  final CloudDatabase cloudDatabase;
+  final SharedPreferences sharedPreferences;
   final dialogService = locator<DialogService>();
-
-  SharedPreferences _sharedPreferences;
-
-  /// initialise service
-  Future<void> initAuth() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    _sharedPreferences.clear();
-  }
 
   /// register user with phone number [FirebaseAuth]
   Future registerUser(String mobile) async {
@@ -88,21 +82,20 @@ class AuthService {
 
   /// add new username to firestore db user_names collection
   Future<bool> addUserName(String username) async {
-    return database.addUserName(username);
+    return cloudDatabase.addUserName(username);
   }
 
   /// compare username argument with user_names collection
   /// returns true if do not exists in collection, false if exists
   Future<bool> validateUserName(String username) async {
-    return await database.validateUserName(username);
+    return await cloudDatabase.validateUserName(username);
   }
 
   /// save authentication state in prefs
   void saveAuthentication({bool auth = false}) {
-    _sharedPreferences.setBool(_kAuthKeyName, auth);
+    sharedPreferences.setBool(_kAuthKeyName, auth);
   }
 
   /// is authenticate getter
-  bool get isAuthenticated =>
-      _sharedPreferences.getBool(_kAuthKeyName) ?? false;
+  bool get isAuthenticated => sharedPreferences.getBool(_kAuthKeyName) ?? false;
 }

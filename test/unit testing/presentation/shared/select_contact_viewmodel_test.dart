@@ -1,5 +1,5 @@
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
-import 'package:WhatsAppClone/views/screens/shared/select_contact_viewmodel.dart';
+import 'package:WhatsAppClone/presentation/screens/shared/select_contact_viewmodel.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../test_helper.dart';

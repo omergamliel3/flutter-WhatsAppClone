@@ -1,4 +1,4 @@
-import 'package:WhatsAppClone/views/screens/loading/loading_viewmodel.dart';
+import 'package:WhatsAppClone/presentation/screens/loading/loading_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -7,7 +7,6 @@ import '../../test_helper.dart';
 void main() {
   // construct mock services
   RouterServiceMock router;
-  LocalDatabaseMock localDb;
   PermissionServiceMock permmision;
   UserServiceMock user;
   AuthServiceMock auth;
@@ -15,7 +14,7 @@ void main() {
   ConnectivityServiceMock connectivity;
   setUp(() {
     router = getAndRegisterRouterServiceMock();
-    localDb = getAndRegisterLocalDatabaseMock();
+    //localDb = getAndRegisterLocalDatabaseMock();
     permmision = getAndRegisterPermissionServiceMock();
     user = getAndRegisterUserServiceMock();
     auth = getAndRegisterAuthServiceMock();
@@ -36,9 +35,7 @@ void main() {
       // verify async services and repo init calls
       verifyInOrder([
         connectivity.initConnectivity(),
-        localDb.asyncInitDB(),
         permmision.requestPermissions(),
-        auth.initAuth(),
         user.initUserService(),
         repo.initalise(),
         router.navigateMainPage()
@@ -59,9 +56,7 @@ void main() {
       // verify async services and repo init calls
       verifyInOrder([
         connectivity.initConnectivity(),
-        localDb.asyncInitDB(),
         permmision.requestPermissions(),
-        auth.initAuth(),
         user.initUserService(),
         repo.initalise(),
         router.navigateLoginPage()

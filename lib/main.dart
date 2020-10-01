@@ -11,7 +11,7 @@ import 'core/routes/router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
+  await setupLocator();
   await Firebase.initializeApp();
   runApp(MyApp());
 }

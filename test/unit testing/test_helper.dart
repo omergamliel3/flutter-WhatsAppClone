@@ -3,11 +3,8 @@ import 'package:WhatsAppClone/repositories/contacts_repo/contacts_repository.dar
 import 'package:WhatsAppClone/services/api/dialogflow.dart';
 import 'package:WhatsAppClone/services/auth/auth_service.dart';
 import 'package:WhatsAppClone/services/auth/user_service.dart';
-import 'package:WhatsAppClone/services/cloud_storage/cloud_database.dart';
-import 'package:WhatsAppClone/services/device/contacts_service.dart';
 import 'package:WhatsAppClone/services/device/permission_service.dart';
 import 'package:WhatsAppClone/services/firebase/analytics_service.dart';
-import 'package:WhatsAppClone/services/local_storage/local_database.dart';
 import 'package:WhatsAppClone/services/locator.dart';
 import 'package:WhatsAppClone/services/network/connectivity.dart';
 import 'package:mockito/mockito.dart';
@@ -19,15 +16,15 @@ class PermissionServiceMock extends Mock implements PermissionService {}
 
 class UserServiceMock extends Mock implements UserService {}
 
-class CloudDatabaseMock extends Mock implements CloudDatabase {}
+//class CloudDatabaseMock extends Mock implements CloudDatabase {}
 
-class LocalDatabaseMock extends Mock implements LocalDatabase {}
+//class LocalDatabaseMock extends Mock implements LocalDatabase {}
 
 class AuthServiceMock extends Mock implements AuthService {}
 
 class DialogFlowAPIMock extends Mock implements DialogFlowAPI {}
 
-class ContactsHandlerMock extends Mock implements ContactsHandler {}
+//class ContactsHandlerMock extends Mock implements ContactsHandler {}
 
 class ConnectivityServiceMock extends Mock implements ConnectivityService {}
 
@@ -62,20 +59,6 @@ UserService getAndRegisterUserServiceMock() {
   return service;
 }
 
-CloudDatabase getAndRegisterCloudDatabaseMock() {
-  _removeRegistrationIfExists<CloudDatabase>();
-  var service = CloudDatabaseMock();
-  locator.registerSingleton<CloudDatabase>(service);
-  return service;
-}
-
-LocalDatabase getAndRegisterLocalDatabaseMock() {
-  _removeRegistrationIfExists<LocalDatabase>();
-  var service = LocalDatabaseMock();
-  locator.registerSingleton<LocalDatabase>(service);
-  return service;
-}
-
 AuthService getAndRegisterAuthServiceMock() {
   _removeRegistrationIfExists<AuthService>();
   var service = AuthServiceMock();
@@ -87,13 +70,6 @@ DialogFlowAPI getAndRegisterDialogFlowAPIMock() {
   _removeRegistrationIfExists<DialogFlowAPI>();
   var service = DialogFlowAPIMock();
   locator.registerSingleton<DialogFlowAPI>(service);
-  return service;
-}
-
-ContactsHandler getAndRegisterContactsHandlerMock() {
-  _removeRegistrationIfExists<ContactsHandler>();
-  var service = ContactsHandlerMock();
-  locator.registerSingleton<ContactsHandler>(service);
   return service;
 }
 
@@ -144,3 +120,24 @@ void _removeRegistrationIfExists<T>() {
     locator.unregister<T>();
   }
 }
+
+// ContactsHandler getAndRegisterContactsHandlerMock() {
+//   _removeRegistrationIfExists<ContactsHandler>();
+//   var service = ContactsHandlerMock();
+//   locator.registerSingleton<ContactsHandler>(service);
+//   return service;
+// }
+
+// CloudDatabase getAndRegisterCloudDatabaseMock() {
+//   _removeRegistrationIfExists<CloudDatabase>();
+//   var service = CloudDatabaseMock();
+//   locator.registerSingleton<CloudDatabase>(service);
+//   return service;
+// }
+
+// LocalDatabase getAndRegisterLocalDatabaseMock() {
+//   _removeRegistrationIfExists<LocalDatabase>();
+//   var service = LocalDatabaseMock();
+//   locator.registerSingleton<LocalDatabase>(service);
+//   return service;
+// }

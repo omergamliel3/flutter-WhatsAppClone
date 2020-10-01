@@ -1,30 +1,33 @@
 import 'dart:async';
-
+import 'package:meta/meta.dart';
 import 'package:stacked/stacked.dart';
 import 'package:observable_ish/observable_ish.dart';
 
 import 'contacts_repository_interface.dart';
 
 import '../../services/device/contacts_service.dart';
-import '../../services/local_storage/local_database.dart';
-import '../../services/locator.dart';
+import '../../data/local_storage/local_database.dart';
 import '../../core/models/contact_entity.dart';
+import '../../core/models/message.dart';
 
 class ContactsRepository
     with ReactiveServiceMixin
     implements IContactsRepository {
-  // services
-  final contactHandler = locator<ContactsHandler>();
-  final dbService = locator<LocalDatabase>();
-  // contacts data
+  ContactsRepository(
+      {@required this.localDatabase, @required this.contactHandler});
+  final LocalDatabase localDatabase;
+  final ContactsHandler contactHandler;
+
+  // holds un active contacts
   List<ContactEntity> _unActiveContacts;
-  // active chats data
+  // holds active contacts (chats)
   final RxValue<List<ContactEntity>> _activeContacts =
       RxValue<List<ContactEntity>>();
 
   @override
   Future<void> initalise() async {
     listenToReactiveValues([_activeContacts]);
+    await localDatabase.asyncInitDB();
     await setActiveContacts();
     await setUnActiveContacts();
   }
@@ -32,7 +35,7 @@ class ContactsRepository
   @override
   Future<bool> setActiveContacts() async {
     try {
-      _activeContacts.value = await dbService.getContactEntites();
+      _activeContacts.value = await localDatabase.getContactEntites();
       return true;
     } on Exception catch (_) {
       return Future.value(false);
@@ -54,7 +57,7 @@ class ContactsRepository
   Future<bool> activateContact(ContactEntity contactEntity) async {
     try {
       // create new contact in local db
-      var inserted = await dbService.insertContactEntity(contactEntity);
+      var inserted = await localDatabase.insertContactEntity(contactEntity);
       if (inserted) {
         // get active contacts from local db
         var success = await setActiveContacts();
@@ -71,6 +74,16 @@ class ContactsRepository
     } on Exception catch (_) {
       return false;
     }
+  }
+
+  @override
+  Future<List<Message>> getMessages(ContactEntity contactEntity) {
+    return localDatabase.getMessages(contactEntity);
+  }
+
+  @override
+  Future<bool> insertMessage(Message message) async {
+    return await localDatabase.insertMessage(message);
   }
 
   @override

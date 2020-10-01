@@ -3,26 +3,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stacked/stacked.dart';
 import 'package:observable_ish/observable_ish.dart';
 import '../../services/auth/auth_service.dart';
-import '../cloud_storage/cloud_database.dart';
+import '../../data/cloud_storage/cloud_database.dart';
 import '../locator.dart';
 import '../../core/models/status.dart';
+import 'package:meta/meta.dart';
 
 class UserService with ReactiveServiceMixin {
-  // static variables
+  UserService({@required this.cloudDatabase, @required this.sharedPreferences});
 
   final _kUserNameKey = 'username';
   final auth = locator<AuthService>();
-  final database = locator<CloudDatabase>();
+  final CloudDatabase cloudDatabase;
 
   // storage ref
-  SharedPreferences _sharedPreferences;
+  final SharedPreferences sharedPreferences;
   final RxValue<String> _userStatus = RxValue<String>(initial: null);
 
   /// initialise service
   Future<void> initUserService() async {
-    // create prefs instance
-    _sharedPreferences = await SharedPreferences.getInstance();
-    await _sharedPreferences.clear();
     // only set user status if authenticated
     if (auth.isAuthenticated) {
       await getUserStatus();
@@ -34,18 +32,18 @@ class UserService with ReactiveServiceMixin {
   /// save username in prefs
   void saveUserName(String username) {
     if (username == null || username.isEmpty) return;
-    _sharedPreferences.setString(_kUserNameKey, username.trim());
+    sharedPreferences.setString(_kUserNameKey, username.trim());
   }
 
   /// get the most recent user status, if there is one
   /// return null if there is no status
   Future<void> getUserStatus() async {
-    _userStatus.value = await database.getUserStatus(userName);
+    _userStatus.value = await cloudDatabase.getUserStatus(userName);
   }
 
   /// add new user status to firestore db collection
   Future<bool> uploadStatus(Status status) async {
-    var success = await database.uploadStatus(status);
+    var success = await cloudDatabase.uploadStatus(status);
     if (success) {
       _userStatus.value = status.content;
       return true;
@@ -55,7 +53,7 @@ class UserService with ReactiveServiceMixin {
 
   /// delete status from firestore db users_status collection
   Future<bool> deleteStatus(Status status) async {
-    return await database.deleteStatus(status);
+    return await cloudDatabase.deleteStatus(status);
   }
 
   /// return [true/false] if [name argument] is the current username (validation)
@@ -64,11 +62,11 @@ class UserService with ReactiveServiceMixin {
   }
 
   /// status stream getter
-  Stream<QuerySnapshot> get statusStream => database.statusStream();
+  Stream<QuerySnapshot> get statusStream => cloudDatabase.statusStream();
 
   /// user status getter
   String get userStatus => _userStatus.value;
 
   /// username getter
-  String get userName => _sharedPreferences.getString(_kUserNameKey);
+  String get userName => sharedPreferences.getString(_kUserNameKey);
 }

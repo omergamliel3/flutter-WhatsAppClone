@@ -1,4 +1,4 @@
-import 'package:WhatsAppClone/views/screens/login/login_viewmodel.dart';
+import 'package:WhatsAppClone/presentation/screens/login/login_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -10,10 +10,13 @@ void main() {
   AuthServiceMock auth;
   ConnectivityServiceMock connectivity;
   RouterServiceMock router;
-  router = getAndRegisterRouterServiceMock();
-  auth = getAndRegisterAuthServiceMock();
+  DialogServiceMock dialogService;
+
   userService = getAndRegisterUserServiceMock();
+  auth = getAndRegisterAuthServiceMock();
   connectivity = getAndRegisterConnectivityServiceMock();
+  router = getAndRegisterRouterServiceMock();
+  dialogService = getAndRegisterDialogServiceMock();
 
   group('LoginViewModel Test -', () {
     // construct login viewmodel
