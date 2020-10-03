@@ -13,7 +13,7 @@ class AuthService {
   final dialogService = locator<DialogService>();
 
   /// register user with phone number [FirebaseAuth]
-  Future registerUser(String mobile) async {
+  Future<bool> registerUser(String mobile) async {
     var _auth = FirebaseAuth.instance;
 
     await _auth.verifyPhoneNumber(
@@ -23,6 +23,7 @@ class AuthService {
         _auth.signInWithCredential(authCredential).then((_) {
           // save authentication in prefs service
           saveAuthentication(auth: true);
+          return true;
         }).catchError(print);
       },
       verificationFailed: (authException) {
@@ -71,13 +72,15 @@ class AuthService {
         print('Timeout $verificationId');
       },
     );
+    return false;
   }
 
   /// mock register user
-  Future mockRegisterUser({int delay = 3, bool auth = true}) async {
+  Future<bool> mockRegisterUser({int delay = 3, bool auth = true}) async {
     await Future.delayed(Duration(seconds: delay), () {
       saveAuthentication(auth: auth);
     });
+    return auth;
   }
 
   /// add new username to firestore db user_names collection

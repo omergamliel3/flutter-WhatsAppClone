@@ -13,8 +13,10 @@ import '../core/models/message.dart';
 class ContactsRepository
     with ReactiveServiceMixin
     implements IContactsRepository {
+  // constructor
   ContactsRepository(
       {@required this.localDatabase, @required this.contactHandler});
+  // data classes
   final LocalDatabase localDatabase;
   final ContactsHandler contactHandler;
 

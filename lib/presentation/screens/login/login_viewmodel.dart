@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -20,13 +21,13 @@ class LoginViewModel extends BaseViewModel {
   final _connectivityService = locator<ConnectivityService>();
   final _dialogService = locator<DialogService>();
 
-  final StreamController<ViewState> _stateController =
-      StreamController<ViewState>()..add(ViewState.initial);
+  final BehaviorSubject<ViewState> _stateSubject =
+      BehaviorSubject<ViewState>.seeded(ViewState.initial);
 
-  Stream<ViewState> get viewState => _stateController.stream;
+  Stream<ViewState> get viewState => _stateSubject.stream;
 
-  void _setState(ViewState state) {
-    _stateController.add(state);
+  void setState(ViewState state) {
+    _stateSubject.add(state);
   }
 
   // return the latest connectivity status
@@ -39,18 +40,23 @@ class LoginViewModel extends BaseViewModel {
   }
 
   // submit phone auth
-  void submitPhoneAuth(String value) async {
+  Future submitPhoneAuth(String value) async {
     if (!connectivity) {
       _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
-    _setState(ViewState.busy);
+    setState(ViewState.busy);
+    bool register;
     if (foundation.kDebugMode) {
-      await _auth.mockRegisterUser();
+      register = await _auth.mockRegisterUser();
     } else {
-      await _auth.registerUser(value);
+      register = await _auth.registerUser(value);
     }
-    _setState(ViewState.username);
+    if (register) {
+      setState(ViewState.username);
+    } else {
+      setState(ViewState.phone);
+    }
   }
 
   // submit username auth
@@ -59,20 +65,20 @@ class LoginViewModel extends BaseViewModel {
       _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
-    _setState(ViewState.busy);
+    setState(ViewState.busy);
     var validate = await _auth.validateUserName(value);
     if (!validate) {
       _showErrorDialog('Username is taken', 'Please enter another username.');
-      _setState(ViewState.username);
+      setState(ViewState.username);
     } else {
       var success = await _auth.addUserName(value);
       if (!success) {
         _showErrorDialog('Something went wrnog', 'Please try again.');
-        _setState(ViewState.username);
+        setState(ViewState.username);
         return;
       }
       _userService.saveUserName(value);
-      _setState(ViewState.profilePic);
+      setState(ViewState.profilePic);
     }
   }
 
@@ -82,15 +88,15 @@ class LoginViewModel extends BaseViewModel {
       _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
-    _setState(ViewState.busy);
+    setState(ViewState.busy);
     await Future.delayed(Duration(seconds: 2));
     _router.navigateMainPage();
   }
 
   void _showErrorDialog(String title, String description) {
     _dialogService.showDialog(
-      title: 'Username is taken',
-      description: 'Please enter another username',
+      title: title,
+      description: description,
       buttonTitle: 'OK',
     );
   }

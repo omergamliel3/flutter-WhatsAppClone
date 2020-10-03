@@ -18,6 +18,8 @@ dependencies:
   provider: ^4.3.2+1
   # inversion of control
   get_it: ^5.0.0
+  # reactive extantion
+  rxdart: ^0.24.1
   # stacked
   stacked_services: ^0.5.4+4
   # device
