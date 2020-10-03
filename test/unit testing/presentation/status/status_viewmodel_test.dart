@@ -9,17 +9,19 @@ import '../../test_helper.dart';
 void main() {
   // construct mocked user service
   UserServiceMock userService;
-  userService = getAndRegisterUserServiceMock();
+
+  setUp(() {
+    userService = getAndRegisterUserServiceMock();
+  });
 
   group('StatusViewModel Test', () {
     // valid username
     var username = 'omergamliel';
 
-    // construct status viewmodel
-    var model = StatusViewModel();
-
     /// [initalise method, statusStream getter test]
     test('initialise viewmodel and get user status stream', () async {
+      // construct status viewmodel
+      var model = StatusViewModel();
       // status stream getter returns empty stream
       when(userService.statusStream)
           .thenAnswer((realInvocation) => Stream<QuerySnapshot>.empty());
@@ -32,6 +34,8 @@ void main() {
 
     /// [allowDelete method test (allow)]
     test('should allow delete', () {
+      // construct status viewmodel
+      var model = StatusViewModel();
       // mock allowDelete method
       when(userService.allowDelete(username))
           .thenAnswer((realInvocation) => true);
@@ -42,6 +46,8 @@ void main() {
 
     /// [allowDelete method test (dont allow)]
     test('should not allow delete', () {
+      // construct status viewmodel
+      var model = StatusViewModel();
       // mock allowDelete method
       when(userService.allowDelete(username))
           .thenAnswer((realInvocation) => false);
@@ -52,6 +58,8 @@ void main() {
 
     /// [username, userStatus getters test]
     test('should able to print username and status', () {
+      // construct status viewmodel
+      var model = StatusViewModel();
       var status = 'hello! this is a test status';
       // mock user service username getter
       when(userService.userName).thenAnswer((realInvocation) => username);
@@ -76,6 +84,8 @@ void main() {
 
     /// [deleteStatus method test (success)]
     test('handle delete status with success', () async {
+      // construct status viewmodel
+      var model = StatusViewModel();
       var status = Status(
           userName: 'username',
           content: 'test',
@@ -92,6 +102,8 @@ void main() {
 
     /// [deleteStatus method test (failure)]
     test('failed to handle delete status', () async {
+      // construct status viewmodel
+      var model = StatusViewModel();
       var status = Status(
           userName: 'username',
           content: 'test',

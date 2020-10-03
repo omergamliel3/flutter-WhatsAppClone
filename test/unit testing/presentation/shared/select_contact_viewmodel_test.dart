@@ -9,12 +9,14 @@ void main() {
   RouterServiceMock router;
   ContactsRepositoryMock contactsRepo;
   AnalyticsServiceMock analytics;
+  DialogServiceMock dialogService;
   // dummy contact entity data
   ContactEntity entity;
   setUp(() {
     router = getAndRegisterRouterServiceMock();
     contactsRepo = getAndRegisterContactsRepositoryMock();
     analytics = getAndRegisterAnalyticsServiceMock();
+    dialogService = getAndRegisterDialogServiceMock();
     entity = ContactEntity(
         displayName: 'omer',
         phoneNumber: '00000',
@@ -49,6 +51,9 @@ void main() {
       var model = SelectContactViewModel();
       await model.activateContact(entity);
       verify(contactsRepo.activateContact(entity));
+      verify(dialogService.showDialog(
+          title: 'Something went wrong',
+          description: 'failed to create new chat, please try again.'));
       verifyNever(router.pop());
       verifyNever(analytics.logCreateNewContactEvent());
     });

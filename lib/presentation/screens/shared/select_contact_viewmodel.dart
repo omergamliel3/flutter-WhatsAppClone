@@ -22,12 +22,12 @@ class SelectContactViewModel extends BaseViewModel {
     final activate = await _contactsRepo.activateContact(contactEntity);
     if (activate) {
       _analytics.logCreateNewContactEvent();
+      _router.pop();
     } else {
       _dialogService.showDialog(
           title: 'Something went wrong',
           description: 'failed to create new chat, please try again.');
     }
-    _router.pop();
   }
 
   // launch device phone call
