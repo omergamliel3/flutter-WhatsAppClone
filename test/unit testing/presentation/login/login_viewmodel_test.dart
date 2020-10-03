@@ -14,11 +14,13 @@ void main() {
   RouterServiceMock router;
   DialogServiceMock dialogService;
 
-  userService = getAndRegisterUserServiceMock();
-  auth = getAndRegisterAuthServiceMock();
-  connectivity = getAndRegisterConnectivityServiceMock();
-  router = getAndRegisterRouterServiceMock();
-  dialogService = getAndRegisterDialogServiceMock();
+  setUp(() {
+    userService = getAndRegisterUserServiceMock();
+    auth = getAndRegisterAuthServiceMock();
+    connectivity = getAndRegisterConnectivityServiceMock();
+    router = getAndRegisterRouterServiceMock();
+    dialogService = getAndRegisterDialogServiceMock();
+  });
 
   group('LoginViewModel Test -', () {
     group('viewState tests:', () {
@@ -200,7 +202,165 @@ void main() {
 
     group('submitUsernameAuth tests:', () {
       /// [submitUsernameAuth test (no connection)]
-      test('when submitUsernameAuth should update ', () {});
+      test('when submitUsernameAuth (no connectivity) should show dialog ',
+          () async {
+        var username = 'omergamliel';
+        // construct login viewmodel
+        var model = LoginViewModel();
+        model.setState(ViewState.username);
+        model.viewState.listen(print);
+        when(connectivity.connectivity).thenAnswer((realInvocation) => false);
+        await model.submitUsernameAuth(username);
+        expect(model.viewState, emits(ViewState.username));
+        verify(dialogService.showDialog(
+            title: 'No internet connection',
+            description: 'Please connect your device.',
+            buttonTitle: 'OK'));
+        verifyNever(auth.validateUserName(username));
+        // when(auth.validateUserName('omergamliel'))
+        //     .thenAnswer((realInvocation) => Future.value(true));
+      });
+
+      /// [submitUsernameAuth test (connection, invalid username)]
+      test(
+          '''when submitUsernameAuth (connectivity) should update view state to busy, failed to validate username, then update viewState to username''',
+          () async {
+        var username = 'omergamliel';
+        // construct login viewmodel
+        var model = LoginViewModel();
+        // set ViewState to username
+        model.setState(ViewState.username);
+        // listen to viewState events
+        model.viewState.listen(print);
+        // mock connectivity to true
+        when(connectivity.connectivity).thenAnswer((realInvocation) => true);
+        // mock validateUserName to false (invalid)
+        when(auth.validateUserName(username))
+            .thenAnswer((realInvocation) => Future.value(false));
+        // call submitUsernameAuth
+        await model.submitUsernameAuth(username);
+        // expect ViewState username
+        expect(model.viewState, emits(ViewState.username));
+        // verify showDialog been called from dialogService
+        verify(dialogService.showDialog(
+            title: 'Username is taken',
+            description: 'Please enter another username.',
+            buttonTitle: 'OK'));
+        // should never call addUserName
+        verifyNever(auth.addUserName(username));
+      });
+
+      /// [submitUsernameAuth test]
+      /// [connection, valid username, addUserName failure]
+      test(
+          '''when submitUsernameAuth (connectivity) should update view state to busy, success validate username, failed to addUserName, then show dialog and update viewState to username''',
+          () async {
+        var username = 'omergamliel';
+        // construct login viewmodel
+        var model = LoginViewModel();
+        // set ViewState to username
+        model.setState(ViewState.username);
+        // listen to viewState events
+        model.viewState.listen(print);
+        // mock connectivity to true
+        when(connectivity.connectivity).thenAnswer((realInvocation) => true);
+        // mock validateUserName to true (valid)
+        when(auth.validateUserName(username))
+            .thenAnswer((realInvocation) => Future.value(true));
+        // mock addUserName to false (failure)
+        when(auth.addUserName(username))
+            .thenAnswer((realInvocation) => Future.value(false));
+        // call submitUsernameAuth
+        await model.submitUsernameAuth(username);
+        // expect ViewState username
+        expect(model.viewState, emits(ViewState.username));
+        // verify addUserName call
+        verify(auth.addUserName(username));
+        // verify showDialog been called from dialogService
+        verify(dialogService.showDialog(
+            title: 'Something went wrnog',
+            description: 'Please try again.',
+            buttonTitle: 'OK'));
+        // should never call saveUserName
+        verifyNever(userService.saveUserName(username));
+      });
+
+      /// [submitUsernameAuth test]
+      /// [connection, valid username, success addUserName]
+      test(
+          '''when submitUsernameAuth (connectivity) should update view state to busy, success validate username, success to addUserName, then saveUserName and update viewState to profile pic''',
+          () async {
+        var username = 'omergamliel';
+        // construct login viewmodel
+        var model = LoginViewModel();
+        // set ViewState to username
+        model.setState(ViewState.username);
+        // listen to viewState events
+        model.viewState.listen(print);
+        // mock connectivity to true
+        when(connectivity.connectivity).thenAnswer((realInvocation) => true);
+        // mock validateUserName to true (valid)
+        when(auth.validateUserName(username))
+            .thenAnswer((realInvocation) => Future.value(true));
+        // mock addUserName to false (success)
+        when(auth.addUserName(username))
+            .thenAnswer((realInvocation) => Future.value(true));
+        // call submitUsernameAuth
+        await model.submitUsernameAuth(username);
+        // expect ViewState profilePic
+        expect(model.viewState, emits(ViewState.profilePic));
+        // verify addUserName call
+        verify(auth.addUserName(username));
+        // verify saveUserName call
+        verify(userService.saveUserName(username));
+      });
+    });
+
+    group('submitProfilePic tests:', () {
+      /// [submitProfilePic test (no connection)]
+      test('''when submitProfilePic with no connectivity should show dialog''',
+          () async {
+        // construct model
+        var model = LoginViewModel();
+        // set viewState to profilePic
+        model.setState(ViewState.profilePic);
+        // mock connectivity to false
+        when(connectivity.connectivity).thenAnswer((realInvocation) => false);
+        // call submitProfilePic
+        await model.submitProfilePic();
+        // model viewState should stay ViewState.profilePic
+        expect(model.viewState, emits(ViewState.profilePic));
+        // verify dialog service showDialog call
+        verify(dialogService.showDialog(
+            title: 'No internet connection',
+            description: 'Please connect your device.',
+            buttonTitle: 'OK'));
+        // should never navigate main page
+        verifyNever(router.navigateMainPage());
+      });
+
+      /// [submitProfilePic test (connection)]
+      test(
+          '''when submitProfilePic with connectivity should navigate main page''',
+          () async {
+        // construct model
+        var model = LoginViewModel();
+        // set viewState to profilePic
+        model.setState(ViewState.profilePic);
+        // mock connectivity to true
+        when(connectivity.connectivity).thenAnswer((realInvocation) => true);
+        // call submitProfilePic
+        await model.submitProfilePic();
+        // model viewState should be ViewState.busy
+        expect(model.viewState, emits(ViewState.busy));
+        // verify navigate main page call
+        verify(router.navigateMainPage());
+        // should never call dialog service showDialog call
+        verifyNever(dialogService.showDialog(
+            title: 'No internet connection',
+            description: 'Please connect your device.',
+            buttonTitle: 'OK'));
+      });
     });
   });
 }

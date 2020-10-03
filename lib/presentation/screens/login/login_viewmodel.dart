@@ -40,7 +40,7 @@ class LoginViewModel extends BaseViewModel {
   }
 
   // submit phone auth
-  Future submitPhoneAuth(String value) async {
+  Future<void> submitPhoneAuth(String value) async {
     if (!connectivity) {
       _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
@@ -60,7 +60,7 @@ class LoginViewModel extends BaseViewModel {
   }
 
   // submit username auth
-  void submitUsernameAuth(String value) async {
+  Future<void> submitUsernameAuth(String value) async {
     if (!connectivity) {
       _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
@@ -70,26 +70,26 @@ class LoginViewModel extends BaseViewModel {
     if (!validate) {
       _showErrorDialog('Username is taken', 'Please enter another username.');
       setState(ViewState.username);
-    } else {
-      var success = await _auth.addUserName(value);
-      if (!success) {
-        _showErrorDialog('Something went wrnog', 'Please try again.');
-        setState(ViewState.username);
-        return;
-      }
-      _userService.saveUserName(value);
-      setState(ViewState.profilePic);
+      return;
     }
+    var success = await _auth.addUserName(value);
+    if (!success) {
+      _showErrorDialog('Something went wrnog', 'Please try again.');
+      setState(ViewState.username);
+      return;
+    }
+    _userService.saveUserName(value);
+    setState(ViewState.profilePic);
   }
 
   // submit profile pic
-  void submitProfilePic() async {
+  Future<void> submitProfilePic() async {
     if (!connectivity) {
       _showErrorDialog('No internet connection', 'Please connect your device.');
       return;
     }
     setState(ViewState.busy);
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 500));
     _router.navigateMainPage();
   }
 
