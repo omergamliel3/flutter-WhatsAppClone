@@ -56,6 +56,11 @@ class UserService with ReactiveServiceMixin {
     return await cloudDatabase.deleteStatus(status);
   }
 
+  /// returns profile picture download url
+  Future<String> getProfilePicURL() async {
+    return await cloudDatabase.getProfilePicURL(userName);
+  }
+
   /// return [true/false] if [name argument] is the current username (validation)
   bool allowDelete(String name) {
     return name.trim().toLowerCase() == userName.trim().toLowerCase();

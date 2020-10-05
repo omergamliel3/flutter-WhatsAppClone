@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../core/models/status.dart';
 
 class CloudDatabase {
@@ -71,12 +75,21 @@ class CloudDatabase {
   }
 
   /// add new username to firestore db user_names collection
-  Future<bool> addUserName(String username) async {
+  Future<bool> addUser(String username, PickedFile file) async {
     try {
+      // save picked image file in firebase storage
+      String url;
+      var ref = FirebaseStorage.instance.ref();
+      var storageSnap =
+          await ref.child("image/img").putFile(File(file.path)).onComplete;
+      if (storageSnap.error == null) {
+        // get download url
+        url = await storageSnap.ref.getDownloadURL() as String;
+      }
       // add new username object to user_names db collection
       var docRef = await FirebaseFirestore.instance
           .collection(_kUserNamesCollection)
-          .add({'username': username});
+          .add({'username': username, 'profileUrl': url});
 
       print('created new firestore recored with id: ${docRef.id}');
       return true;
@@ -123,5 +136,25 @@ class CloudDatabase {
         .collection('users_status')
         .orderBy('timestamp', descending: true)
         .snapshots();
+  }
+
+  /// returns profile picture download url
+  Future<String> getProfilePicURL(String username) async {
+    try {
+      // get current user from firestore
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection(_kUserNamesCollection)
+          .where('username', isEqualTo: username)
+          .get();
+      // if snapshot is empty return null
+      if (querySnapshot.docs.isEmpty) {
+        return null;
+      }
+      // get profileUrl field from first query docs
+      var downloadUrl = querySnapshot.docs.first.get('profileUrl') as String;
+      return downloadUrl;
+    } on Exception catch (_) {
+      return null;
+    }
   }
 }

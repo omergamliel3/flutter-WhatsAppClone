@@ -93,8 +93,10 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
   void _updateStatus() async {
     if (_textEditingController.value.text == null ||
         _textEditingController.value.text.isEmpty) return;
+    var url = await userService.getProfilePicURL();
     var status = Status(
         userName: userService.userName,
+        profileUrl: url,
         content: _textEditingController.value.text,
         timestamp: DateTime.now().toUtc());
 

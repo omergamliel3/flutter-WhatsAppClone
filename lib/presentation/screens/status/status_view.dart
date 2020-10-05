@@ -20,16 +20,9 @@ class _StatusPageState extends State<StatusPage>
   StatusViewModel _model;
   // build personal status listile
   Widget _buildPersonalStatus() {
-    var _isLight = Theme.of(context).brightness == Brightness.light;
+    var leading = _getStatusLeading();
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor:
-            _isLight ? Theme.of(context).primaryColor : Colors.blue,
-        child: Text(
-          _model.username[0].toUpperCase(),
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
+      leading: leading,
       title: Text('My status'),
       subtitle: Text(_model.userStatus ?? 'Tap to add status update'),
       onTap: () {
@@ -45,11 +38,8 @@ class _StatusPageState extends State<StatusPage>
     final allowDelete = _model.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
+        backgroundImage: NetworkImage(status.profileUrl),
         backgroundColor: Colors.grey,
-        child: Text(
-          status.userName[0].toUpperCase(),
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
       ),
       title: Text(status.userName),
       subtitle: Text(
@@ -97,6 +87,21 @@ class _StatusPageState extends State<StatusPage>
         ));
       },
     );
+  }
+
+  // handle personal status leading widget
+  Widget _getStatusLeading() {
+    var _isLight = Theme.of(context).brightness == Brightness.light;
+    return _model.downloadUrl == null
+        ? CircleAvatar(
+            backgroundColor:
+                _isLight ? Theme.of(context).primaryColor : Colors.blue,
+          )
+        : CircleAvatar(
+            backgroundImage: NetworkImage(_model.downloadUrl),
+            backgroundColor:
+                _isLight ? Theme.of(context).primaryColor : Colors.blue,
+          );
   }
 
   @override

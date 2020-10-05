@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:WhatsAppClone/data/cloud_storage/cloud_database.dart';
@@ -47,11 +48,11 @@ void main() {
       var authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       var username = 'omergamliel';
-      when(cloudDatabase.addUserName(username))
+      when(cloudDatabase.addUser(username, PickedFile('')))
           .thenAnswer((realInvocation) => Future.value(true));
-      var success = await authService.addUserName(username);
+      var success = await authService.addUser(username, PickedFile(''));
       expect(success, true);
-      verify(cloudDatabase.addUserName(username));
+      verify(cloudDatabase.addUser(username, PickedFile('')));
     });
 
     test(
@@ -63,11 +64,11 @@ void main() {
       var authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       var username = 'omergamliel';
-      when(cloudDatabase.addUserName(username))
+      when(cloudDatabase.addUser(username, PickedFile('')))
           .thenAnswer((realInvocation) => Future.value(false));
-      var success = await authService.addUserName(username);
+      var success = await authService.addUser(username, PickedFile(''));
       expect(success, false);
-      verify(cloudDatabase.addUserName(username));
+      verify(cloudDatabase.addUser(username, PickedFile('')));
     });
 
     test(

@@ -10,11 +10,13 @@ class StatusViewModel extends ReactiveViewModel {
   final _userService = locator<UserService>();
   // status stream
   Stream<QuerySnapshot> _statusStream;
+  String _downloadUrl;
 
   /// call once after the model is construct
   void initalise() {
     // set status stream to firestore status snapshots
     _statusStream = _userService.statusStream;
+    getProfilePicUrl();
   }
 
   /// evoke status delete methods
@@ -25,6 +27,12 @@ class StatusViewModel extends ReactiveViewModel {
     if (!deleted) return;
     // get user last status
     await _userService.getUserStatus();
+  }
+
+  // get profile pic download url
+  Future<void> getProfilePicUrl() async {
+    _downloadUrl = await _userService.getProfilePicURL();
+    notifyListeners();
   }
 
   // whatever the user allow to delete status
@@ -38,6 +46,8 @@ class StatusViewModel extends ReactiveViewModel {
   String get userStatus => _userService.userStatus;
   // status stream
   Stream<QuerySnapshot> get statusStream => _statusStream;
+
+  String get downloadUrl => _downloadUrl;
 
   // listen to UserService changes
   @override

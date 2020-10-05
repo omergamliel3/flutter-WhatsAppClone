@@ -28,7 +28,6 @@ void setupLocator() async {
   var _cloudDatabase = CloudDatabase();
   var _contactsHandler = ContactsHandler();
   var _sharedPreferences = await SharedPreferences.getInstance();
-
   // first party services
 
   // router

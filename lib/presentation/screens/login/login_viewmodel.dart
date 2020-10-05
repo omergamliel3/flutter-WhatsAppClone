@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stacked/stacked.dart';
+
 import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
@@ -21,18 +24,20 @@ class LoginViewModel extends BaseViewModel {
   final _connectivityService = locator<ConnectivityService>();
   final _dialogService = locator<DialogService>();
 
+  // state stream
   final BehaviorSubject<ViewState> _stateSubject =
       BehaviorSubject<ViewState>.seeded(ViewState.initial);
 
-  Stream<ViewState> get viewState => _stateSubject.stream;
+  // image file data
+  PickedFile _profileImage;
+  Uint8List _profileImageUnit8List;
+
+  // auth data
+  String _username;
 
   void setState(ViewState state) {
     _stateSubject.add(state);
   }
-
-  // return the latest connectivity status
-  bool get connectivity => _connectivityService.connectivity;
-  bool get isAuthenticated => _auth.isAuthenticated;
 
   // validate username via firestore service
   Future<bool> isUserValid(String username) async {
@@ -72,27 +77,46 @@ class LoginViewModel extends BaseViewModel {
       setState(ViewState.username);
       return;
     }
-    var success = await _auth.addUserName(value);
-    if (!success) {
-      _showErrorDialog('Something went wrnog', 'Please try again.');
-      setState(ViewState.username);
-      return;
-    }
-    _userService.saveUserName(value);
+    _username = value;
     setState(ViewState.profilePic);
   }
 
   // submit profile pic
   Future<void> submitProfilePic() async {
-    if (!connectivity) {
-      _showErrorDialog('No internet connection', 'Please connect your device.');
+    setState(ViewState.busy);
+    if (_profileImage == null) {
+      _showErrorDialog(
+          'Profile image empty', 'Please pick image from gallery or camera');
       return;
     }
-    setState(ViewState.busy);
-    await Future.delayed(Duration(milliseconds: 500));
+    // call submit form after finish auth view states
+    submitAuth();
+  }
+
+  // submit user authentication
+  Future<void> submitAuth() async {
+    var success = await _auth.addUser(_username, _profileImage);
+    if (!success) {
+      _showErrorDialog('Something went wrnog', 'Please try again.');
+      setState(ViewState.profilePic);
+      return;
+    }
+    _userService.saveUserName(_username);
     _router.navigateMainPage();
   }
 
+  // get image from device
+  Future<void> getImage(ImageSource source) async {
+    var image = await ImagePicker().getImage(source: source);
+    if (image == null) {
+      return;
+    }
+    _profileImage = image;
+    _profileImageUnit8List = await image.readAsBytes();
+    notifyListeners();
+  }
+
+  // show error dialog with a given title and description
   void _showErrorDialog(String title, String description) {
     _dialogService.showDialog(
       title: title,
@@ -100,4 +124,16 @@ class LoginViewModel extends BaseViewModel {
       buttonTitle: 'OK',
     );
   }
+
+  // view state stream getter
+  Stream<ViewState> get viewState => _stateSubject.stream;
+
+  // return the latest connectivity status
+  bool get connectivity => _connectivityService.connectivity;
+
+  // auth state
+  bool get isAuthenticated => _auth.isAuthenticated;
+
+  // image data in unit8list
+  Uint8List get image => _profileImageUnit8List;
 }

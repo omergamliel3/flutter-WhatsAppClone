@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../../data/cloud_storage/cloud_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,8 +85,8 @@ class AuthService {
   }
 
   /// add new username to firestore db user_names collection
-  Future<bool> addUserName(String username) async {
-    return await cloudDatabase.addUserName(username);
+  Future<bool> addUser(String username, PickedFile file) async {
+    return await cloudDatabase.addUser(username, file);
   }
 
   /// compare username argument with user_names collection

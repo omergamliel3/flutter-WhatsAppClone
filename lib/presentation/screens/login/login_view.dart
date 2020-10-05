@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:stacked/stacked.dart';
 import 'login_viewmodel.dart';
@@ -190,21 +191,31 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey,
-            minRadius: 45,
-          ),
-          SizedBox(height: 10.0),
-          FlatButton(
-              child: Text('PICK PROFILE PIC'), onPressed: () => print('pick')),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-
-          //     SizedBox(width: 5.0),
-          //     FlatButton(child: Text('TAKE A NEW PICTURE'), onPressed: null),
-          //   ],
-          // )
+          _model.image == null
+              ? CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  minRadius: 45,
+                  maxRadius: 60,
+                )
+              : CircleAvatar(
+                  backgroundImage: MemoryImage(_model.image),
+                  backgroundColor: Colors.grey,
+                  minRadius: 45,
+                  maxRadius: 60,
+                ),
+          const SizedBox(height: 10.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlatButton(
+                  child: Text('PICK FROM GALLERY'),
+                  onPressed: () => _model.getImage(ImageSource.gallery)),
+              const SizedBox(width: 5.0),
+              FlatButton(
+                  child: Text('PICK FROM CAMERA'),
+                  onPressed: () => _model.getImage(ImageSource.camera)),
+            ],
+          )
         ],
       ),
     );
@@ -212,6 +223,8 @@ class _LoginPageState extends State<LoginPage> {
 
   // submit form according to formMode [PhoneNum/UserName]
   void _submitForm() {
+    // evoid submit form when model is busy
+    if (_model.viewState == ViewState.busy) return;
     if (_formMode == FormMode.phoneNum) {
       _submitPhoneNumForm();
     } else if (_formMode == FormMode.userName) {
@@ -242,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<LoginViewModel>.nonReactive(
+    return ViewModelBuilder<LoginViewModel>.reactive(
         viewModelBuilder: () => LoginViewModel(),
         builder: (context, model, child) {
           _model = model;
@@ -251,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Scaffold(
                 body: Stack(
               children: [
-                Padding(
+                Container(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.1),
                   child: Column(

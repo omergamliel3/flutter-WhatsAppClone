@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:WhatsAppClone/presentation/screens/login/login_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../test_helper.dart';
@@ -247,7 +248,7 @@ void main() {
             description: 'Please enter another username.',
             buttonTitle: 'OK'));
         // should never call addUserName
-        verifyNever(auth.addUserName(username));
+        verifyNever(auth.addUser(username, PickedFile('')));
       });
 
       /// [submitUsernameAuth test]
@@ -268,14 +269,14 @@ void main() {
         when(auth.validateUserName(username))
             .thenAnswer((realInvocation) => Future.value(true));
         // mock addUserName to false (failure)
-        when(auth.addUserName(username))
+        when(auth.addUser(username, PickedFile('')))
             .thenAnswer((realInvocation) => Future.value(false));
         // call submitUsernameAuth
         await model.submitUsernameAuth(username);
         // expect ViewState username
         expect(model.viewState, emits(ViewState.username));
         // verify addUserName call
-        verify(auth.addUserName(username));
+        verify(auth.addUser(username, PickedFile('')));
         // verify showDialog been called from dialogService
         verify(dialogService.showDialog(
             title: 'Something went wrnog',
@@ -303,14 +304,14 @@ void main() {
         when(auth.validateUserName(username))
             .thenAnswer((realInvocation) => Future.value(true));
         // mock addUserName to false (success)
-        when(auth.addUserName(username))
+        when(auth.addUser(username, PickedFile('')))
             .thenAnswer((realInvocation) => Future.value(true));
         // call submitUsernameAuth
         await model.submitUsernameAuth(username);
         // expect ViewState profilePic
         expect(model.viewState, emits(ViewState.profilePic));
         // verify addUserName call
-        verify(auth.addUserName(username));
+        verify(auth.addUser(username, PickedFile('')));
         // verify saveUserName call
         verify(userService.saveUserName(username));
       });

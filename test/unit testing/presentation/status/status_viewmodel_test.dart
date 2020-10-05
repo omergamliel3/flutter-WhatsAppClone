@@ -88,6 +88,7 @@ void main() {
       var model = StatusViewModel();
       var status = Status(
           userName: 'username',
+          profileUrl: 'url',
           content: 'test',
           timestamp: DateTime.now(),
           id: 'id');
@@ -106,6 +107,7 @@ void main() {
       var model = StatusViewModel();
       var status = Status(
           userName: 'username',
+          profileUrl: 'url',
           content: 'test',
           timestamp: DateTime.now(),
           id: 'id');
