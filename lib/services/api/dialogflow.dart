@@ -8,8 +8,7 @@ class DialogFlowAPI {
       var dialogflow =
           Dialogflow(authGoogle: authGoogle, language: Language.english);
       var response = await dialogflow.detectIntent(query);
-      var msgResponse = response.getMessage();
-      return msgResponse;
+      return response.getMessage();
     } on Exception catch (_) {
       return null;
     }
