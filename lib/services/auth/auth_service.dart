@@ -85,7 +85,7 @@ class AuthService {
 
   /// add new username to firestore db user_names collection
   Future<bool> addUserName(String username) async {
-    return cloudDatabase.addUserName(username);
+    return await cloudDatabase.addUserName(username);
   }
 
   /// compare username argument with user_names collection
@@ -95,8 +95,8 @@ class AuthService {
   }
 
   /// save authentication state in prefs
-  void saveAuthentication({bool auth = false}) {
-    sharedPreferences.setBool(_kAuthKeyName, auth);
+  Future<bool> saveAuthentication({bool auth = false}) {
+    return sharedPreferences.setBool(_kAuthKeyName, auth);
   }
 
   /// is authenticate getter
