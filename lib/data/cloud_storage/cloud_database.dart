@@ -80,8 +80,10 @@ class CloudDatabase {
       // save picked image file in firebase storage
       String url;
       var ref = FirebaseStorage.instance.ref();
-      var storageSnap =
-          await ref.child("image/img").putFile(File(file.path)).onComplete;
+      var storageSnap = await ref
+          .child("image/img${DateTime.now().millisecondsSinceEpoch}")
+          .putFile(File(file.path))
+          .onComplete;
       if (storageSnap.error == null) {
         // get download url
         url = await storageSnap.ref.getDownloadURL() as String;
