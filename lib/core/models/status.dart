@@ -14,9 +14,8 @@ class Status {
       @required this.content,
       @required this.timestamp});
 
-  Status.fromJsonMap(Map<String, dynamic> map, String id)
-      : id = id,
-        userName = map['username'],
+  Status.fromJsonMap(Map<String, dynamic> map, this.id)
+      : userName = map['username'],
         profileUrl = map['profileUrl'],
         content = map['status'],
         timestamp = DateTime.fromMillisecondsSinceEpoch(map['timestamp']);

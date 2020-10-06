@@ -45,14 +45,15 @@ void main() {
       getAndRegisterDialogServiceMock();
       var prefs = SharedPreferencesMock();
       var cloudDatabase = CloudDatabaseMock();
+      var username = 'omergamliel';
+      var file = PickedFile('path');
+      when(cloudDatabase.addUser(username, file))
+          .thenAnswer((realInvocation) => Future.value(true));
       var authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      var username = 'omergamliel';
-      when(cloudDatabase.addUser(username, PickedFile('')))
-          .thenAnswer((realInvocation) => Future.value(true));
-      var success = await authService.addUser(username, PickedFile(''));
+      var success = await authService.addUser(username, file);
       expect(success, true);
-      verify(cloudDatabase.addUser(username, PickedFile('')));
+      verify(cloudDatabase.addUser(username, file));
     });
 
     test(
@@ -64,11 +65,12 @@ void main() {
       var authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       var username = 'omergamliel';
-      when(cloudDatabase.addUser(username, PickedFile('')))
+      var file = PickedFile('path');
+      when(cloudDatabase.addUser(username, file))
           .thenAnswer((realInvocation) => Future.value(false));
-      var success = await authService.addUser(username, PickedFile(''));
+      var success = await authService.addUser(username, file);
       expect(success, false);
-      verify(cloudDatabase.addUser(username, PickedFile('')));
+      verify(cloudDatabase.addUser(username, file));
     });
 
     test(

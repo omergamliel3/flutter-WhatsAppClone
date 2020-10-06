@@ -82,15 +82,15 @@ class LoginViewModel extends BaseViewModel {
   }
 
   // submit profile pic
-  Future<void> submitProfilePic() async {
-    setState(ViewState.busy);
-    if (_profileImage == null) {
+  Future<void> submitProfilePic({PickedFile profileImage}) async {
+    if (_profileImage == null && profileImage == null) {
       _showErrorDialog(
           'Profile image empty', 'Please pick image from gallery or camera');
       return;
     }
+    setState(ViewState.busy);
     // call submit form after finish auth view states
-    submitAuth();
+    await submitAuth();
   }
 
   // submit user authentication
