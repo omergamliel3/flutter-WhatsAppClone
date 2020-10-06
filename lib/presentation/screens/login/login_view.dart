@@ -193,6 +193,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           _model.image == null
               ? CircleAvatar(
+                  backgroundImage: AssetImage(backGroundAssetName),
                   backgroundColor: Colors.grey,
                   minRadius: 45,
                   maxRadius: 60,
