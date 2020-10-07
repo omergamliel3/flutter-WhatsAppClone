@@ -25,12 +25,12 @@ GetIt locator = GetIt.instance;
 
 void setupLocator() async {
   // initiate data layer
-
   var _localDatabase = LocalDatabase();
   var _cloudDatabase = CloudDatabase();
   var _contactsService = ContactsService();
   var _contactsHandler = ContactsHandler(_contactsService);
   var _sharedPreferences = await SharedPreferences.getInstance();
+
   // first party services
 
   // router

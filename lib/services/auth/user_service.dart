@@ -30,9 +30,9 @@ class UserService with ReactiveServiceMixin {
   }
 
   /// save username in prefs
-  void saveUserName(String username) {
-    if (username == null || username.isEmpty) return;
-    sharedPreferences.setString(_kUserNameKey, username.trim());
+  Future<bool> saveUserName(String username) async {
+    if (username == null || username.isEmpty) return false;
+    return await sharedPreferences.setString(_kUserNameKey, username.trim());
   }
 
   /// get the most recent user status, if there is one
