@@ -1,15 +1,17 @@
 import 'package:connectivity/connectivity.dart';
 
 class ConnectivityService {
+  final Connectivity _connectivity;
+  ConnectivityService(this._connectivity);
   ConnectivityState _connectivityState;
   bool get connectivity => _connectivityState.connection ?? false;
   ConnectivityResult get result => _connectivityState.result;
 
   // init connectivity
   Future<void> initConnectivity() async {
-    final result = await Connectivity().checkConnectivity();
+    final result = await _connectivity.checkConnectivity();
     handleResult(result);
-    Connectivity().onConnectivityChanged.listen(handleResult);
+    _connectivity.onConnectivityChanged.listen(handleResult);
   }
 
   // handle connectivity result and update connectivity state

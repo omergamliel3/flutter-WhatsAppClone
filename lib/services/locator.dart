@@ -1,3 +1,5 @@
+import 'package:connectivity/connectivity.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -26,7 +28,8 @@ void setupLocator() async {
 
   var _localDatabase = LocalDatabase();
   var _cloudDatabase = CloudDatabase();
-  var _contactsHandler = ContactsHandler();
+  var _contactsService = ContactsService();
+  var _contactsHandler = ContactsHandler(_contactsService);
   var _sharedPreferences = await SharedPreferences.getInstance();
   // first party services
 
@@ -45,8 +48,8 @@ void setupLocator() async {
   // dailog flow api
   locator.registerLazySingleton<DialogFlowAPI>(() => DialogFlowAPI());
   // connectivity
-  locator
-      .registerLazySingleton<ConnectivityService>(() => ConnectivityService());
+  locator.registerLazySingleton<ConnectivityService>(
+      () => ConnectivityService(Connectivity()));
   // repository
   locator.registerLazySingleton<ContactsRepository>(() => ContactsRepository(
       localDatabase: _localDatabase, contactHandler: _contactsHandler));
