@@ -1,8 +1,8 @@
 # WhatsAppClone - _UNDER CONSTRUCTION_
 
-A clean mvvm styled architecture WhatsApp clone Flutter project.
+A clean mvvm styled architecture, whatsApp clone app.
 
-This app is a mini-clone version of WhatsApp. Real contacts replaced with DialogFlow API small-talk agents.
+This app is a mini-clone version of WhatsApp, build with Flutter. Real contacts replaced with DialogFlow API small-talk agents.
 
 The main goal is to build readble, maintainable, testable, and high-quality flutter app using mvvm design pattern from the stacked package developed by [FilledStacks](https://www.filledstacks.com/).
 
@@ -27,7 +27,7 @@ View layer (UI), viewmodel layer (business logic), and model layer (services, re
 
 ### Front-end
 - **Flutter SDK**
-- **Stacked pattern Provider and Change Notifier for state management** 
+- **[Stacked](https://pub.dev/packages/stacked), based on Provider** 
 
 ### Back-end
 - **SQLite**
