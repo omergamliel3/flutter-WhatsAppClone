@@ -47,6 +47,8 @@ dependencies:
   image_picker: ^0.6.7+11
   # UI widets
   flutter_spinkit: ^4.1.2
+
+  
   
 
 dev_dependencies:
@@ -58,11 +60,28 @@ dev_dependencies:
   effective_dart: ^1.2.0
   mockito:
 
+  # icon generator
+  flutter_launcher_icons: ^0.8.1
+  # native splash generator
+  flutter_native_splash: ^0.1.9
+
+# flutter icons setup
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+
+# flutter splash screen setup
+flutter_native_splash:
+  image: assets/images/whatsapp_icon.png
+  color: "#ffffff"
+  android_disable_fullscreen: true
+
 flutter:
 
   uses-material-design: true
 
   assets:
-     - asset/images/whatsapp_icon.png
-     - asset/images/Whatsapp_Wallpaper.jpg
+     - assets/images/whatsapp_icon.png
+     - assets/images/Whatsapp_Wallpaper.jpg
      - private/credentials.json

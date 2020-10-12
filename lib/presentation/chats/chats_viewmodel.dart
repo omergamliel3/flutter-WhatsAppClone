@@ -1,11 +1,11 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../data/repositories/contacts_repository.dart';
+import '../../data/repositories/contacts_repository.dart';
 
-import '../../../locator.dart';
+import '../../locator.dart';
 
-import '../../../core/models/contact_entity.dart';
-import '../../../core/routes/router.dart';
+import '../../core/models/contact_entity.dart';
+import '../../core/routes/router.dart';
 
 class ChatsViewModel extends ReactiveViewModel {
   // get services

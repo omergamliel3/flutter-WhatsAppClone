@@ -3,9 +3,9 @@ import 'package:stacked/stacked.dart';
 
 import 'chats_viewmodel.dart';
 
-import '../../../core/models/contact_entity.dart';
+import '../../core/models/contact_entity.dart';
 
-import '../../../utils/datetime.dart';
+import '../../utils/datetime.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
