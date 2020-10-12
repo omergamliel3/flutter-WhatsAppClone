@@ -72,8 +72,8 @@ class ContactsRepository with ReactiveServiceMixin {
     }
   }
 
-  Future<List<Message>> getMessages(ContactEntity contactEntity) {
-    return localDatabase.getMessages(contactEntity);
+  Future<List<Message>> getMessages(ContactEntity contactEntity) async {
+    return await localDatabase.getMessages(contactEntity);
   }
 
   Future<bool> insertMessage(Message message) async {
