@@ -69,7 +69,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/icon.png"
+  image_path: "assets/images/app_icon.png"
 
 # flutter splash screen setup
 flutter_native_splash:
