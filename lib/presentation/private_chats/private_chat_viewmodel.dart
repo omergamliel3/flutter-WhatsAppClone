@@ -1,13 +1,13 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../data/repositories/contacts_repository.dart';
+import '../../data/repositories/contacts_repository.dart';
 
-import '../../../locator.dart';
-import '../../../services/api/dialogflow.dart';
-import '../../../services/firebase/analytics_service.dart';
+import '../../locator.dart';
+import '../../services/api/dialogflow.dart';
+import '../../services/firebase/analytics_service.dart';
 
-import '../../../core/models/message.dart';
-import '../../../core/models/contact_entity.dart';
+import '../../core/models/message.dart';
+import '../../core/models/contact_entity.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 

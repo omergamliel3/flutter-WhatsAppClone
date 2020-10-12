@@ -4,9 +4,9 @@ import 'package:stacked/stacked.dart';
 
 import 'loading_viewmodel.dart';
 
-import '../../../core/shared/constants.dart';
+import '../../core/shared/constants.dart';
 
-import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import '../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class LoadingPage extends StatefulWidget {
   @override

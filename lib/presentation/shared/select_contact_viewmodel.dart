@@ -3,13 +3,13 @@ import 'package:stacked_services/stacked_services.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-import '../../../locator.dart';
-import '../../../services/firebase/analytics_service.dart';
+import '../../locator.dart';
+import '../../services/firebase/analytics_service.dart';
 
-import '../../../core/routes/router.dart';
-import '../../../core/models/contact_entity.dart';
+import '../../core/routes/router.dart';
+import '../../core/models/contact_entity.dart';
 
-import '../../../data/repositories/contacts_repository.dart';
+import '../../data/repositories/contacts_repository.dart';
 
 class SelectContactViewModel extends BaseViewModel {
   // get services, repos

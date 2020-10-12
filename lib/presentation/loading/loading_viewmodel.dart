@@ -1,14 +1,14 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../locator.dart';
-import '../../../services/device/permission_service.dart';
-import '../../../services/auth/user_service.dart';
-import '../../../core/network/network_info.dart';
-import '../../../services/auth/auth_service.dart';
+import '../../locator.dart';
+import '../../services/device/permission_service.dart';
+import '../../services/auth/user_service.dart';
+import '../../core/network/network_info.dart';
+import '../../services/auth/auth_service.dart';
 
-import '../../../core/routes/router.dart';
+import '../../core/routes/router.dart';
 
-import '../../../data/repositories/contacts_repository.dart';
+import '../../data/repositories/contacts_repository.dart';
 
 class LoadingViewModel extends BaseViewModel {
   // get all services

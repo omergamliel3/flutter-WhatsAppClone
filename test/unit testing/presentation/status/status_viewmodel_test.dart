@@ -1,5 +1,5 @@
 import 'package:WhatsAppClone/core/models/status.dart';
-import 'package:WhatsAppClone/presentation/screens/status/status_viewmodel.dart';
+import 'package:WhatsAppClone/presentation/status/status_viewmodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

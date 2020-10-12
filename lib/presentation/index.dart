@@ -1,0 +1,9 @@
+export 'calls/calls_view.dart';
+export 'camera/camera_page.dart';
+export 'loading/loading_view.dart';
+export 'login/login_view.dart';
+export 'main/main_view.dart';
+export 'private_chats/private_chat_view.dart';
+export 'chats/chats_view.dart';
+export 'shared/select_contact_view.dart';
+export 'status/status_view.dart';

@@ -1,7 +1,7 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../locator.dart';
-import '../../../services/firebase/analytics_service.dart';
+import '../../locator.dart';
+import '../../services/firebase/analytics_service.dart';
 
 import 'package:call_log/call_log.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;

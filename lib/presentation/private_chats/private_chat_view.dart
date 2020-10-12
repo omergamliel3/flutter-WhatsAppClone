@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'private_chat_viewmodel.dart';
 
-import '../../../core/models/contact_entity.dart';
-import '../../../core/models/message.dart';
-import '../../../core/shared/constants.dart';
+import '../../core/models/contact_entity.dart';
+import '../../core/models/message.dart';
+import '../../core/shared/constants.dart';
 
-import '../../../utils/datetime.dart';
+import '../../utils/datetime.dart';
 
-import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import '../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
 
 class PrivateChatPage extends StatefulWidget {
   @override

@@ -8,11 +8,7 @@ import '../shared/constants.dart';
 import 'routing_constants.dart';
 import 'undefined_route.dart';
 
-import '../../presentation/main/main_view.dart';
-import '../../presentation/screens/shared/select_contact_view.dart';
-import '../../presentation/screens/chats/private_chat_view.dart';
-import '../../presentation/screens/login/login_view.dart';
-import '../../presentation/screens/loading/loading_view.dart';
+import '../../presentation/index.dart';
 
 class Router {
   final navigator = locator<NavigationService>();

@@ -8,11 +8,11 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
-import '../../../services/auth/auth_service.dart';
-import '../../../services/auth/user_service.dart';
-import '../../../locator.dart';
-import '../../../core/network/network_info.dart';
-import '../../../core/routes/router.dart';
+import '../../services/auth/auth_service.dart';
+import '../../services/auth/user_service.dart';
+import '../../locator.dart';
+import '../../core/network/network_info.dart';
+import '../../core/routes/router.dart';
 
 enum ViewState { initial, busy, phone, username, profilePic }
 

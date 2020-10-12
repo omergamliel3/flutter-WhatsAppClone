@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../core/models/status.dart';
+import '../../core/models/status.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../utils/datetime.dart';
+import '../../utils/datetime.dart';
 
-import '../../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
+import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 import 'status_viewmodel.dart';
 
 class StatusPage extends StatefulWidget {

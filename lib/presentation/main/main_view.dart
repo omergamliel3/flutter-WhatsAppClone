@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'main_viewmodel.dart';
 
-import '../screens/calls/calls_view.dart';
-import '../screens/chats/chats_view.dart';
-import '../screens/status/status_view.dart';
-import '../screens/camera/camera_page.dart';
+import '../index.dart';
 
 import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 import 'widgets/popupmenubutton.dart';

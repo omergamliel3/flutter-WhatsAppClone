@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'select_contact_viewmodel.dart';
 
-import '../../../core/models/contact_entity.dart';
-import '../../../core/shared/constants.dart';
+import '../../core/models/contact_entity.dart';
+import '../../core/shared/constants.dart';
 
 import 'widgets/popup_menu_button.dart';
 

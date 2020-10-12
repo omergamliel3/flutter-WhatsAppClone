@@ -5,9 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'login_viewmodel.dart';
 
-import '../../../core/shared/constants.dart';
+import '../../core/shared/constants.dart';
 
-import '../../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
+import '../../core/widgets/ui_elements/spinkit_loading_indicator.dart';
 import 'widgets/whatapp_image.dart';
 
 enum FormMode { phoneNum, userName, profilePic }

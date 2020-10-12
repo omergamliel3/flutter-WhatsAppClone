@@ -1,4 +1,4 @@
-import 'package:WhatsAppClone/presentation/screens/loading/loading_viewmodel.dart';
+import 'package:WhatsAppClone/presentation/loading/loading_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
