@@ -81,7 +81,9 @@ void main() {
       await driver.waitFor(find.byValueKey('UsernameFormField'));
       final textField = find.byValueKey('UsernameFormField');
       driver.tap(textField);
-      driver.enterText('omergamliel', timeout: Duration(seconds: 1));
+      driver.enterText('usernametest', timeout: Duration(seconds: 1));
+      await driver.tap(login);
+      await Future.delayed(Duration(seconds: 10));
       await driver.tap(login);
     });
 
