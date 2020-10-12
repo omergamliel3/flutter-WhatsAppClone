@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-class ContactEntity {
+class ContactEntity extends Equatable {
   final int id;
   final String displayName;
   final String phoneNumber;
@@ -34,4 +35,7 @@ class ContactEntity {
     return '''Name: $displayName\nPhone: $phoneNumber
     \nLastMsg: $lastMsg\nLastMsgTime: $lastMsgTime''';
   }
+
+  @override
+  List<Object> get props => [displayName, phoneNumber, lastMsg, lastMsgTime];
 }
