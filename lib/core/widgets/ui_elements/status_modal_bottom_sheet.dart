@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/status.dart';
 
-import '../../../services/locator.dart';
+import '../../../locator.dart';
 import '../../../services/auth/user_service.dart';
 import '../../../services/firebase/analytics_service.dart';
 

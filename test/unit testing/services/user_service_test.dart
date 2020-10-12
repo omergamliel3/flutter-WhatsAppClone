@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:WhatsAppClone/core/models/status.dart';
-import 'package:WhatsAppClone/data/cloud_storage/cloud_database.dart';
+import 'package:WhatsAppClone/data/datasources/cloud_database.dart';
 import 'package:WhatsAppClone/services/auth/auth_service.dart';
 import 'package:WhatsAppClone/services/auth/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

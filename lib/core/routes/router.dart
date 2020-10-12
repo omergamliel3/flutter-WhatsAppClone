@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:stacked_services/stacked_services.dart';
-import '../../services/locator.dart';
+import '../../locator.dart';
 
 import '../models/contact_entity.dart';
 import '../shared/constants.dart';

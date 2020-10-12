@@ -11,7 +11,7 @@ void main() {
   UserServiceMock user;
   AuthServiceMock auth;
   ContactsRepositoryMock repo;
-  ConnectivityServiceMock connectivity;
+  NetworkInfoMock connectivity;
   setUp(() {
     router = getAndRegisterRouterServiceMock();
     //localDb = getAndRegisterLocalDatabaseMock();

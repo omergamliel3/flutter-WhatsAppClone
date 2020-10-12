@@ -10,8 +10,8 @@ import 'package:flutter/foundation.dart' as foundation;
 
 import '../../../services/auth/auth_service.dart';
 import '../../../services/auth/user_service.dart';
-import '../../../services/locator.dart';
-import '../../../services/network/connectivity.dart';
+import '../../../locator.dart';
+import '../../../core/network/network_info.dart';
 import '../../../core/routes/router.dart';
 
 enum ViewState { initial, busy, phone, username, profilePic }
@@ -21,7 +21,7 @@ class LoginViewModel extends BaseViewModel {
   final _router = locator<Router>();
   final _auth = locator<AuthService>();
   final _userService = locator<UserService>();
-  final _connectivityService = locator<ConnectivityService>();
+  final _connectivityService = locator<NetworkInfo>();
   final _dialogService = locator<DialogService>();
 
   // state stream

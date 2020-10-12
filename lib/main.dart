@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'services/locator.dart';
+import 'locator.dart';
 
 import 'core/shared/theme.dart';
 

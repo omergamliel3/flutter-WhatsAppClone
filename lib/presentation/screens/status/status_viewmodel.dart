@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/models/status.dart';
 import '../../../services/auth/user_service.dart';
-import '../../../services/locator.dart';
+import '../../../locator.dart';
 
 class StatusViewModel extends ReactiveViewModel {
   // services

@@ -1,8 +1,8 @@
 import 'package:connectivity/connectivity.dart';
 
-class ConnectivityService {
+class NetworkInfo {
   final Connectivity _connectivity;
-  ConnectivityService(this._connectivity);
+  NetworkInfo(this._connectivity);
   ConnectivityState _connectivityState;
   bool get connectivity => _connectivityState.connection ?? false;
   ConnectivityResult get result => _connectivityState.result;

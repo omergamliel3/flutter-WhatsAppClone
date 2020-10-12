@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:WhatsAppClone/services/network/connectivity.dart';
+import 'package:WhatsAppClone/core/network/network_info.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -26,7 +26,7 @@ void main() {
       when(connectivityMock.onConnectivityChanged)
           .thenAnswer((realInvocation) => connectivityStream.stream);
       // construct tested service
-      var connectivityService = ConnectivityService(connectivityMock);
+      var connectivityService = NetworkInfo(connectivityMock);
       // init tested service
       await connectivityService.initConnectivity();
       var connectivity = connectivityService.connectivity;

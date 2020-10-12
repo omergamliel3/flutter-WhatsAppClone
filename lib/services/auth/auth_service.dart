@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked_services/stacked_services.dart';
-import '../../data/cloud_storage/cloud_database.dart';
+import '../../data/datasources/cloud_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:meta/meta.dart';
-import '../locator.dart';
+import '../../locator.dart';
 
 class AuthService {
   AuthService({@required this.cloudDatabase, @required this.sharedPreferences});

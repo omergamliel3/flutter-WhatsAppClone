@@ -1,6 +1,6 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../services/locator.dart';
+import '../../../locator.dart';
 import '../../../services/firebase/analytics_service.dart';
 
 import 'package:call_log/call_log.dart';

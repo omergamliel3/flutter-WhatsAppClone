@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stacked/stacked.dart';
 import 'package:observable_ish/observable_ish.dart';
 import '../../services/auth/auth_service.dart';
-import '../../data/cloud_storage/cloud_database.dart';
-import '../locator.dart';
+import '../../data/datasources/cloud_database.dart';
+import '../../locator.dart';
 import '../../core/models/status.dart';
 import 'package:meta/meta.dart';
 

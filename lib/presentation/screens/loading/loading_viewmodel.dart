@@ -1,13 +1,14 @@
 import 'package:stacked/stacked.dart';
 
-import '../../../services/locator.dart';
+import '../../../locator.dart';
 import '../../../services/device/permission_service.dart';
 import '../../../services/auth/user_service.dart';
-import '../../../services/network/connectivity.dart';
+import '../../../core/network/network_info.dart';
 import '../../../services/auth/auth_service.dart';
-import '../../../repositories/contacts_repository.dart';
 
 import '../../../core/routes/router.dart';
+
+import '../../../data/repositories/contacts_repository.dart';
 
 class LoadingViewModel extends BaseViewModel {
   // get all services
@@ -16,7 +17,7 @@ class LoadingViewModel extends BaseViewModel {
   final user = locator<UserService>();
   final auth = locator<AuthService>();
   final contactsRepo = locator<ContactsRepository>();
-  final connectivity = locator<ConnectivityService>();
+  final connectivity = locator<NetworkInfo>();
 
   /// call once after the model is construct
   Future<void> initalise() async {

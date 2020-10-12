@@ -1,6 +1,6 @@
 import 'package:stacked/stacked.dart';
 
-import '../../services/locator.dart';
+import '../../locator.dart';
 
 import '../../core/shared/constants.dart';
 

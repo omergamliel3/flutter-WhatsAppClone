@@ -1,12 +1,12 @@
 import 'package:WhatsAppClone/core/routes/router.dart';
-import 'package:WhatsAppClone/repositories/contacts_repository.dart';
+import 'package:WhatsAppClone/data/repositories/contacts_repository.dart';
 import 'package:WhatsAppClone/services/api/dialogflow.dart';
 import 'package:WhatsAppClone/services/auth/auth_service.dart';
 import 'package:WhatsAppClone/services/auth/user_service.dart';
 import 'package:WhatsAppClone/services/device/permission_service.dart';
 import 'package:WhatsAppClone/services/firebase/analytics_service.dart';
-import 'package:WhatsAppClone/services/locator.dart';
-import 'package:WhatsAppClone/services/network/connectivity.dart';
+import 'package:WhatsAppClone/locator.dart';
+import 'package:WhatsAppClone/core/network/network_info.dart';
 import 'package:mockito/mockito.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -16,17 +16,11 @@ class PermissionServiceMock extends Mock implements PermissionService {}
 
 class UserServiceMock extends Mock implements UserService {}
 
-//class CloudDatabaseMock extends Mock implements CloudDatabase {}
-
-//class LocalDatabaseMock extends Mock implements LocalDatabase {}
-
 class AuthServiceMock extends Mock implements AuthService {}
 
 class DialogFlowAPIMock extends Mock implements DialogFlowAPI {}
 
-//class ContactsHandlerMock extends Mock implements ContactsHandler {}
-
-class ConnectivityServiceMock extends Mock implements ConnectivityService {}
+class NetworkInfoMock extends Mock implements NetworkInfo {}
 
 class ContactsRepositoryMock extends Mock implements ContactsRepository {}
 
@@ -73,10 +67,10 @@ DialogFlowAPI getAndRegisterDialogFlowAPIMock() {
   return service;
 }
 
-ConnectivityService getAndRegisterConnectivityServiceMock() {
-  _removeRegistrationIfExists<ConnectivityService>();
-  var service = ConnectivityServiceMock();
-  locator.registerSingleton<ConnectivityService>(service);
+NetworkInfo getAndRegisterConnectivityServiceMock() {
+  _removeRegistrationIfExists<NetworkInfo>();
+  var service = NetworkInfoMock();
+  locator.registerSingleton<NetworkInfo>(service);
   return service;
 }
 

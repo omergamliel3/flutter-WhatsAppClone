@@ -11,7 +11,7 @@ void main() {
   // construct mocked services
   UserServiceMock userService;
   AuthServiceMock auth;
-  ConnectivityServiceMock connectivity;
+  NetworkInfoMock connectivity;
   RouterServiceMock router;
   DialogServiceMock dialogService;
 

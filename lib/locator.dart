@@ -5,54 +5,46 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 // services
-import '../core/routes/router.dart';
-import 'api/dialogflow.dart';
-import 'device/permission_service.dart';
-import 'device/contacts_service.dart';
-import 'auth/auth_service.dart';
-import 'auth/user_service.dart';
-import 'firebase/analytics_service.dart';
-import 'network/connectivity.dart';
+import 'core/routes/router.dart';
+import 'services/api/dialogflow.dart';
+import 'services/device/permission_service.dart';
+import 'services/device/contacts_service.dart';
+import 'services/auth/auth_service.dart';
+import 'services/auth/user_service.dart';
+import 'services/firebase/analytics_service.dart';
+import 'core/network/network_info.dart';
 
-// repos
-import '../repositories/contacts_repository.dart';
-
-// data layer
-import '../data/cloud_storage/cloud_database.dart';
-import '../data/local_storage/local_database.dart';
+// data
+import 'data/datasources/cloud_database.dart';
+import 'data/datasources/local_database.dart';
+import 'data/repositories/contacts_repository.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator() async {
-  // initiate data layer
+  // data
   var _localDatabase = LocalDatabase();
   var _cloudDatabase = CloudDatabase();
   var _contactsService = ContactsService();
   var _contactsHandler = ContactsHandler(_contactsService);
   var _sharedPreferences = await SharedPreferences.getInstance();
 
-  // first party services
-
-  // router
-  locator.registerLazySingleton<Router>(() => Router());
-  // permission
-  locator.registerLazySingleton<PermissionService>(() => PermissionService());
-  // user
-  locator.registerLazySingleton<UserService>(() => UserService(
-      cloudDatabase: _cloudDatabase, sharedPreferences: _sharedPreferences));
-  // analytics
-  locator.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
-  // auth
-  locator.registerLazySingleton<AuthService>(() => AuthService(
-      cloudDatabase: _cloudDatabase, sharedPreferences: _sharedPreferences));
-  // dailog flow api
-  locator.registerLazySingleton<DialogFlowAPI>(() => DialogFlowAPI());
-  // connectivity
-  locator.registerLazySingleton<ConnectivityService>(
-      () => ConnectivityService(Connectivity()));
-  // repository
   locator.registerLazySingleton<ContactsRepository>(() => ContactsRepository(
       localDatabase: _localDatabase, contactHandler: _contactsHandler));
+
+  // services
+
+  locator.registerLazySingleton<Router>(() => Router());
+  locator.registerLazySingleton<PermissionService>(() => PermissionService());
+  locator.registerLazySingleton<UserService>(() => UserService(
+      cloudDatabase: _cloudDatabase, sharedPreferences: _sharedPreferences));
+  locator.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
+  locator.registerLazySingleton<AuthService>(() => AuthService(
+      cloudDatabase: _cloudDatabase, sharedPreferences: _sharedPreferences));
+  locator.registerLazySingleton<DialogFlowAPI>(() => DialogFlowAPI());
+
+  // core
+  locator.registerLazySingleton<NetworkInfo>(() => NetworkInfo(Connectivity()));
 
   // third party services (stacked services)
   locator.registerLazySingleton<DialogService>(() => DialogService());

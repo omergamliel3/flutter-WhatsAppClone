@@ -1,18 +1,16 @@
 import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:stacked/stacked.dart';
 import 'package:observable_ish/observable_ish.dart';
 
-import 'contacts_repository_interface.dart';
+import '../datasources/local_database.dart';
+import '../../services/device/contacts_service.dart';
 
-import '../services/device/contacts_service.dart';
-import '../data/local_storage/local_database.dart';
-import '../core/models/contact_entity.dart';
-import '../core/models/message.dart';
+import '../../core/models/contact_entity.dart';
+import '../../core/models/message.dart';
 
-class ContactsRepository
-    with ReactiveServiceMixin
-    implements IContactsRepository {
+class ContactsRepository with ReactiveServiceMixin {
   // constructor
   ContactsRepository(
       {@required this.localDatabase, @required this.contactHandler});
@@ -26,7 +24,6 @@ class ContactsRepository
   final RxValue<List<ContactEntity>> _activeContacts =
       RxValue<List<ContactEntity>>();
 
-  @override
   Future<void> initalise() async {
     listenToReactiveValues([_activeContacts]);
     await localDatabase.asyncInitDB();
@@ -34,7 +31,6 @@ class ContactsRepository
     await setUnActiveContacts();
   }
 
-  @override
   Future<bool> setActiveContacts() async {
     try {
       _activeContacts.value = await localDatabase.getContactEntites();
@@ -44,7 +40,6 @@ class ContactsRepository
     }
   }
 
-  @override
   Future<bool> setUnActiveContacts() async {
     try {
       _unActiveContacts =
@@ -55,7 +50,6 @@ class ContactsRepository
     }
   }
 
-  @override
   Future<bool> activateContact(ContactEntity contactEntity) async {
     try {
       // create new contact in local db
@@ -78,19 +72,15 @@ class ContactsRepository
     }
   }
 
-  @override
   Future<List<Message>> getMessages(ContactEntity contactEntity) {
     return localDatabase.getMessages(contactEntity);
   }
 
-  @override
   Future<bool> insertMessage(Message message) async {
     return await localDatabase.insertMessage(message);
   }
 
-  @override
   List<ContactEntity> get activeContacts => _activeContacts.value;
 
-  @override
   List<ContactEntity> get unActiveContacts => _unActiveContacts;
 }
