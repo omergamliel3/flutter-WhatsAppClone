@@ -79,7 +79,6 @@ WhatAppClone.iml
 
 
 # ignore private files
-/Assets
 /build
 /lib/shared/keys.dart
 /android/app/google-services.json
