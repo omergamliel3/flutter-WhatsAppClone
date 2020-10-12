@@ -55,7 +55,7 @@ class LoginViewModel extends BaseViewModel {
     if (foundation.kDebugMode) {
       register = await _auth.mockRegisterUser();
     } else {
-      register = await _auth.registerUser(value);
+      register = await _auth.mockRegisterUser();
     }
     if (register) {
       setState(ViewState.username);

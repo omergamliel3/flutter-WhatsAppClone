@@ -7,15 +7,8 @@ import '../../core/models/contact_entity.dart';
 
 import '../../utils/datetime.dart';
 
-class ChatsPage extends StatefulWidget {
-  @override
-  _ChatsPageState createState() => _ChatsPageState();
-}
-
-class _ChatsPageState extends State<ChatsPage>
-    with AutomaticKeepAliveClientMixin {
-  ChatsViewModel _model;
-  Widget _buildEmptyContact() {
+class ChatsPage extends StatelessWidget {
+  Widget _buildEmptyContact(BuildContext context) {
     return Container(
         padding: const EdgeInsets.only(top: 20),
         alignment: Alignment.topCenter,
@@ -26,7 +19,8 @@ class _ChatsPageState extends State<ChatsPage>
   }
 
   // build contact list tile widget
-  Widget _buildContactListTile(ContactEntity contactEntity, int index) {
+  Widget _buildContactListTile(
+      ContactEntity contactEntity, int index, ChatsViewModel model) {
     var name = contactEntity.displayName ?? 'unKnown';
     var lastMessage =
         contactEntity.lastMsg == 'null' ? '' : contactEntity.lastMsg;
@@ -46,17 +40,17 @@ class _ChatsPageState extends State<ChatsPage>
       subtitle: Text(lastMessage),
       trailing: Text(timeAgo),
       onTap: () {
-        _model.navigatePrivateChatView(contactEntity);
+        model.navigatePrivateChatView(contactEntity);
       },
     );
   }
 
   // build contact chats listview
-  Widget _buildContactChats() {
+  Widget _buildContactChats(BuildContext context, ChatsViewModel model) {
     // order contacts data by date time decending
-    var contacts = _model.activeContacts;
+    var contacts = model.activeContacts;
     if (contacts.isEmpty) {
-      return _buildEmptyContact();
+      return _buildEmptyContact(context);
     }
     contacts.sort((a, b) => a.lastMsgTime.compareTo(b.lastMsgTime));
     contacts = contacts.reversed.toList();
@@ -72,23 +66,18 @@ class _ChatsPageState extends State<ChatsPage>
         itemBuilder: (context, index) {
           return Container(
               key: ValueKey('chat$index'),
-              child: _buildContactListTile(contacts[index], index));
+              child: _buildContactListTile(contacts[index], index, model));
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return ViewModelBuilder<ChatsViewModel>.reactive(
         builder: (context, model, child) {
-          _model = model;
           return Scaffold(
-            body: _buildContactChats(),
+            body: _buildContactChats(context, model),
           );
         },
         viewModelBuilder: () => ChatsViewModel());
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

@@ -6,6 +6,8 @@ import 'main_viewmodel.dart';
 import '../index.dart';
 
 import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
+import '../../core/widgets/keep_alive_wrapper.dart';
+
 import 'widgets/popupmenubutton.dart';
 
 class MainPage extends StatefulWidget {
@@ -102,7 +104,12 @@ class _MainPageState extends State<MainPage>
       child: TabBarView(
           controller: _tabController,
           physics: const ScrollPhysics(),
-          children: [CameraPage(), ChatsPage(), StatusPage(), CallsPage()]),
+          children: [
+            KeepAliveWrapper(child: CameraPage()),
+            KeepAliveWrapper(child: ChatsPage()),
+            KeepAliveWrapper(child: StatusPage()),
+            KeepAliveWrapper(child: CallsPage())
+          ]),
     );
   }
 
