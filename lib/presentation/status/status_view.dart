@@ -10,21 +10,14 @@ import '../../utils/datetime.dart';
 import '../../core/widgets/ui_elements/status_modal_bottom_sheet.dart';
 import 'status_viewmodel.dart';
 
-class StatusPage extends StatefulWidget {
-  @override
-  _StatusPageState createState() => _StatusPageState();
-}
-
-class _StatusPageState extends State<StatusPage>
-    with AutomaticKeepAliveClientMixin {
-  StatusViewModel _model;
+class StatusPage extends StatelessWidget {
   // build personal status listile
-  Widget _buildPersonalStatus() {
-    var leading = _getStatusLeading();
+  Widget _buildPersonalStatus(BuildContext context, StatusViewModel model) {
+    var leading = _getStatusLeading(context, model);
     return ListTile(
       leading: leading,
       title: Text('My status'),
-      subtitle: Text(_model.userStatus ?? 'Tap to add status update'),
+      subtitle: Text(model.userStatus ?? 'Tap to add status update'),
       onTap: () {
         // show status modal bottom sheet
         showStatusModalBottomSheet(context);
@@ -33,9 +26,10 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // build users status widget
-  Widget _buildStatus(Status status) {
+  Widget _buildStatus(
+      Status status, BuildContext context, StatusViewModel model) {
     final timeAgo = formatDateTime(status.timestamp);
-    final allowDelete = _model.allowDelete(status.userName);
+    final allowDelete = model.allowDelete(status.userName);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(status.profileUrl),
@@ -50,7 +44,7 @@ class _StatusPageState extends State<StatusPage>
         style: Theme.of(context).textTheme.caption,
       ),
       // only user can delete its own status
-      onTap: allowDelete ? () => _model.handleDeleteStatus(status) : null,
+      onTap: allowDelete ? () => model.handleDeleteStatus(status) : null,
     );
   }
 
@@ -63,9 +57,9 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // build users status widgets from firestore collection snapthots
-  Widget _buildUsersStatus() {
+  Widget _buildUsersStatus(BuildContext context, StatusViewModel model) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _model.statusStream,
+      stream: model.statusStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -81,7 +75,7 @@ class _StatusPageState extends State<StatusPage>
             itemBuilder: (context, index) {
               var status = Status.fromJsonMap(snapshot.data.docs[index].data(),
                   snapshot.data.docs[index].id);
-              return _buildStatus(status);
+              return _buildStatus(status, context, model);
             },
           ),
         ));
@@ -90,15 +84,15 @@ class _StatusPageState extends State<StatusPage>
   }
 
   // handle personal status leading widget
-  Widget _getStatusLeading() {
+  Widget _getStatusLeading(BuildContext context, StatusViewModel model) {
     var _isLight = Theme.of(context).brightness == Brightness.light;
-    return _model.downloadUrl == null
+    return model.downloadUrl == null
         ? CircleAvatar(
             backgroundColor:
                 _isLight ? Theme.of(context).primaryColor : Colors.blue,
           )
         : CircleAvatar(
-            backgroundImage: NetworkImage(_model.downloadUrl),
+            backgroundImage: NetworkImage(model.downloadUrl),
             backgroundColor:
                 _isLight ? Theme.of(context).primaryColor : Colors.blue,
           );
@@ -106,24 +100,19 @@ class _StatusPageState extends State<StatusPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return ViewModelBuilder<StatusViewModel>.reactive(
       viewModelBuilder: () => StatusViewModel(),
       onModelReady: (model) => model.initalise(),
       builder: (context, model, child) {
-        _model = model;
         return Scaffold(
             body: Column(
           children: [
-            _buildPersonalStatus(),
+            _buildPersonalStatus(context, model),
             _buildDividerText(),
-            _buildUsersStatus()
+            _buildUsersStatus(context, model)
           ],
         ));
       },
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
