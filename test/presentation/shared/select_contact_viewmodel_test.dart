@@ -17,6 +17,7 @@ void main() {
     contactsRepo = getAndRegisterContactsRepositoryMock();
     analytics = getAndRegisterAnalyticsServiceMock();
     dialogService = getAndRegisterDialogServiceMock();
+    getAndRegisterNavigationServiceMock();
     entity = ContactEntity(
         displayName: 'omer',
         phoneNumber: '00000',
