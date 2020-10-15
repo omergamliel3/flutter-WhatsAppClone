@@ -256,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<LoginViewModel>.reactive(
+    return ViewModelBuilder<LoginViewModel>.nonReactive(
         viewModelBuilder: () => LoginViewModel(),
         builder: (context, model, child) {
           _model = model;
