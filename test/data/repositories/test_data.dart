@@ -39,6 +39,7 @@ var contactsHandlerEntites = <ContactEntity>[
 ];
 
 var message = Message(
+    messageType: MessageType.text,
     foreignID: 0,
     fromUser: true,
     text: 'hello',

@@ -4,13 +4,15 @@ import 'package:stacked/stacked.dart';
 import 'select_contact_viewmodel.dart';
 
 import '../../core/models/contact_entity.dart';
-import '../../core/shared/constants.dart';
 
 import 'widgets/popup_menu_button.dart';
 
+enum ContactMode { chat, calls, setImage }
+
 class SelectContactScreen extends StatelessWidget {
   final ContactMode _contactMode;
-  SelectContactScreen(this._contactMode);
+  final String imagePath;
+  SelectContactScreen(this._contactMode, [this.imagePath]);
 
   // build contact list tile
   Widget _buildContactListTile(
@@ -25,16 +27,14 @@ class SelectContactScreen extends StatelessWidget {
             backgroundColor: Colors.grey,
           ),
           title: Text(contactEntity.displayName),
-          trailing: _contactMode == ContactMode.chat
+          trailing: _contactMode != ContactMode.calls
               ? SizedBox()
               : IconButton(
                   icon: Icon(Icons.phone),
                   onPressed: _contactMode == ContactMode.calls
                       ? () => model.launchCall(contactEntity.phoneNumber)
                       : null),
-          onTap: _contactMode == ContactMode.chat
-              ? () => model.activateContact(contactEntity)
-              : null),
+          onTap: () => handleOnTapType(contactEntity, model)),
     );
   }
 
@@ -67,12 +67,18 @@ class SelectContactScreen extends StatelessWidget {
           }),
       actions: [
         IconButton(icon: Icon(Icons.search), onPressed: () {}),
-        PopUpMenuButton(),
-        SizedBox(
-          width: 4.0,
-        ),
+        _contactMode != ContactMode.setImage ? PopUpMenuButton() : Container()
       ],
     );
+  }
+
+  void handleOnTapType(
+      ContactEntity contactEntity, SelectContactViewModel model) {
+    if (_contactMode == ContactMode.chat) {
+      model.activateContact(contactEntity);
+    } else if (_contactMode == ContactMode.setImage) {
+      model.sendImage(imagePath, contactEntity);
+    }
   }
 
   @override
@@ -80,7 +86,7 @@ class SelectContactScreen extends StatelessWidget {
     return ViewModelBuilder<SelectContactViewModel>.nonReactive(
         viewModelBuilder: () => SelectContactViewModel(),
         builder: (context, model, child) {
-          var contacts = model.unActiveContacts;
+          var contacts = model.getViewContacts(_contactMode);
           return SafeArea(
             top: false,
             child: Scaffold(

@@ -27,7 +27,7 @@ class ContactEntity extends Equatable {
         'displayName': displayName,
         'phoneNumber': phoneNumber,
         'lastMsg': lastMsg,
-        'lastMsgTime': lastMsgTime.millisecondsSinceEpoch,
+        'lastMsgTime': lastMsgTime?.millisecondsSinceEpoch,
       };
 
   @override

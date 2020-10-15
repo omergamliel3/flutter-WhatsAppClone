@@ -81,7 +81,8 @@ class LocalDatabase {
           foreignID INTEGER,
           text TEXT,
           fromUser INTEGER,
-          timestamp INTEGER
+          timestamp INTEGER,
+          messageType TEXT
           )
         ''');
   }
@@ -149,14 +150,16 @@ class LocalDatabase {
           foreignID,
           text,
           fromUser,
-          timestamp
+          timestamp,
+          messageType
         ) 
         VALUES
         (
           "${message.foreignID}",
           "${message.text}",
           "${message.fromUser ? 0 : 1}",
-          "${message.timestamp.millisecondsSinceEpoch}"
+          "${message.timestamp.millisecondsSinceEpoch}",
+          "${message.messageType.toString().split('.')[1]}"
         )
         ''');
         print('create new record with id: $id');
@@ -168,7 +171,7 @@ class LocalDatabase {
                     lastMsgTime = ?
                     WHERE id = ? ''',
         [
-          message.text,
+          message.messageType == MessageType.text ? message.text : 'image',
           message.timestamp.millisecondsSinceEpoch,
           message.foreignID
         ],

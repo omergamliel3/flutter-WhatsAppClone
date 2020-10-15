@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -108,26 +109,36 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   Widget _buildMessage(Message message) {
     var timestamp = formatDateTime(message.timestamp);
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         mainAxisAlignment:
             message.fromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           Flexible(
             child: Container(
-              child: RichText(
-                text: TextSpan(children: [
-                  TextSpan(text: message.text),
-                  TextSpan(text: '  '),
-                  TextSpan(
-                      text: timestamp,
-                      style: TextStyle(
-                          color: Colors.grey[300],
-                          fontStyle: FontStyle.italic,
-                          fontSize: 12.0))
-                ]),
-              ),
-              padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+              child: message.messageType == MessageType.text
+                  ? RichText(
+                      text: TextSpan(children: [
+                        TextSpan(text: message.text),
+                        TextSpan(text: '  '),
+                        TextSpan(
+                            text: timestamp,
+                            style: TextStyle(
+                                color: Colors.grey[300],
+                                fontStyle: FontStyle.italic,
+                                fontSize: 12.0))
+                      ]),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.file(
+                        File(message.text),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+              padding: message.messageType == MessageType.text
+                  ? const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0)
+                  : const EdgeInsets.all(0.0),
               decoration: BoxDecoration(
                   color: message.fromUser ? kPrimaryColor : Colors.grey[800],
                   borderRadius: BorderRadius.circular(10.0)),
@@ -176,7 +187,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         foreignID: widget.contactEntity.id,
         text: msg.trim(),
         fromUser: fromUser,
-        timestamp: DateTime.now());
+        timestamp: DateTime.now(),
+        messageType: MessageType.text);
     // insert message to local db
     await _model.insertMessage(message);
     if (mounted) {

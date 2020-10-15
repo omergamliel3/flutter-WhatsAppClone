@@ -13,7 +13,7 @@ class ChatsPage extends StatelessWidget {
         padding: const EdgeInsets.only(top: 20),
         alignment: Alignment.topCenter,
         child: Text(
-          'No active contacts',
+          '',
           style: Theme.of(context).textTheme.headline5,
         ));
   }

@@ -4,7 +4,6 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../locator.dart';
 
 import '../models/contact_entity.dart';
-import '../shared/constants.dart';
 import 'routing_constants.dart';
 import 'undefined_route.dart';
 
@@ -35,7 +34,7 @@ class Router {
         // pass mode argument
         Map<String, dynamic> arguments = settings.arguments;
         return MaterialPageRoute(builder: (context) {
-          return SelectContactScreen(arguments['mode']);
+          return SelectContactScreen(arguments['mode'], arguments['path']);
         });
         break;
       case privateChatRoute:
@@ -44,6 +43,16 @@ class Router {
         return MaterialPageRoute(builder: (context) {
           return PrivateChatPage(ContactEntity.fromJsonMap(arguments));
         });
+        break;
+      case displayPictureRoute:
+        Map<String, dynamic> arguments = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) {
+            return DisplayPictureView(
+              imagePath: arguments['path'],
+            );
+          },
+        );
         break;
       default:
         return MaterialPageRoute(builder: (context) {
@@ -63,15 +72,20 @@ class Router {
   }
 
   /// navigate contact screen
-  Future<dynamic> navigateContactScreen(ContactMode contactMode) {
-    return navigator
-        .navigateTo(contactsRoute, arguments: {'mode': contactMode});
+  Future<dynamic> navigateContactScreen(ContactMode contactMode,
+      [String imagePath]) {
+    return navigator.navigateTo(contactsRoute,
+        arguments: {'mode': contactMode, 'path': imagePath});
   }
 
   /// navigate private chat screen
   Future<dynamic> navigatePrivateChatSceen(ContactEntity contactEntity) {
     return navigator.navigateTo(privateChatRoute,
         arguments: contactEntity.toJsonMap());
+  }
+
+  Future<dynamic> navigateDisplayPicture(String path) {
+    return navigator.navigateTo(displayPictureRoute, arguments: {'path': path});
   }
 
   void pop() {

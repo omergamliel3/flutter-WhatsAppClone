@@ -1,5 +1,6 @@
 export 'calls/calls_view.dart';
 export 'camera/camera_page.dart';
+export 'camera/display_picture_view.dart';
 export 'loading/loading_view.dart';
 export 'login/login_view.dart';
 export 'main/main_view.dart';
