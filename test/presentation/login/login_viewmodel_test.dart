@@ -1,19 +1,21 @@
 import 'dart:async';
 
 import 'package:WhatsAppClone/presentation/login/login_viewmodel.dart';
+import 'package:WhatsAppClone/services/index.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../test_helper.dart';
 
 void main() {
   // construct mocked services
-  UserServiceMock userService;
-  AuthServiceMock auth;
-  NetworkInfoMock connectivity;
-  RouterServiceMock router;
-  DialogServiceMock dialogService;
+  UserService userService;
+  AuthService auth;
+  NetworkInfo connectivity;
+  Router router;
+  DialogService dialogService;
 
   setUp(() {
     userService = getAndRegisterUserServiceMock();
@@ -28,8 +30,8 @@ void main() {
       /// [viewState getter initial value test]
       test('when get viewState should return ViewState.initial', () async {
         // construct login viewmodel
-        var model = LoginViewModel();
-        var state = await model.viewState.first;
+        final model = LoginViewModel();
+        final state = await model.viewState.first;
         expect(state, ViewState.initial);
       });
 
@@ -37,8 +39,8 @@ void main() {
       test('when setState should add viewState value to viewState stream',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
-        var stream = model.viewState;
+        final model = LoginViewModel();
+        final stream = model.viewState;
         expect(stream, emits(ViewState.initial));
         model.setState(ViewState.phone);
         expect(stream, emits(ViewState.phone));
@@ -55,11 +57,11 @@ void main() {
           '''when get connectivity should return the device connectivity state (connected)''',
           () {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // mock authentication state to true
         when(connectivity.connectivity).thenAnswer((realInvocation) => true);
         // get auth state from model
-        var connectivityState = model.connectivity;
+        final connectivityState = model.connectivity;
         // verify service call
         verify(connectivity.connectivity);
         // expected value
@@ -71,11 +73,11 @@ void main() {
           '''when get connectivity should return the device connectivity state (not connected)''',
           () {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // mock authentication state to true
         when(connectivity.connectivity).thenAnswer((realInvocation) => false);
         // get auth state from model
-        var connectivityState = model.connectivity;
+        final connectivityState = model.connectivity;
         // verify service call
         verify(connectivity.connectivity);
         // expected value
@@ -89,11 +91,11 @@ void main() {
           '''when called isUserValid should return true (the username isn't used)''',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // mock validateUserName method to return true
         when(auth.validateUserName('omergamliel'))
             .thenAnswer((realInvocation) => Future.value(true));
-        var valid = await model.isUserValid('omergamliel');
+        final valid = await model.isUserValid('omergamliel');
         // verify auth service call
         verify(auth.validateUserName('omergamliel'));
         // expected value
@@ -104,11 +106,11 @@ void main() {
       test("when called isUserValid should return false (the username is used)",
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // mock validateUserName method to return false
         when(auth.validateUserName('omergamliel'))
             .thenAnswer((realInvocation) => Future.value(false));
-        var valid = await model.isUserValid('omergamliel');
+        final valid = await model.isUserValid('omergamliel');
         // verify auth service call
         verify(auth.validateUserName('omergamliel'));
         // expected value
@@ -121,11 +123,11 @@ void main() {
       test('when get isAuthenticated should return the auth state (Logged-In)',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // mock authentication state to true
         when(auth.isAuthenticated).thenAnswer((realInvocation) => true);
         // get auth state from model
-        var authState = model.isAuthenticated;
+        final authState = model.isAuthenticated;
         // verify service call
         verify(auth.isAuthenticated);
         // expected value
@@ -136,11 +138,11 @@ void main() {
       test('when get isAuthenticated should return the auth state (Not-logged)',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // mock authentication state to false
         when(auth.isAuthenticated).thenAnswer((realInvocation) => false);
         // get auth state from model
-        var authState = model.isAuthenticated;
+        final authState = model.isAuthenticated;
         // verify service call
         verify(auth.isAuthenticated);
         // expected value
@@ -153,7 +155,7 @@ void main() {
       test('''when submitPhoneAuth (no connectivity) should show dialog''',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         model.viewState.listen(print);
         //mock connectivity to true
         when(connectivity.connectivity).thenAnswer((realInvocation) => false);
@@ -171,7 +173,7 @@ void main() {
           '''when submitPhoneAuth (connectivity) should update viewState to busy and call registerUser (auth service), then should update viewState to username''',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         model.viewState.listen(print);
         // mock connectivity to true
         when(connectivity.connectivity).thenAnswer((realInvocation) => true);
@@ -188,7 +190,7 @@ void main() {
           '''when submitPhoneAuth (connectivity) should update viewState to busy and call registerUser (auth service) with failure, then should update viewState back to phone''',
           () async {
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         model.viewState.listen(print);
         // mock connectivity to true
         when(connectivity.connectivity).thenAnswer((realInvocation) => true);
@@ -205,9 +207,9 @@ void main() {
       /// [submitUsernameAuth test (no connection)]
       test('when submitUsernameAuth (no connectivity) should show dialog ',
           () async {
-        var username = 'omergamliel';
+        const username = 'omergamliel';
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         model.setState(ViewState.username);
         model.viewState.listen(print);
         when(connectivity.connectivity).thenAnswer((realInvocation) => false);
@@ -226,9 +228,9 @@ void main() {
       test(
           '''when submitUsernameAuth (connectivity) should update view state to busy, failed to validate username, then update viewState to username''',
           () async {
-        var username = 'omergamliel';
+        const username = 'omergamliel';
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // set ViewState to username
         model.setState(ViewState.username);
         // listen to viewState events
@@ -256,9 +258,9 @@ void main() {
       test(
           '''when submitUsernameAuth (connectivity) should update view state to busy, success validate username, success to addUserName, then saveUserName and update viewState to profile pic''',
           () async {
-        var username = 'omergamliel';
+        const username = 'omergamliel';
         // construct login viewmodel
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // set ViewState to username
         model.setState(ViewState.username);
         // listen to viewState events
@@ -282,7 +284,7 @@ void main() {
       test('''when submitProfilePic with no picked image should show dialog''',
           () async {
         // construct model
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // set viewState to profilePic
         model.setState(ViewState.profilePic);
         // call submitProfilePic
@@ -303,7 +305,7 @@ void main() {
         when(auth.addUser(null, null))
             .thenAnswer((realInvocation) => Future.value(true));
         // construct model
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // set viewState to profilePic
         model.setState(ViewState.profilePic);
         // call submitProfilePic
@@ -326,7 +328,7 @@ void main() {
         when(auth.addUser(null, null))
             .thenAnswer((realInvocation) => Future.value(false));
         // construct model
-        var model = LoginViewModel();
+        final model = LoginViewModel();
         // set viewState to profilePic
         model.setState(ViewState.profilePic);
         // call submitProfilePic

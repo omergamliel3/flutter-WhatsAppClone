@@ -1,4 +1,5 @@
 import 'package:WhatsAppClone/core/routes/router.dart';
+import 'package:WhatsAppClone/data/repositories/contacts_repository.dart';
 import 'package:WhatsAppClone/presentation/chats/chats_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -7,7 +8,7 @@ import '../../data/repositories/test_data.dart';
 import '../../test_helper.dart';
 
 void main() {
-  ContactsRepositoryMock repository;
+  ContactsRepository repository;
   Router router;
   setUp(() {
     repository = getAndRegisterContactsRepositoryMock();
@@ -17,16 +18,16 @@ void main() {
     test('when get activeContacts should pass to ContactsRepository', () {
       when(repository.activeContacts)
           .thenAnswer((realInvocation) => localDatabaseContactsEntites);
-      var model = ChatsViewModel();
-      var activeContacts = model.activeContacts;
+      final model = ChatsViewModel();
+      final activeContacts = model.activeContacts;
       expect(activeContacts, equals(localDatabaseContactsEntites));
       verify(repository.activeContacts);
 
-      var reactiveService = model.reactiveServices;
+      final reactiveService = model.reactiveServices;
       expect(reactiveService, equals([repository]));
     });
     test('when call navigatePrivateChatView should pass to router', () {
-      var model = ChatsViewModel();
+      final model = ChatsViewModel();
       model.navigatePrivateChatView(contactEntity);
       verify(router.navigatePrivateChatSceen(contactEntity));
     });

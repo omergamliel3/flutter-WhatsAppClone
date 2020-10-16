@@ -1,15 +1,17 @@
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/presentation/shared/select_contact_viewmodel.dart';
+import 'package:WhatsAppClone/services/index.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../test_helper.dart';
 
 void main() {
   // construct mocked services
-  RouterServiceMock router;
-  ContactsRepositoryMock contactsRepo;
-  AnalyticsServiceMock analytics;
-  DialogServiceMock dialogService;
+  Router router;
+  ContactsRepository contactsRepo;
+  AnalyticsService analytics;
+  DialogService dialogService;
   // dummy contact entity data
   ContactEntity entity;
   setUp(() {
@@ -33,7 +35,7 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(true));
 
       // construct model
-      var model = SelectContactViewModel();
+      final model = SelectContactViewModel();
       await model.activateContact(entity);
       verifyInOrder([
         contactsRepo.activateContact(entity),
@@ -49,7 +51,7 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(false));
 
       // construct model
-      var model = SelectContactViewModel();
+      final model = SelectContactViewModel();
       await model.activateContact(entity);
       verify(contactsRepo.activateContact(entity));
       verify(dialogService.showDialog(

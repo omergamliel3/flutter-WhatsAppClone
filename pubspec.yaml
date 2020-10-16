@@ -29,6 +29,7 @@ dependencies:
   google_fonts: ^1.1.0
   image_picker: ^0.6.7+11
   intl: ^0.16.1
+  lint: ^1.3.0
   path: ^1.7.0
   path_provider: ^1.6.21
   permission_handler: ^5.0.1+1

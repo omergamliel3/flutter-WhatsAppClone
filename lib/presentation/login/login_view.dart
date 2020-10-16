@@ -65,14 +65,13 @@ class _LoginPageState extends State<LoginPage> {
   // build phone number text field
   Widget _buildPhoneNumFormField() {
     return TextFormField(
-        autofocus: false,
         initialValue: '+9720587675744',
         decoration: InputDecoration(
             hintText: 'Enter your phone number',
-            prefixIcon: Icon(Icons.phone),
+            prefixIcon: const Icon(Icons.phone),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(width: .7)),
+                borderSide: const BorderSide(width: .7)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 borderSide: BorderSide(
@@ -93,15 +92,14 @@ class _LoginPageState extends State<LoginPage> {
   // build phone number text field
   Widget _buildUserNameFormField() {
     return TextFormField(
-        key: ValueKey('UsernameFormField'),
-        autofocus: false,
+        key: const ValueKey('UsernameFormField'),
         initialValue: 'omer gamliel',
         decoration: InputDecoration(
             hintText: 'Enter username',
-            prefixIcon: Icon(Icons.person),
+            prefixIcon: const Icon(Icons.person),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(width: .7)),
+                borderSide: const BorderSide(width: .7)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 borderSide: BorderSide(
@@ -191,30 +189,31 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: Column(
         children: [
-          _model.image == null
-              ? CircleAvatar(
-                  backgroundImage: AssetImage(backGroundAssetName),
-                  backgroundColor: Colors.grey,
-                  minRadius: 45,
-                  maxRadius: 60,
-                )
-              : CircleAvatar(
-                  backgroundImage: MemoryImage(_model.image),
-                  backgroundColor: Colors.grey,
-                  minRadius: 45,
-                  maxRadius: 60,
-                ),
+          if (_model.image == null)
+            const CircleAvatar(
+              backgroundImage: AssetImage(backGroundAssetName),
+              backgroundColor: Colors.grey,
+              minRadius: 45,
+              maxRadius: 60,
+            )
+          else
+            CircleAvatar(
+              backgroundImage: MemoryImage(_model.image),
+              backgroundColor: Colors.grey,
+              minRadius: 45,
+              maxRadius: 60,
+            ),
           const SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FlatButton(
-                  child: Text('PICK FROM GALLERY'),
-                  onPressed: () => _model.getImage(ImageSource.gallery)),
+                  onPressed: () => _model.getImage(ImageSource.gallery),
+                  child: const Text('PICK FROM GALLERY')),
               const SizedBox(width: 5.0),
               FlatButton(
-                  child: Text('PICK FROM CAMERA'),
-                  onPressed: () => _model.getImage(ImageSource.camera)),
+                  onPressed: () => _model.getImage(ImageSource.camera),
+                  child: const Text('PICK FROM CAMERA')),
             ],
           )
         ],
@@ -225,6 +224,7 @@ class _LoginPageState extends State<LoginPage> {
   // submit form according to formMode [PhoneNum/UserName]
   void _submitForm() {
     // evoid submit form when model is busy
+    // ignore: unrelated_type_equality_checks
     if (_model.viewState == ViewState.busy) return;
     if (_formMode == FormMode.phoneNum) {
       _submitPhoneNumForm();
@@ -236,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //  submit phone num form
-  void _submitPhoneNumForm() async {
+  Future _submitPhoneNumForm() async {
     // validate phone num field
     if (_formKeyAuth.currentState.validate()) {
       // save phone num value
@@ -246,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // submit user name form
-  void _submitUserNameForm() async {
+  Future _submitUserNameForm() async {
     // validate username field
     if (_formKeyUserName.currentState.validate()) {
       _formKeyUserName.currentState.save();
@@ -269,7 +269,6 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.1),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
                         alignment: Alignment.center,
@@ -283,9 +282,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: _buildStateWidget(),
                       ),
                       const SizedBox(height: 15),
-                      Align(
-                          alignment: Alignment.center,
-                          child: _buildContinueButton())
+                      Align(child: _buildContinueButton())
                     ],
                   ),
                 ),

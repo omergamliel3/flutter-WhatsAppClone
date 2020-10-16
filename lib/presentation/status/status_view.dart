@@ -13,10 +13,10 @@ import 'status_viewmodel.dart';
 class StatusPage extends StatelessWidget {
   // build personal status listile
   Widget _buildPersonalStatus(BuildContext context, StatusViewModel model) {
-    var leading = _getStatusLeading(context, model);
+    final leading = _getStatusLeading(context, model);
     return ListTile(
       leading: leading,
-      title: Text('My status'),
+      title: const Text('My status'),
       subtitle: Text(model.userStatus ?? 'Tap to add status update'),
       onTap: () {
         // show status modal bottom sheet
@@ -65,7 +65,7 @@ class StatusPage extends StatelessWidget {
           return Container();
         }
         if (snapshot.hasError) {
-          return Text(snapshot.error);
+          return Text(snapshot.error.toString());
         }
 
         return Expanded(
@@ -73,7 +73,8 @@ class StatusPage extends StatelessWidget {
           child: ListView.builder(
             itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
-              var status = Status.fromJsonMap(snapshot.data.docs[index].data(),
+              final status = Status.fromJsonMap(
+                  snapshot.data.docs[index].data(),
                   snapshot.data.docs[index].id);
               return _buildStatus(status, context, model);
             },
@@ -85,7 +86,7 @@ class StatusPage extends StatelessWidget {
 
   // handle personal status leading widget
   Widget _getStatusLeading(BuildContext context, StatusViewModel model) {
-    var _isLight = Theme.of(context).brightness == Brightness.light;
+    final _isLight = Theme.of(context).brightness == Brightness.light;
     return model.downloadUrl == null
         ? CircleAvatar(
             backgroundColor:

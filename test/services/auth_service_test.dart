@@ -20,22 +20,22 @@ class AuthServiceMock extends Mock implements AuthService {}
 void main() {
   group('auth service tests - ', () {
     test('when registerUser with mobile should return true', () async {
-      var authService = AuthServiceMock();
-      var mobile = '0587675744';
+      final authService = AuthServiceMock();
+      const mobile = '0587675744';
       when(authService.registerUser(mobile))
           .thenAnswer((realInvocation) => Future.value(true));
-      var register = await authService.registerUser(mobile);
+      final register = await authService.registerUser(mobile);
       expect(register, true);
     });
 
     test(
         '''when registerUser with mobile should return false (firebase auth exception)''',
         () async {
-      var authService = AuthServiceMock();
-      var mobile = '0587675744';
+      final authService = AuthServiceMock();
+      const mobile = '0587675744';
       when(authService.registerUser(mobile))
           .thenAnswer((realInvocation) => Future.value(false));
-      var register = await authService.registerUser(mobile);
+      final register = await authService.registerUser(mobile);
       expect(register, false);
     });
 
@@ -43,15 +43,15 @@ void main() {
         '''when addUserName should add username in cloudDatabase and return true''',
         () async {
       getAndRegisterDialogServiceMock();
-      var prefs = SharedPreferencesMock();
-      var cloudDatabase = CloudDatabaseMock();
-      var username = 'omergamliel';
-      var file = PickedFile('path');
+      final prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      const username = 'omergamliel';
+      final file = PickedFile('path');
       when(cloudDatabase.addUser(username, file))
           .thenAnswer((realInvocation) => Future.value(true));
-      var authService =
+      final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      var success = await authService.addUser(username, file);
+      final success = await authService.addUser(username, file);
       expect(success, true);
       verify(cloudDatabase.addUser(username, file));
     });
@@ -60,15 +60,15 @@ void main() {
         '''when addUserName should raise exception in cloudDatabase, and return false''',
         () async {
       getAndRegisterDialogServiceMock();
-      var prefs = SharedPreferencesMock();
-      var cloudDatabase = CloudDatabaseMock();
-      var authService =
+      final prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      var username = 'omergamliel';
-      var file = PickedFile('path');
+      const username = 'omergamliel';
+      final file = PickedFile('path');
       when(cloudDatabase.addUser(username, file))
           .thenAnswer((realInvocation) => Future.value(false));
-      var success = await authService.addUser(username, file);
+      final success = await authService.addUser(username, file);
       expect(success, false);
       verify(cloudDatabase.addUser(username, file));
     });
@@ -77,14 +77,14 @@ void main() {
         '''when validateUserName should validate username via cloudDatabase and return true (valid username)''',
         () async {
       getAndRegisterDialogServiceMock();
-      var prefs = SharedPreferencesMock();
-      var cloudDatabase = CloudDatabaseMock();
-      var authService =
+      final prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      var username = 'omergamliel';
+      const username = 'omergamliel';
       when(cloudDatabase.validateUserName(username))
           .thenAnswer((realInvocation) => Future.value(true));
-      var valid = await authService.validateUserName(username);
+      final valid = await authService.validateUserName(username);
       expect(valid, true);
       verify(cloudDatabase.validateUserName(username));
     });
@@ -93,14 +93,14 @@ void main() {
         '''when validateUserName should validate username via cloudDatabase and return false (invalid username)''',
         () async {
       getAndRegisterDialogServiceMock();
-      var prefs = SharedPreferencesMock();
-      var cloudDatabase = CloudDatabaseMock();
-      var authService =
+      final prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      var username = 'omergamliel';
+      const username = 'omergamliel';
       when(cloudDatabase.validateUserName(username))
           .thenAnswer((realInvocation) => Future.value(false));
-      var valid = await authService.validateUserName(username);
+      final valid = await authService.validateUserName(username);
       expect(valid, false);
       verify(cloudDatabase.validateUserName(username));
     });
@@ -113,10 +113,10 @@ void main() {
       final cloudDatabase = CloudDatabaseMock();
       final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      final _kAuthKeyName = 'authenticate';
+      const _kAuthKeyName = 'authenticate';
       when(prefs.setBool(_kAuthKeyName, true))
           .thenAnswer((realInvocation) => Future.value(true));
-      var saveAuth = await authService.saveAuthentication(auth: true);
+      final saveAuth = await authService.saveAuthentication(auth: true);
       expect(saveAuth, true);
       verify(prefs.setBool(_kAuthKeyName, true));
     });
@@ -129,10 +129,10 @@ void main() {
       final cloudDatabase = CloudDatabaseMock();
       final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      final _kAuthKeyName = 'authenticate';
+      const _kAuthKeyName = 'authenticate';
       when(prefs.setBool(_kAuthKeyName, false))
           .thenAnswer((realInvocation) => Future.value(false));
-      var saveAuth = await authService.saveAuthentication(auth: false);
+      final saveAuth = await authService.saveAuthentication();
       expect(saveAuth, false);
       verify(prefs.setBool(_kAuthKeyName, false));
     });
@@ -145,11 +145,11 @@ void main() {
       final cloudDatabase = CloudDatabaseMock();
       final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      final _kAuthKeyName = 'authenticate';
-      var authenticated = true;
+      const _kAuthKeyName = 'authenticate';
+      const authenticated = true;
       when(prefs.getBool(_kAuthKeyName))
           .thenAnswer((realInvocation) => authenticated);
-      var authState = await authService.isAuthenticated;
+      final authState = authService.isAuthenticated;
       expect(authState, authenticated);
       verify(prefs.getBool(_kAuthKeyName));
     });
@@ -162,11 +162,11 @@ void main() {
       final cloudDatabase = CloudDatabaseMock();
       final authService =
           AuthService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
-      final _kAuthKeyName = 'authenticate';
-      var authenticated = false;
+      const _kAuthKeyName = 'authenticate';
+      const authenticated = false;
       when(prefs.getBool(_kAuthKeyName))
           .thenAnswer((realInvocation) => authenticated);
-      var authState = await authService.isAuthenticated;
+      final authState = authService.isAuthenticated;
       expect(authState, authenticated);
       verify(prefs.getBool(_kAuthKeyName));
     });

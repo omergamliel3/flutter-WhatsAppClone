@@ -1,4 +1,4 @@
-include: package:effective_dart/analysis_options.1.2.0.yaml
+include: package:lint/analysis_options.yaml
 
 linter:
   rules:
@@ -6,3 +6,4 @@ linter:
     directives_ordering: false
     prefer_initializing_formals: true
     type_annotate_public_apis: false
+    avoid_print: false

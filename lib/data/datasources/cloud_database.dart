@@ -14,7 +14,7 @@ class CloudDatabase {
   Future<String> getUserStatus(String username) async {
     try {
       // get all user status, order by timestamp (descending)
-      var querySnapshot = await FirebaseFirestore.instance
+      final querySnapshot = await FirebaseFirestore.instance
           .collection(_kUsersStatusCollection)
           .orderBy('timestamp', descending: true)
           .get();
@@ -23,7 +23,7 @@ class CloudDatabase {
         return null;
       }
       // iterate docs from query
-      for (var doc in querySnapshot.docs) {
+      for (final doc in querySnapshot.docs) {
         // only compare doc with the same username as user
         if (doc.data()['username'].toLowerCase() == username.toLowerCase()) {
           // set user status to reactive value
@@ -44,16 +44,16 @@ class CloudDatabase {
   Future<bool> validateUserName(String username) async {
     try {
       // get query db collection
-      var query = await FirebaseFirestore.instance
+      final query = await FirebaseFirestore.instance
           .collection(_kUserNamesCollection)
           .get();
       // get query docs
-      var usernames = query.docs;
+      final usernames = query.docs;
       // username flag
       var flag = false;
       // iterate usernames query docs list
-      for (var user in usernames) {
-        var name = user.data()['username'] as String;
+      for (final user in usernames) {
+        final name = user.data()['username'] as String;
         if (name.toLowerCase() == username.toLowerCase()) {
           flag = true;
           break;
@@ -79,8 +79,8 @@ class CloudDatabase {
     try {
       // save picked image file in firebase storage
       String url;
-      var ref = FirebaseStorage.instance.ref();
-      var storageSnap = await ref
+      final ref = FirebaseStorage.instance.ref();
+      final storageSnap = await ref
           .child("image/img${DateTime.now().millisecondsSinceEpoch}")
           .putFile(File(file.path))
           .onComplete;
@@ -89,7 +89,7 @@ class CloudDatabase {
         url = await storageSnap.ref.getDownloadURL() as String;
       }
       // add new username object to user_names db collection
-      var docRef = await FirebaseFirestore.instance
+      final docRef = await FirebaseFirestore.instance
           .collection(_kUserNamesCollection)
           .add({'username': username, 'profileUrl': url});
 
@@ -105,7 +105,7 @@ class CloudDatabase {
   Future<bool> uploadStatus(Status status) async {
     try {
       // add new status object to users_status db collection
-      var docRef = await FirebaseFirestore.instance
+      final docRef = await FirebaseFirestore.instance
           .collection(_kUsersStatusCollection)
           .add(status.toJsonMap());
 
@@ -144,7 +144,7 @@ class CloudDatabase {
   Future<String> getProfilePicURL(String username) async {
     try {
       // get current user from firestore
-      var querySnapshot = await FirebaseFirestore.instance
+      final querySnapshot = await FirebaseFirestore.instance
           .collection(_kUserNamesCollection)
           .where('username', isEqualTo: username)
           .get();
@@ -153,7 +153,7 @@ class CloudDatabase {
         return null;
       }
       // get profileUrl field from first query docs
-      var downloadUrl = querySnapshot.docs.first.get('profileUrl') as String;
+      final downloadUrl = querySnapshot.docs.first.get('profileUrl') as String;
       return downloadUrl;
     } on Exception catch (_) {
       return null;

@@ -81,17 +81,17 @@ class _MainPageState extends State<MainPage>
 
   // returns AppBar bottom widget
   TabBar _buildAppBarBottom() {
-    return TabBar(controller: _tabController, tabs: [
-      const Tab(
+    return TabBar(controller: _tabController, tabs: const [
+      Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Icon(Icons.camera_alt)),
       ),
-      const Tab(
+      Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Text('CHATS')),
       ),
-      const Tab(
+      Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Text('STATUS')),
       ),
-      const Tab(
+      Tab(
         child: FittedBox(fit: BoxFit.fitWidth, child: Text('CALLS')),
       ),
     ]);
@@ -119,12 +119,13 @@ class _MainPageState extends State<MainPage>
       duration: const Duration(milliseconds: 300),
       opacity: _fabVisible ? 1.0 : 0.0,
       child: FloatingActionButton(
-          key: const ValueKey('FAB'),
-          child: Icon(
-            _fabIconData,
-            color: Colors.white,
-          ),
-          onPressed: () => model.handlePressedFAB(_pageIndex, showStatusModal)),
+        key: const ValueKey('FAB'),
+        onPressed: () => model.handlePressedFAB(_pageIndex, showStatusModal),
+        child: Icon(
+          _fabIconData,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 

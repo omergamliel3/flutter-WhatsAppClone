@@ -41,7 +41,7 @@ class LoginViewModel extends BaseViewModel {
 
   // validate username via firestore service
   Future<bool> isUserValid(String username) async {
-    return await _auth.validateUserName(username);
+    return _auth.validateUserName(username);
   }
 
   // submit phone auth
@@ -71,7 +71,7 @@ class LoginViewModel extends BaseViewModel {
       return;
     }
     setState(ViewState.busy);
-    var validate = await _auth.validateUserName(value);
+    final validate = await _auth.validateUserName(value);
     if (!validate) {
       _showErrorDialog('Username is taken', 'Please enter another username.');
       setState(ViewState.username);
@@ -95,7 +95,7 @@ class LoginViewModel extends BaseViewModel {
 
   // submit user authentication
   Future<void> submitAuth() async {
-    var success = await _auth.addUser(_username, _profileImage);
+    final success = await _auth.addUser(_username, _profileImage);
     if (!success) {
       _showErrorDialog('Something went wrnog', 'Please try again.');
       setState(ViewState.profilePic);
@@ -107,7 +107,7 @@ class LoginViewModel extends BaseViewModel {
 
   // get image from device
   Future<void> getImage(ImageSource source) async {
-    var image = await ImagePicker().getImage(source: source);
+    final image = await ImagePicker().getImage(source: source);
     if (image == null) {
       return;
     }

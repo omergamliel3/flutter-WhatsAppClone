@@ -15,11 +15,11 @@ class AuthService {
 
   /// register user with phone number [FirebaseAuth]
   Future<bool> registerUser(String mobile) async {
-    var _auth = FirebaseAuth.instance;
+    final _auth = FirebaseAuth.instance;
 
     await _auth.verifyPhoneNumber(
       phoneNumber: mobile,
-      timeout: Duration(minutes: 1),
+      timeout: const Duration(minutes: 1),
       verificationCompleted: (authCredential) {
         _auth.signInWithCredential(authCredential).then((_) {
           // save authentication in prefs service
@@ -86,13 +86,13 @@ class AuthService {
 
   /// add new username to firestore db user_names collection
   Future<bool> addUser(String username, PickedFile file) async {
-    return await cloudDatabase.addUser(username, file);
+    return cloudDatabase.addUser(username, file);
   }
 
   /// compare username argument with user_names collection
   /// returns true if do not exists in collection, false if exists
   Future<bool> validateUserName(String username) async {
-    return await cloudDatabase.validateUserName(username);
+    return cloudDatabase.validateUserName(username);
   }
 
   /// save authentication state in prefs

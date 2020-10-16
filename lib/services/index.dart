@@ -1,0 +1,9 @@
+export 'package:WhatsAppClone/core/routes/router.dart';
+export 'package:WhatsAppClone/data/repositories/contacts_repository.dart';
+export 'package:WhatsAppClone/services/api/dialogflow.dart';
+export 'package:WhatsAppClone/services/auth/auth_service.dart';
+export 'package:WhatsAppClone/services/auth/user_service.dart';
+export 'package:WhatsAppClone/services/device/permission_service.dart';
+export 'package:WhatsAppClone/services/firebase/analytics_service.dart';
+export 'package:WhatsAppClone/locator.dart';
+export 'package:WhatsAppClone/core/network/network_info.dart';

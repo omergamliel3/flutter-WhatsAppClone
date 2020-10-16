@@ -1,5 +1,6 @@
 import 'package:WhatsAppClone/core/models/status.dart';
 import 'package:WhatsAppClone/presentation/status/status_viewmodel.dart';
+import 'package:WhatsAppClone/services/auth/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -8,7 +9,7 @@ import '../../test_helper.dart';
 
 void main() {
   // construct mocked user service
-  UserServiceMock userService;
+  UserService userService;
 
   setUp(() {
     userService = getAndRegisterUserServiceMock();
@@ -16,15 +17,15 @@ void main() {
 
   group('StatusViewModel Test', () {
     // valid username
-    var username = 'omergamliel';
+    const username = 'omergamliel';
 
     /// [initalise method, statusStream getter test]
     test('initialise viewmodel and get user status stream', () async {
       // construct status viewmodel
-      var model = StatusViewModel();
+      final model = StatusViewModel();
       // status stream getter returns empty stream
       when(userService.statusStream)
-          .thenAnswer((realInvocation) => Stream<QuerySnapshot>.empty());
+          .thenAnswer((realInvocation) => const Stream<QuerySnapshot>.empty());
       // initalise model
       model.initalise();
       // verify status stream is called from user service
@@ -35,7 +36,7 @@ void main() {
     /// [allowDelete method test (allow)]
     test('should allow delete', () {
       // construct status viewmodel
-      var model = StatusViewModel();
+      final model = StatusViewModel();
       // mock allowDelete method
       when(userService.allowDelete(username))
           .thenAnswer((realInvocation) => true);
@@ -47,7 +48,7 @@ void main() {
     /// [allowDelete method test (dont allow)]
     test('should not allow delete', () {
       // construct status viewmodel
-      var model = StatusViewModel();
+      final model = StatusViewModel();
       // mock allowDelete method
       when(userService.allowDelete(username))
           .thenAnswer((realInvocation) => false);
@@ -59,8 +60,8 @@ void main() {
     /// [username, userStatus getters test]
     test('should able to print username and status', () {
       // construct status viewmodel
-      var model = StatusViewModel();
-      var status = 'hello! this is a test status';
+      final model = StatusViewModel();
+      const status = 'hello! this is a test status';
       // mock user service username getter
       when(userService.userName).thenAnswer((realInvocation) => username);
       expect(model.username, username);
@@ -85,8 +86,8 @@ void main() {
     /// [deleteStatus method test (success)]
     test('handle delete status with success', () async {
       // construct status viewmodel
-      var model = StatusViewModel();
-      var status = Status(
+      final model = StatusViewModel();
+      final status = Status(
           userName: 'username',
           profileUrl: 'url',
           content: 'test',
@@ -104,8 +105,8 @@ void main() {
     /// [deleteStatus method test (failure)]
     test('failed to handle delete status', () async {
       // construct status viewmodel
-      var model = StatusViewModel();
-      var status = Status(
+      final model = StatusViewModel();
+      final status = Status(
           userName: 'username',
           profileUrl: 'url',
           content: 'test',

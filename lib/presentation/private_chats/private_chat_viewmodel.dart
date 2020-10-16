@@ -34,7 +34,7 @@ class PrivateChatViewModel extends BaseViewModel {
 
   // insert new message to local db service
   Future<bool> insertMessage(Message message) async {
-    var inserted = await contactsRepo.insertMessage(message);
+    final inserted = await contactsRepo.insertMessage(message);
     if (inserted) {
       analytics.logMsgEvent(message.text.length);
       await setActiveContacts();
@@ -44,6 +44,6 @@ class PrivateChatViewModel extends BaseViewModel {
 
   // get message response via dialog flow api
   Future<String> msgResponse(String query) async {
-    return await dialogflowAPI.response(query);
+    return dialogflowAPI.response(query);
   }
 }

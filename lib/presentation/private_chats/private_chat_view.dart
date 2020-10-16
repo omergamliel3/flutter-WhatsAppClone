@@ -19,7 +19,7 @@ class PrivateChatPage extends StatefulWidget {
   _PrivateChatPageState createState() => _PrivateChatPageState();
 
   final ContactEntity contactEntity;
-  PrivateChatPage(this.contactEntity);
+  const PrivateChatPage(this.contactEntity);
 }
 
 class _PrivateChatPageState extends State<PrivateChatPage> {
@@ -29,7 +29,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   Future<List<Message>> _msgs;
 
   @override
-  initState() {
+  void initState() {
     // init controllers
     _textEditingController = TextEditingController();
     _scrollController = ScrollController();
@@ -41,9 +41,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   // build appbar popup menu button
   Widget _buildPopUpMenuButton() {
     return PopupMenuButton(
-      child: Icon(Icons.more_vert),
       itemBuilder: (context) {
-        return [
+        return const [
           PopupMenuItem(
               child: FittedBox(
             fit: BoxFit.fitWidth,
@@ -76,13 +75,14 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
           )),
         ];
       },
+      child: const Icon(Icons.more_vert),
     );
   }
 
   // build messages list
   Widget _buildMsgList() {
     return FutureBuilder<List<Message>>(
-      key: ValueKey('LongList'),
+      key: const ValueKey('LongList'),
       future: _msgs,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -107,7 +107,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // build message listile widget
   Widget _buildMessage(Message message) {
-    var timestamp = formatDateTime(message.timestamp);
+    final timestamp = formatDateTime(message.timestamp);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
@@ -116,11 +116,17 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         children: [
           Flexible(
             child: Container(
+              padding: message.messageType == MessageType.text
+                  ? const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0)
+                  : const EdgeInsets.all(0.0),
+              decoration: BoxDecoration(
+                  color: message.fromUser ? kPrimaryColor : Colors.grey[800],
+                  borderRadius: BorderRadius.circular(10.0)),
               child: message.messageType == MessageType.text
                   ? RichText(
                       text: TextSpan(children: [
                         TextSpan(text: message.text),
-                        TextSpan(text: '  '),
+                        const TextSpan(text: '  '),
                         TextSpan(
                             text: timestamp,
                             style: TextStyle(
@@ -136,12 +142,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                         fit: BoxFit.cover,
                       ),
                     ),
-              padding: message.messageType == MessageType.text
-                  ? const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0)
-                  : const EdgeInsets.all(0.0),
-              decoration: BoxDecoration(
-                  color: message.fromUser ? kPrimaryColor : Colors.grey[800],
-                  borderRadius: BorderRadius.circular(10.0)),
             ),
           ),
         ],
@@ -152,22 +152,22 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   // build compose message
   Widget _buildComposeMsg() {
     return Container(
-      key: ValueKey('compose'),
-      padding: EdgeInsets.only(left: 5.0, bottom: 4.0, right: 4.0),
+      key: const ValueKey('compose'),
+      padding: const EdgeInsets.only(left: 5.0, bottom: 4.0, right: 4.0),
       decoration: BoxDecoration(color: Theme.of(context).canvasColor),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(
               child: TextField(
             controller: _textEditingController,
             keyboardType: TextInputType.multiline,
-            decoration: InputDecoration.collapsed(hintText: 'Send a message'),
+            decoration:
+                const InputDecoration.collapsed(hintText: 'Send a message'),
             onSubmitted: _onTextMsgSubmitted,
           )),
           IconButton(
-              key: ValueKey('sendMsg'),
-              icon: Icon(Icons.send),
+              key: const ValueKey('sendMsg'),
+              icon: const Icon(Icons.send),
               onPressed: () => _onTextMsgSubmitted(_textEditingController.text))
         ],
       ),
@@ -175,7 +175,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   }
 
   // submitted text message
-  void _onTextMsgSubmitted(String msg, {bool fromUser = true}) async {
+  Future _onTextMsgSubmitted(String msg, {bool fromUser = true}) async {
     // non null of empty validation
     if (msg == null || msg.isEmpty) return;
     // clear text field
@@ -183,7 +183,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
       _textEditingController.clear();
     }
     // create new Message instacne
-    var message = Message(
+    final message = Message(
         foreignID: widget.contactEntity.id,
         text: msg.trim(),
         fromUser: fromUser,
@@ -206,8 +206,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   }
 
   // submit message response from DialogFlow API
-  void evokeMsgResponse(String query) async {
-    var msgResponse = await _model.msgResponse(query);
+  Future evokeMsgResponse(String query) async {
+    final msgResponse = await _model.msgResponse(query);
     if (msgResponse != null && msgResponse.isNotEmpty) {
       _onTextMsgSubmitted(msgResponse, fromUser: false);
     }
@@ -215,11 +215,11 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   // animate to bottom of messages listview
   void _scrollToBottom(int milliseconds) {
-    Timer(Duration(milliseconds: 500), () {
+    Timer(const Duration(milliseconds: 500), () {
       if (mounted) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.fastOutSlowIn,
         );
       }
@@ -238,7 +238,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
               title: Text(widget.contactEntity.displayName),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.call),
+                  icon: const Icon(Icons.call),
                   onPressed: () =>
                       _model.launchCall(widget.contactEntity.phoneNumber),
                 ),
@@ -248,7 +248,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
             body: Column(
               children: [
                 _buildMsgList(),
-                Divider(
+                const Divider(
                   height: 2.0,
                   thickness: 1.0,
                 ),

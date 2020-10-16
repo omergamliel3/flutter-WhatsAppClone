@@ -30,11 +30,11 @@ class PopUpMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       tooltip: 'More',
-      icon: Icon(Icons.more_vert),
+      icon: const Icon(Icons.more_vert),
       padding: EdgeInsets.zero,
       itemBuilder: (context) {
         return buttons.map((e) {
-          var index = buttons.indexOf(e);
+          final index = buttons.indexOf(e);
           return PopupMenuItem<int>(
               value: index,
               child: FittedBox(

@@ -32,24 +32,26 @@ class Router {
         break;
       case contactsRoute:
         // pass mode argument
-        Map<String, dynamic> arguments = settings.arguments;
+        final arguments = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) {
-          return SelectContactScreen(arguments['mode'], arguments['path']);
+          return SelectContactScreen(
+              arguments['mode'] as ContactMode, arguments['path'] as String);
         });
         break;
       case privateChatRoute:
         // pass contact entity argument
-        Map<String, dynamic> arguments = settings.arguments;
+        final arguments = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) {
           return PrivateChatPage(ContactEntity.fromJsonMap(arguments));
         });
         break;
       case displayPictureRoute:
-        Map<String, dynamic> arguments = settings.arguments;
+        final arguments = settings.arguments as Map<String, dynamic>;
+
         return MaterialPageRoute(
           builder: (context) {
             return DisplayPictureView(
-              imagePath: arguments['path'],
+              imagePath: arguments['path'] as String,
             );
           },
         );

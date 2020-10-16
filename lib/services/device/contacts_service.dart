@@ -18,12 +18,12 @@ class ContactsHandler {
   Future<List<ContactEntity>> getUnActiveContacts(
       List<ContactEntity> activeContacts) async {
     // get raw contacts from contacts service plugin
-    var contacts = await contactsService.getContacts(orderByGivenName: false);
-    var contactsRawData = contacts.toList();
+    final contacts = await contactsService.getContacts(orderByGivenName: false);
+    final contactsRawData = contacts.toList();
     // if there are entities
     if (activeContacts != null && activeContacts.isNotEmpty) {
       // extract entities displayName
-      var names = activeContacts.map((e) => e.displayName).toList();
+      final names = activeContacts.map((e) => e.displayName).toList();
       // remove active contacts from contacts raw data
       contactsRawData
           .removeWhere((contact) => names.contains(contact.displayName));

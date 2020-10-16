@@ -6,13 +6,14 @@ import 'select_contact_viewmodel.dart';
 import '../../core/models/contact_entity.dart';
 
 import 'widgets/popup_menu_button.dart';
+import 'widgets/search_delegate.dart';
 
 enum ContactMode { chat, calls, setImage }
 
 class SelectContactScreen extends StatelessWidget {
   final ContactMode _contactMode;
   final String imagePath;
-  SelectContactScreen(this._contactMode, [this.imagePath]);
+  const SelectContactScreen(this._contactMode, [this.imagePath]);
 
   // build contact list tile
   Widget _buildContactListTile(
@@ -21,16 +22,16 @@ class SelectContactScreen extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: ListTile(
           leading: CircleAvatar(
-            child: Text(contactEntity.displayName[0].toUpperCase(),
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
             backgroundColor: Colors.grey,
+            child: Text(contactEntity.displayName[0].toUpperCase(),
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ),
           title: Text(contactEntity.displayName),
           trailing: _contactMode != ContactMode.calls
-              ? SizedBox()
+              ? const SizedBox()
               : IconButton(
-                  icon: Icon(Icons.phone),
+                  icon: const Icon(Icons.phone),
                   onPressed: _contactMode == ContactMode.calls
                       ? () => model.launchCall(contactEntity.phoneNumber)
                       : null),
@@ -43,8 +44,8 @@ class SelectContactScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Select contact'),
-        SizedBox(height: 3.0),
+        const Text('Select contact'),
+        const SizedBox(height: 3.0),
         Text(
           '${contactsLength.toString()} contacts',
           style: Theme.of(context)
@@ -57,17 +58,25 @@ class SelectContactScreen extends StatelessWidget {
   }
 
   // build scaffold appbar
-  Widget _buildAppBar(context, contacts) {
+  PreferredSizeWidget _buildAppBar(
+      BuildContext context, List<ContactEntity> contacts) {
     return AppBar(
       title: _buildAppBarTitle(context, contacts.length),
       leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           }),
       actions: [
-        IconButton(icon: Icon(Icons.search), onPressed: () {}),
-        _contactMode != ContactMode.setImage ? PopUpMenuButton() : Container()
+        IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: CustomSearchDelegate());
+            }),
+        if (_contactMode != ContactMode.setImage)
+          PopUpMenuButton()
+        else
+          Container()
       ],
     );
   }
@@ -83,17 +92,17 @@ class SelectContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SelectContactViewModel>.nonReactive(
+    return ViewModelBuilder<SelectContactViewModel>.reactive(
         viewModelBuilder: () => SelectContactViewModel(),
         builder: (context, model, child) {
-          var contacts = model.getViewContacts(_contactMode);
+          final contacts = model.getViewContacts(_contactMode);
           return SafeArea(
             top: false,
             child: Scaffold(
               appBar: _buildAppBar(context, contacts),
               body: Scrollbar(
                 child: ListView.builder(
-                    physics: ScrollPhysics(),
+                    physics: const ScrollPhysics(),
                     itemCount: contacts.length,
                     itemBuilder: (context, index) {
                       return Container(

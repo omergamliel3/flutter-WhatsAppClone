@@ -12,10 +12,13 @@ import '../../alerts/toast.dart';
 import 'spinkit_loading_indicator.dart';
 
 // parent container border radius
-final borderRadius = RoundedRectangleBorder(
+const borderRadius = RoundedRectangleBorder(
     borderRadius: BorderRadius.only(
-        topLeft: const Radius.circular(8.0),
-        topRight: const Radius.circular(8.0)));
+        topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)));
+
+// inner child container border radius
+const borderRadiusGeometry = BorderRadius.only(
+    topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0));
 
 // evoke modal bottom sheet
 void showStatusModalBottomSheet(BuildContext context) {
@@ -53,11 +56,6 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     super.dispose();
   }
 
-  // inner child container border radius
-  final borderRadiusGeometry = BorderRadius.only(
-      topLeft: const Radius.circular(8.0),
-      topRight: const Radius.circular(8.0));
-
   // build status text field
   Widget _buildTextField(BuildContext context) {
     final isLight = Theme.of(context).brightness == Brightness.light;
@@ -72,7 +70,8 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
         controller: _textEditingController,
         keyboardType: TextInputType.text,
         autofocus: true,
-        decoration: InputDecoration.collapsed(hintText: 'Enter your status'),
+        decoration:
+            const InputDecoration.collapsed(hintText: 'Enter your status'),
       ),
     );
   }
@@ -80,21 +79,21 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
   // build upload status button
   Widget _buildUploadButton() {
     return FlatButton(
-      child: Text(
-        'UPLOAD STATUS',
-      ),
       onPressed: () {
         _updateStatus();
       },
+      child: const Text(
+        'UPLOAD STATUS',
+      ),
     );
   }
 
   // update status in FirestoreService, PrefsService, MainModel provider
-  void _updateStatus() async {
+  Future _updateStatus() async {
     if (_textEditingController.value.text == null ||
         _textEditingController.value.text.isEmpty) return;
-    var url = await userService.getProfilePicURL();
-    var status = Status(
+    final url = await userService.getProfilePicURL();
+    final status = Status(
         userName: userService.userName,
         profileUrl: url,
         content: _textEditingController.value.text,
@@ -107,7 +106,7 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
     });
 
     // upload status to firestore db
-    var upload = await userService.uploadStatus(status);
+    final upload = await userService.uploadStatus(status);
     if (upload) {
       locator<AnalyticsService>().logStatusEvent(status.content.length);
       if (Navigator.canPop(context)) {
@@ -131,16 +130,15 @@ class _ModalBottomSheetScreenState extends State<ModalBottomSheetScreen> {
       child: Container(
         padding:
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        decoration: BoxDecoration(borderRadius: borderRadiusGeometry),
+        decoration: const BoxDecoration(borderRadius: borderRadiusGeometry),
         child: Container(
           height: targetSize,
           padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildTextField(context),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _responsiveWidget

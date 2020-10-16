@@ -32,31 +32,32 @@ class _LoadingPageState extends State<LoadingPage>
   // build 'from facebook' text
   Widget _buildBottomText() {
     return Expanded(
-        flex: 1,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'from',
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: Colors.grey[700], fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 12.0),
-            ShaderMask(
-              shaderCallback: (rect) {
-                return LinearGradient(colors: [Colors.amber, Colors.red])
-                    .createShader(rect);
-              },
-              child: Text(
-                'FACEBOOK',
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5),
-              ),
-            ),
-          ],
-        ));
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'from',
+          style: Theme.of(context)
+              .textTheme
+              .bodyText2
+              .copyWith(color: Colors.grey[700], fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12.0),
+        ShaderMask(
+          shaderCallback: (rect) {
+            return const LinearGradient(colors: [Colors.amber, Colors.red])
+                .createShader(rect);
+          },
+          child: Text(
+            'FACEBOOK',
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5),
+          ),
+        ),
+      ],
+    ));
   }
 
   @override
@@ -76,7 +77,7 @@ class _LoadingPageState extends State<LoadingPage>
                   Column(
                     children: <Widget>[
                       _buildWhatsAppImage(),
-                      Expanded(flex: 1, child: SpinkitLoadingIndicator()),
+                      Expanded(child: SpinkitLoadingIndicator()),
                       _buildBottomText()
                     ],
                   )

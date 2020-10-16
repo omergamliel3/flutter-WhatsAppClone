@@ -7,7 +7,7 @@ import '../../shared/constants.dart';
 class SpinkitLoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var isLight = Theme.of(context).brightness == Brightness.light;
+    final isLight = Theme.of(context).brightness == Brightness.light;
     return SpinKitFadingCircle(
       itemBuilder: (context, index) {
         return DecoratedBox(

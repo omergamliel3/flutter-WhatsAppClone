@@ -22,24 +22,24 @@ void main() {
       when(connectivityMock.checkConnectivity()).thenAnswer(
           (realInvocation) => Future.value(ConnectivityResult.mobile));
       // mock connectivityStream controller (instead of connectivity)
-      var connectivityStream = StreamController<ConnectivityResult>();
+      final connectivityStream = StreamController<ConnectivityResult>();
       when(connectivityMock.onConnectivityChanged)
           .thenAnswer((realInvocation) => connectivityStream.stream);
       // construct tested service
-      var connectivityService = NetworkInfo(connectivityMock);
+      final connectivityService = NetworkInfo(connectivityMock);
       // init tested service
       await connectivityService.initConnectivity();
-      var connectivity = connectivityService.connectivity;
-      var state = connectivityService.result;
+      final connectivity = connectivityService.connectivity;
+      final state = connectivityService.result;
       // expected values
       expect(state, ConnectivityResult.mobile);
       expect(connectivity, true);
 
       // raise onConnectivityChanged event
       connectivityStream.add(ConnectivityResult.none);
-      await Future.delayed(Duration(milliseconds: 1000));
-      var newConnectivity = connectivityService.connectivity;
-      var newState = connectivityService.result;
+      await Future.delayed(const Duration(milliseconds: 1000));
+      final newConnectivity = connectivityService.connectivity;
+      final newState = connectivityService.result;
       // expected values
       expect(newState, ConnectivityResult.none);
       expect(newConnectivity, false);

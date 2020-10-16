@@ -7,9 +7,12 @@ void showUserIsTakenDialog(BuildContext context) {
     builder: (context) {
       return AlertDialog(
         title: Text('Username is taken'.toUpperCase()),
-        content: Text('Please enter another username'),
+        content: const Text('Please enter another username'),
         actions: [
-          FlatButton(child: Text('OK'), onPressed: () => Navigator.pop(context))
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          )
         ],
       );
     },
@@ -21,10 +24,13 @@ void showNoConnectionDialog(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text('THERE IS NO INTERNET CONNECTION'),
-        content: Text('Please connect your device to network'),
+        title: const Text('THERE IS NO INTERNET CONNECTION'),
+        content: const Text('Please connect your device to network'),
         actions: [
-          FlatButton(child: Text('OK'), onPressed: () => Navigator.pop(context))
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          )
         ],
       );
     },
@@ -37,8 +43,8 @@ void showFailedAuthDialog(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text('Phone auth failed'),
-        content: Text('Please validate your phone number'),
+        title: const Text('Phone auth failed'),
+        content: const Text('Please validate your phone number'),
         actions: [
           FlatButton(
               onPressed: () => Navigator.pop(context),

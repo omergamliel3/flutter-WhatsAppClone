@@ -7,12 +7,11 @@ class AnalyticsService {
   }
 
   Future<void> logCreateNewContactEvent() async {
-    await FirebaseAnalytics()
-        .logEvent(name: 'create_new_contact', parameters: null);
+    await FirebaseAnalytics().logEvent(name: 'create_new_contact');
   }
 
   Future<void> logCallEvent() async {
-    await FirebaseAnalytics().logEvent(name: 'call_made', parameters: null);
+    await FirebaseAnalytics().logEvent(name: 'call_made');
   }
 
   Future<void> logStatusEvent(int length) async {

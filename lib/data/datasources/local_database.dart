@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:async/async.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -15,15 +14,6 @@ class LocalDatabase {
   final _kDBTableMsgs = 'messages_table';
   // class attributes
   Database _db; // db instace
-  final AsyncMemoizer _memoizer = AsyncMemoizer(); // async memoizer
-
-  /// Init DB, run only once
-  Future<bool> asyncInitDB() async {
-    // Avoid this function to be called multiple times
-    return await _memoizer.runOnce(() async {
-      return await initDb();
-    });
-  }
 
   // Opens a db local file. Creates the db table if it's not yet created.
   Future<bool> initDb() async {
@@ -97,7 +87,7 @@ class LocalDatabase {
 
   /// Reertieves contact entities from db contacts_table
   Future<List<ContactEntity>> getContactEntites() async {
-    List<Map> jsons = await _db.rawQuery('SELECT * FROM $_kDBTableContacts');
+    final jsons = await _db.rawQuery('SELECT * FROM $_kDBTableContacts');
     return jsons.map((e) => ContactEntity.fromJsonMap(e)).toList();
   }
 
@@ -106,7 +96,7 @@ class LocalDatabase {
     try {
       await _db.transaction(
         (txn) async {
-          var id = await txn.rawInsert('''
+          final id = await txn.rawInsert('''
           INSERT INTO $_kDBTableContacts 
           (
           displayName,
@@ -135,7 +125,7 @@ class LocalDatabase {
 
   /// get messsages, related to the ContactEntity
   Future<List<Message>> getMessages(ContactEntity contactEntity) async {
-    List<Map> jsons = await _db.rawQuery(
+    final jsons = await _db.rawQuery(
         'SELECT * FROM $_kDBTableMsgs WHERE foreignID = ?', [contactEntity.id]);
     return jsons.map((e) => Message.fromJsonMap(e)).toList();
   }
@@ -145,7 +135,8 @@ class LocalDatabase {
     try {
       // insert new message to messages table
       await _db.transaction((txn) async {
-        var id = await txn.rawInsert('''INSERT INTO $_kDBTableMsgs
+        final id = await txn.rawInsert('''
+        INSERT INTO $_kDBTableMsgs
         ( 
           foreignID,
           text,
@@ -165,13 +156,17 @@ class LocalDatabase {
         print('create new record with id: $id');
       });
       // update lastMsg, lastMsgTime to the related contact entity
-      var count = await _db.rawUpdate(
-        '''UPDATE $_kDBTableContacts
+      final count = await _db.rawUpdate(
+        '''
+                    UPDATE $_kDBTableContacts
                     SET lastMsg = ?,
                     lastMsgTime = ?
                     WHERE id = ? ''',
         [
-          message.messageType == MessageType.text ? message.text : 'image',
+          if (message.messageType == MessageType.text)
+            message.text
+          else
+            'image',
           message.timestamp.millisecondsSinceEpoch,
           message.foreignID
         ],

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+@immutable
 class ContactEntity extends Equatable {
   final int id;
   final String displayName;
@@ -8,7 +9,7 @@ class ContactEntity extends Equatable {
   final String lastMsg;
   final DateTime lastMsgTime;
 
-  ContactEntity(
+  const ContactEntity(
       {this.id,
       @required this.displayName,
       @required this.phoneNumber,
@@ -16,11 +17,12 @@ class ContactEntity extends Equatable {
       this.lastMsgTime});
 
   ContactEntity.fromJsonMap(Map<String, dynamic> map)
-      : id = map['id'],
-        displayName = map['displayName'] ?? 'unKnown',
-        phoneNumber = map['phoneNumber'] ?? 'unKnown',
-        lastMsg = map['lastMsg'],
-        lastMsgTime = DateTime.fromMillisecondsSinceEpoch(map['lastMsgTime']);
+      : id = map['id'] as int,
+        displayName = map['displayName'] as String ?? 'unKnown',
+        phoneNumber = map['phoneNumber'] as String ?? 'unKnown',
+        lastMsg = map['lastMsg'] as String,
+        lastMsgTime =
+            DateTime.fromMillisecondsSinceEpoch(map['lastMsgTime'] as int);
 
   Map<String, dynamic> toJsonMap() => {
         'id': id,
@@ -29,12 +31,6 @@ class ContactEntity extends Equatable {
         'lastMsg': lastMsg,
         'lastMsgTime': lastMsgTime?.millisecondsSinceEpoch,
       };
-
-  @override
-  String toString() {
-    return '''Name: $displayName\nPhone: $phoneNumber
-    \nLastMsg: $lastMsg\nLastMsgTime: $lastMsgTime''';
-  }
 
   @override
   List<Object> get props => [displayName, phoneNumber, lastMsg, lastMsgTime];

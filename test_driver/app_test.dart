@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
-final path = r'C:\Users\omerg\AppData\Local\Android\Sdk';
+const path = r'C:\Users\omerg\AppData\Local\Android\Sdk';
 
 Future<void> grantPermissions() async {
   //final envVars = Platform.environment;
@@ -77,23 +77,23 @@ void main() {
       await driver.waitFor(find.byValueKey('CONTINUE'));
       final login = find.byValueKey('CONTINUE');
       await driver.tap(login);
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       await driver.waitFor(find.byValueKey('UsernameFormField'));
       final textField = find.byValueKey('UsernameFormField');
       driver.tap(textField);
-      driver.enterText('testusername', timeout: Duration(seconds: 1));
+      driver.enterText('testusername', timeout: const Duration(seconds: 1));
       await driver.tap(login);
     });
 
     test('Press FAB and select first contact', () async {
       // wait for FAB
       await driver.waitFor(find.byValueKey('FAB'));
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       final buttonFinder = find.byValueKey('FAB');
       // First, tap the button.
       await driver.tap(buttonFinder);
       // Delay
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       // Wait for first contact
       await driver.waitFor(find.byValueKey('contact0'));
       final contactFinder = find.byValueKey('contact0');
@@ -103,7 +103,7 @@ void main() {
 
     test('Tap First chat contact', () async {
       // Delay
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       // Wait for first chat
       await driver.waitFor(find.byValueKey('chat0'));
       final chatFinder = find.byValueKey('chat0');
@@ -121,7 +121,7 @@ void main() {
       Future composeMsg(String msg) async {
         await driver.enterText(msg);
         await driver.tap(send);
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
       }
 
       await composeMsg(
@@ -135,6 +135,6 @@ void main() {
       for (var i = 0; i < 10; i++) {
         await composeMsg('bye $i');
       }
-    }, timeout: Timeout(Duration(minutes: 2)));
+    }, timeout: const Timeout(Duration(minutes: 2)));
   });
 }

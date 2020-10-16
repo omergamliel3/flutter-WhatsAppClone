@@ -27,11 +27,11 @@ void main() {
         '''when call initUserService should check if user is authenticated and getUserStauts if auth is true, else userStatus should be null.''',
         () async {
       // mocked data
-      var username = 'omergamliel';
-      var status = 'this is a test status!';
+      const username = 'omergamliel';
+      const status = 'this is a test status!';
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked expected behavior
       when(authService.isAuthenticated).thenAnswer((realInvocation) => true);
       when(prefs.getString('username'))
@@ -39,7 +39,7 @@ void main() {
       when(cloudDatabase.getUserStatus(username))
           .thenAnswer((realInvocation) => Future.value(status));
       // construct tested service
-      var userService =
+      final userService =
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       // evoke initUserService tested method
       await userService.initUserService();
@@ -56,11 +56,11 @@ void main() {
         '''when call initUserService should check if user is authenticated and getUserStauts if auth is true, else userStatus should be null.''',
         () async {
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked tested behavior
       when(authService.isAuthenticated).thenAnswer((realInvocation) => false);
-      var userService =
+      final userService =
           // construct tested service
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       // evoke initUserService tested method
@@ -76,18 +76,18 @@ void main() {
         '''when call saveUserName should set the given argument in shared preferences''',
         () async {
       // mocked data
-      var username = 'omergamliel';
+      const username = 'omergamliel';
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked tested behavior
       when(prefs.setString('username', username))
           .thenAnswer((realInvocation) => Future.value(true));
-      var userService =
+      final userService =
           // construct tested service
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       // evoke saveUserName tested method
-      var saved = await userService.saveUserName(username);
+      final saved = await userService.saveUserName(username);
       // expecte valus is true
       expect(saved, true);
       // verify service call
@@ -99,18 +99,18 @@ void main() {
         '''when call getUserStatus should set userStatus reactive value to the status retreived from cloudDatabase''',
         () async {
       // mocked data
-      var username = 'omergamliel';
-      var status = 'this is a test status!';
+      const username = 'omergamliel';
+      const status = 'this is a test status!';
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked tested behavior
       when(prefs.getString('username'))
           .thenAnswer((realInvocation) => username);
       when(cloudDatabase.getUserStatus(username))
           .thenAnswer((realInvocation) => Future.value(status));
       // construct tested service
-      var userService =
+      final userService =
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       // expected to null (did not call init)
       expect(userService.userStatus, null);
@@ -128,22 +128,22 @@ void main() {
         '''when call deleteStatus should remove the given status from cloudDatabase''',
         () async {
       // mocked status entity
-      var status = Status(
+      final status = Status(
           userName: 'omer',
           content: 'content',
           profileUrl: 'url',
           timestamp: DateTime.now());
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked tested behavior
       when(cloudDatabase.deleteStatus(status))
           .thenAnswer((realInvocation) => Future.value(true));
       // construct tested service
-      var userService =
+      final userService =
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       // evoke deleteStatus tested method
-      var statusDeleted = await userService.deleteStatus(status);
+      final statusDeleted = await userService.deleteStatus(status);
       // expected value is true
       expect(statusDeleted, true);
       // verify service call
@@ -155,21 +155,21 @@ void main() {
         '''when call getProfilePicURL should return profile pic download url''',
         () async {
       // mocked data
-      var username = 'omergamliel';
-      var url = 'firebase/images/url/image.jpg';
+      const username = 'omergamliel';
+      const url = 'firebase/images/url/image.jpg';
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked tested behavior
       when(prefs.getString('username'))
           .thenAnswer((realInvocation) => username);
       when(cloudDatabase.getProfilePicURL(username))
           .thenAnswer((realInvocation) => Future.value(url));
       // construct tested service
-      var userService =
+      final userService =
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       // evoke getProfilePicURL tested method
-      var profilePicUrl = await userService.getProfilePicURL();
+      final profilePicUrl = await userService.getProfilePicURL();
       // expected value is [url]
       expect(profilePicUrl, url);
       // veriy service call
@@ -181,15 +181,15 @@ void main() {
         '''when allowDelete should return whether the given name argument is the current device username''',
         () async {
       // mocked data
-      var username = 'omergamliel';
+      const username = 'omergamliel';
       // construct mocked data classes
-      var cloudDatabase = CloudDatabaseMock();
-      var prefs = SharedPreferencesMock();
+      final cloudDatabase = CloudDatabaseMock();
+      final prefs = SharedPreferencesMock();
       // mocked tested behavior
       when(prefs.getString('username'))
           .thenAnswer((realInvocation) => username);
       // construct tested service
-      var userService =
+      final userService =
           UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
       var allow = userService.allowDelete(username);
       expect(allow, true);
@@ -202,17 +202,17 @@ void main() {
       '''after userService is constructed should able to get active status stream''',
       () async {
         // construct mocked data classes
-        var cloudDatabase = CloudDatabaseMock();
-        var prefs = SharedPreferencesMock();
-        var statusStream = BehaviorSubject<QuerySnapshot>.seeded(null);
+        final cloudDatabase = CloudDatabaseMock();
+        final prefs = SharedPreferencesMock();
+        final statusStream = BehaviorSubject<QuerySnapshot>.seeded(null);
         // mocked tested behavior
         when(cloudDatabase.statusStream())
             .thenAnswer((realInvocation) => statusStream.stream);
         // construct tested service
-        var userService =
+        final userService =
             UserService(cloudDatabase: cloudDatabase, sharedPreferences: prefs);
         // statusStream should not be empty
-        var empty = await userService.statusStream.isEmpty;
+        final empty = await userService.statusStream.isEmpty;
         // expected value is false
         expect(empty, false);
         // verify service call

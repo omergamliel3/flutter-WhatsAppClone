@@ -17,7 +17,8 @@ class UserService with ReactiveServiceMixin {
 
   // storage ref
   final SharedPreferences sharedPreferences;
-  final RxValue<String> _userStatus = RxValue<String>(initial: null);
+  // ignore: avoid_redundant_argument_values
+  final _userStatus = RxValue<String>(initial: null);
 
   /// initialise service
   Future<void> initUserService() async {
@@ -32,7 +33,7 @@ class UserService with ReactiveServiceMixin {
   /// save username in prefs
   Future<bool> saveUserName(String username) async {
     if (username == null || username.isEmpty) return false;
-    return await sharedPreferences.setString(_kUserNameKey, username.trim());
+    return sharedPreferences.setString(_kUserNameKey, username.trim());
   }
 
   /// get the most recent user status, if there is one
@@ -43,7 +44,7 @@ class UserService with ReactiveServiceMixin {
 
   /// add new user status to firestore db collection
   Future<bool> uploadStatus(Status status) async {
-    var success = await cloudDatabase.uploadStatus(status);
+    final success = await cloudDatabase.uploadStatus(status);
     if (success) {
       _userStatus.value = status.content;
       return true;
@@ -53,12 +54,12 @@ class UserService with ReactiveServiceMixin {
 
   /// delete status from firestore db users_status collection
   Future<bool> deleteStatus(Status status) async {
-    return await cloudDatabase.deleteStatus(status);
+    return cloudDatabase.deleteStatus(status);
   }
 
   /// returns profile picture download url
   Future<String> getProfilePicURL() async {
-    return await cloudDatabase.getProfilePicURL(userName);
+    return cloudDatabase.getProfilePicURL(userName);
   }
 
   /// return [true/false] if [name argument] is the current username (validation)

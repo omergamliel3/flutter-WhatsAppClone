@@ -1,4 +1,5 @@
 import 'package:WhatsAppClone/presentation/loading/loading_viewmodel.dart';
+import 'package:WhatsAppClone/services/index.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -6,12 +7,12 @@ import '../../test_helper.dart';
 
 void main() {
   // construct mock services
-  RouterServiceMock router;
-  PermissionServiceMock permmision;
-  UserServiceMock user;
-  AuthServiceMock auth;
-  ContactsRepositoryMock repo;
-  NetworkInfoMock connectivity;
+  Router router;
+  PermissionService permmision;
+  UserService user;
+  AuthService auth;
+  ContactsRepository repo;
+  NetworkInfo connectivity;
   setUp(() {
     router = getAndRegisterRouterServiceMock();
     //localDb = getAndRegisterLocalDatabaseMock();
@@ -27,7 +28,7 @@ void main() {
       // mock authentication to true
       when(auth.isAuthenticated).thenAnswer((realInvocation) => true);
       // construct viewmodel
-      var model = LoadingViewModel();
+      final model = LoadingViewModel();
       // call model initalise
       await model.initalise();
       // authentication
@@ -48,7 +49,7 @@ void main() {
       // mock authentication to false
       when(auth.isAuthenticated).thenAnswer((realInvocation) => false);
       // construct viewmodel
-      var model = LoadingViewModel();
+      final model = LoadingViewModel();
       // call model initalise
       await model.initalise();
       // not authentication

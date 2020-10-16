@@ -13,15 +13,14 @@ class CameraPage extends StatelessWidget {
       children: [
         Expanded(flex: 4, child: CameraPreview(model.cameraController)),
         Expanded(
-            flex: 1,
             child: MaterialButton(
-              minWidth: double.infinity,
-              child: Icon(
-                Icons.camera_alt,
-                size: 30,
-              ),
-              onPressed: () => model.takePicture(),
-            ))
+          minWidth: double.infinity,
+          onPressed: () => model.takePicture(),
+          child: const Icon(
+            Icons.camera_alt,
+            size: 30,
+          ),
+        ))
       ],
     );
   }

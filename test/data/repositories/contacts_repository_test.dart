@@ -33,9 +33,9 @@ void main() {
         () async {
       // evoke initialise tested method
       await repository.initalise();
-      verify(localDatabase.asyncInitDB());
-      var activeContacts = repository.activeContacts;
-      var unActiveContacts = repository.unActiveContacts;
+      verify(localDatabase.initDb());
+      final activeContacts = repository.activeContacts;
+      final unActiveContacts = repository.unActiveContacts;
       expect(activeContacts, equals(localDatabaseContactsEntites));
       expect(unActiveContacts, equals(contactsHandlerEntites));
     });
@@ -48,7 +48,7 @@ void main() {
       expect(repository.activeContacts, equals(localDatabaseContactsEntites));
 
       when(localDatabase.getContactEntites()).thenThrow(Exception());
-      var result = await repository.setActiveContacts();
+      final result = await repository.setActiveContacts();
       expect(result, equals(false));
     });
 
@@ -60,7 +60,7 @@ void main() {
       expect(repository.unActiveContacts, equals(contactsHandlerEntites));
 
       when(contactsHandler.getUnActiveContacts(any)).thenThrow(Exception());
-      var result = await repository.setUnActiveContacts();
+      final result = await repository.setUnActiveContacts();
       expect(result, equals(false));
     });
 
@@ -74,7 +74,7 @@ void main() {
       // add menualy contactEntity for test purpose
       repository.unActiveContacts.add(contactEntity);
       expect(repository.unActiveContacts.contains(contactEntity), equals(true));
-      var activate = await repository.activateContact(contactEntity);
+      final activate = await repository.activateContact(contactEntity);
       expect(activate, equals(true));
       expect(
           repository.unActiveContacts.contains(contactEntity), equals(false));
@@ -87,7 +87,7 @@ void main() {
     test('when call getMessages should pass to localDatabase', () async {
       when(localDatabase.getMessages(contactEntity))
           .thenAnswer((realInvocation) => Future.value([message]));
-      var messages = await repository.getMessages(contactEntity);
+      final messages = await repository.getMessages(contactEntity);
       expect(messages, equals([message]));
       verify(localDatabase.getMessages(contactEntity));
     });
@@ -95,7 +95,7 @@ void main() {
     test('when call insertMessage should pass to localDatabase', () async {
       when(localDatabase.insertMessage(message))
           .thenAnswer((realInvocation) => Future.value(true));
-      var inserted = await repository.insertMessage(message);
+      final inserted = await repository.insertMessage(message);
       expect(inserted, equals(true));
       verify(localDatabase.insertMessage(message));
     });

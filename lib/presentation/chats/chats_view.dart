@@ -21,20 +21,21 @@ class ChatsPage extends StatelessWidget {
   // build contact list tile widget
   Widget _buildContactListTile(
       ContactEntity contactEntity, int index, ChatsViewModel model) {
-    var name = contactEntity.displayName ?? 'unKnown';
-    var lastMessage =
+    final name = contactEntity.displayName ?? 'unKnown';
+    final lastMessage =
         contactEntity.lastMsg == 'null' ? '' : contactEntity.lastMsg;
-    var timeAgo = contactEntity.lastMsgTime == null
+    final timeAgo = contactEntity.lastMsgTime == null
         ? ''
         : formatDateTime(contactEntity.lastMsgTime);
 
     return ListTile(
       leading: CircleAvatar(
+        backgroundColor: Colors.grey,
         child: Text(
           name[0],
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.grey,
       ),
       title: Text(name),
       subtitle: Text(lastMessage),
@@ -57,9 +58,9 @@ class ChatsPage extends StatelessWidget {
 
     return ListView.separated(
         separatorBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 70.0, right: 10),
-            child: const Divider(thickness: 2.0),
+          return const Padding(
+            padding: EdgeInsets.only(left: 70.0, right: 10),
+            child: Divider(thickness: 2.0),
           );
         },
         itemCount: contacts.length,

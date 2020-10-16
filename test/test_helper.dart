@@ -1,12 +1,4 @@
-import 'package:WhatsAppClone/core/routes/router.dart';
-import 'package:WhatsAppClone/data/repositories/contacts_repository.dart';
-import 'package:WhatsAppClone/services/api/dialogflow.dart';
-import 'package:WhatsAppClone/services/auth/auth_service.dart';
-import 'package:WhatsAppClone/services/auth/user_service.dart';
-import 'package:WhatsAppClone/services/device/permission_service.dart';
-import 'package:WhatsAppClone/services/firebase/analytics_service.dart';
-import 'package:WhatsAppClone/locator.dart';
-import 'package:WhatsAppClone/core/network/network_info.dart';
+import 'package:WhatsAppClone/services/index.dart';
 import 'package:mockito/mockito.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -34,77 +26,77 @@ class SnackbarServiceMock extends Mock implements SnackbarService {}
 
 Router getAndRegisterRouterServiceMock() {
   _removeRegistrationIfExists<Router>();
-  var service = RouterServiceMock();
+  final service = RouterServiceMock();
   locator.registerSingleton<Router>(service);
   return service;
 }
 
 PermissionService getAndRegisterPermissionServiceMock() {
   _removeRegistrationIfExists<PermissionService>();
-  var service = PermissionServiceMock();
+  final service = PermissionServiceMock();
   locator.registerSingleton<PermissionService>(service);
   return service;
 }
 
 UserService getAndRegisterUserServiceMock() {
   _removeRegistrationIfExists<UserService>();
-  var service = UserServiceMock();
+  final service = UserServiceMock();
   locator.registerSingleton<UserService>(service);
   return service;
 }
 
 AuthService getAndRegisterAuthServiceMock() {
   _removeRegistrationIfExists<AuthService>();
-  var service = AuthServiceMock();
+  final service = AuthServiceMock();
   locator.registerSingleton<AuthService>(service);
   return service;
 }
 
 DialogFlowAPI getAndRegisterDialogFlowAPIMock() {
   _removeRegistrationIfExists<DialogFlowAPI>();
-  var service = DialogFlowAPIMock();
+  final service = DialogFlowAPIMock();
   locator.registerSingleton<DialogFlowAPI>(service);
   return service;
 }
 
 NetworkInfo getAndRegisterConnectivityServiceMock() {
   _removeRegistrationIfExists<NetworkInfo>();
-  var service = NetworkInfoMock();
+  final service = NetworkInfoMock();
   locator.registerSingleton<NetworkInfo>(service);
   return service;
 }
 
 ContactsRepository getAndRegisterContactsRepositoryMock() {
   _removeRegistrationIfExists<ContactsRepository>();
-  var service = ContactsRepositoryMock();
+  final service = ContactsRepositoryMock();
   locator.registerSingleton<ContactsRepository>(service);
   return service;
 }
 
 DialogService getAndRegisterDialogServiceMock() {
   _removeRegistrationIfExists<DialogService>();
-  var service = DialogServiceMock();
+  final service = DialogServiceMock();
   locator.registerSingleton<DialogService>(service);
   return service;
 }
 
 NavigationService getAndRegisterNavigationServiceMock() {
   _removeRegistrationIfExists<NavigationService>();
-  var service = NavigationServiceMock();
+  final service = NavigationServiceMock();
   locator.registerSingleton<NavigationService>(service);
   return service;
 }
 
 SnackbarService getAndRegisterSnackbarServiceMock() {
   _removeRegistrationIfExists<SnackbarService>();
-  var service = SnackbarServiceMock();
+  final service = SnackbarServiceMock();
   locator.registerSingleton<SnackbarService>(service);
   return service;
 }
 
 AnalyticsService getAndRegisterAnalyticsServiceMock() {
   _removeRegistrationIfExists<AnalyticsService>();
-  var service = AnalyticsServiceMock();
+  final service = AnalyticsServiceMock();
   locator.registerSingleton<AnalyticsService>(service);
   return service;
 }

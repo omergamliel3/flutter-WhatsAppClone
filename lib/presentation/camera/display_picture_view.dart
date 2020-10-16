@@ -27,7 +27,7 @@ class DisplayPictureView extends StatelessWidget {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () => model.sendPicture(imagePath),
-              child: Icon(
+              child: const Icon(
                 Icons.send,
                 color: Colors.white,
               ),

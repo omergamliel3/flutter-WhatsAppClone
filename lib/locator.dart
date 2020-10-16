@@ -21,13 +21,13 @@ import 'data/repositories/contacts_repository.dart';
 
 GetIt locator = GetIt.instance;
 
-void setupLocator() async {
+Future<void> setupLocator() async {
   // data
-  var _localDatabase = LocalDatabase();
-  var _cloudDatabase = CloudDatabase();
-  var _contactsService = ContactsService();
-  var _contactsHandler = ContactsHandler(_contactsService);
-  var _sharedPreferences = await SharedPreferences.getInstance();
+  final _localDatabase = LocalDatabase();
+  final _cloudDatabase = CloudDatabase();
+  final _contactsService = ContactsService();
+  final _contactsHandler = ContactsHandler(_contactsService);
+  final _sharedPreferences = await SharedPreferences.getInstance();
 
   locator.registerLazySingleton<ContactsRepository>(() => ContactsRepository(
       localDatabase: _localDatabase, contactHandler: _contactsHandler));

@@ -41,7 +41,7 @@ class SelectContactViewModel extends BaseViewModel {
     url_launcher.launch('tel:$number');
   }
 
-  void sendImage(String imagePath, ContactEntity contactEntity) async {
+  Future sendImage(String imagePath, ContactEntity contactEntity) async {
     print('sendImage: $imagePath');
     // active contact entity if un-active
     if (_contactsRepo.unActiveContacts.contains(contactEntity)) {
@@ -55,7 +55,7 @@ class SelectContactViewModel extends BaseViewModel {
         text: imagePath,
         timestamp: DateTime.now());
     // insert message
-    var result = await _contactsRepo.insertMessage(message);
+    final result = await _contactsRepo.insertMessage(message);
     if (result) {
       _contactsRepo.setActiveContacts();
       _navigator.clearTillFirstAndShow(privateChatRoute,

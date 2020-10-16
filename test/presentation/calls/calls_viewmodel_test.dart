@@ -43,7 +43,7 @@ void main() {
                 CallLogEntry(name: 'TAL'),
                 CallLogEntry(name: 'OHAD')
               ]));
-      var logs = await model.getCallLogs();
+      final logs = await model.getCallLogs();
       expect(logs.length, 3);
     });
   });

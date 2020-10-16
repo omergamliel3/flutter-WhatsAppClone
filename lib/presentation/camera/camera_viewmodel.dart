@@ -47,8 +47,10 @@ class CameraViewModel extends BaseViewModel {
 
       // Construct the path where the image should be saved using the path
       // package.
+      final tempDirPath = await getTemporaryDirectory();
+
       final path = join(
-        ((await getTemporaryDirectory()).path),
+        tempDirPath.path,
         '${DateTime.now().millisecondsSinceEpoch}.png',
       );
 

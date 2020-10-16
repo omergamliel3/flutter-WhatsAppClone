@@ -14,7 +14,7 @@ class CallsViewModel extends BaseViewModel {
   }
 
   // launch device phone call
-  void launchCall(String number) async {
+  Future launchCall(String number) async {
     if (await url_launcher.canLaunch('tel:$number')) {
       analytics.logCallEvent();
       url_launcher.launch('tel:$number');

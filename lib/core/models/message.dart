@@ -19,11 +19,12 @@ class Message {
       @required this.messageType});
 
   Message.fromJsonMap(Map<String, dynamic> map)
-      : id = map['id'],
-        foreignID = map['foreignID'],
-        text = map['text'] ?? '?',
-        fromUser = map['fromUser'] == 0 ? true : false,
-        timestamp = DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
+      : id = map['id'] as int,
+        foreignID = map['foreignID'] as int,
+        text = map['text'] as String ?? '?',
+        fromUser = map['fromUser'] == 0,
+        timestamp =
+            DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
         messageType =
             map['messageType'] == 'text' ? MessageType.text : MessageType.image;
 

@@ -9,18 +9,19 @@ import 'package:call_log/call_log.dart';
 class CallsPage extends StatelessWidget {
   // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry, CallsViewModel model) {
-    var name = callLogEntry.name[0] ?? 'Unknown';
+    final name = callLogEntry.name[0] ?? 'Unknown';
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         child: Text(
           name.toUpperCase(),
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       title: Text(callLogEntry.name ?? 'Unknown'),
       subtitle: Text(callLogEntry.formattedNumber ?? 'Unknown'),
-      trailing: Icon(Icons.call),
+      trailing: const Icon(Icons.call),
       onTap: () {
         // launch device phone call
         model.launchCall(callLogEntry.number);
@@ -44,7 +45,7 @@ class CallsPage extends StatelessWidget {
       List<CallLogEntry> callLogsData, CallsViewModel model) {
     return Scrollbar(
       child: ListView.builder(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           itemCount: callLogsData.length,
           itemBuilder: (context, index) {
             return _buildCallsListTile(callLogsData[index], model);
@@ -62,13 +63,13 @@ class CallsPage extends StatelessWidget {
             future: model.getCallLogs(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var callLogsData = snapshot.data.toList();
-                if (callLogsData.length == 0) {
+                final callLogsData = snapshot.data.toList();
+                if (callLogsData.isEmpty) {
                   return _buildEmptyCallLogs(context, model);
                 }
                 return _buildCallLogsListView(callLogsData, model);
               }
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             },
           ));
         });
