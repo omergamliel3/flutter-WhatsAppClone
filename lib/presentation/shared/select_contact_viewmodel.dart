@@ -36,13 +36,7 @@ class SelectContactViewModel extends BaseViewModel {
     }
   }
 
-  // launch device phone call
-  void launchCall(String number) {
-    url_launcher.launch('tel:$number');
-  }
-
   Future sendImage(String imagePath, ContactEntity contactEntity) async {
-    print('sendImage: $imagePath');
     // active contact entity if un-active
     if (_contactsRepo.unActiveContacts.contains(contactEntity)) {
       await activateContact(contactEntity);
@@ -71,5 +65,10 @@ class SelectContactViewModel extends BaseViewModel {
       return _contactsRepo.unActiveContacts;
     }
     return _contactsRepo.activeContacts + _contactsRepo.unActiveContacts;
+  }
+
+  // launch device phone call
+  void launchCall(String number) {
+    url_launcher.launch('tel:$number');
   }
 }
