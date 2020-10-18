@@ -33,6 +33,7 @@ class UserService with ReactiveServiceMixin {
   /// save username in prefs
   Future<bool> saveUserName(String username) async {
     if (username == null || username.isEmpty) return false;
+    print('save username');
     return sharedPreferences.setString(_kUserNameKey, username.trim());
   }
 
