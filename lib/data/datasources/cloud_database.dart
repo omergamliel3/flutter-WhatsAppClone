@@ -25,7 +25,7 @@ class CloudDatabase {
       // iterate docs from query
       for (final doc in querySnapshot.docs) {
         // only compare doc with the same username as user
-        if (doc.data()['username'].toLowerCase() == username.toLowerCase()) {
+        if (doc.data()['username'].toLowerCase() == username?.toLowerCase()) {
           // set user status to reactive value
           return querySnapshot.docs.first.data()['status'] as String;
         }
