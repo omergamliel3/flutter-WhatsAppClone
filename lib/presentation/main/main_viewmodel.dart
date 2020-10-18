@@ -2,7 +2,7 @@ import 'package:stacked/stacked.dart';
 
 import '../../locator.dart';
 
-import '../shared/select_contact_view.dart';
+import '../index.dart';
 
 import '../../core/routes/router.dart';
 

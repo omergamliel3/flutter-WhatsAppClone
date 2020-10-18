@@ -5,10 +5,8 @@ import 'select_contact_viewmodel.dart';
 
 import '../../core/models/contact_entity.dart';
 
+import 'mode.dart';
 import 'widgets/popup_menu_button.dart';
-import 'widgets/search_delegate.dart';
-
-enum ContactMode { chat, calls, setImage }
 
 class SelectContactScreen extends StatelessWidget {
   final ContactMode _contactMode;
@@ -58,8 +56,8 @@ class SelectContactScreen extends StatelessWidget {
   }
 
   // build scaffold appbar
-  PreferredSizeWidget _buildAppBar(
-      BuildContext context, List<ContactEntity> contacts) {
+  PreferredSizeWidget _buildAppBar(BuildContext context,
+      List<ContactEntity> contacts, SelectContactViewModel model) {
     return AppBar(
       title: _buildAppBarTitle(context, contacts.length),
       leading: IconButton(
@@ -71,7 +69,7 @@ class SelectContactScreen extends StatelessWidget {
         IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate());
+              model.navigateSearch();
             }),
         if (_contactMode != ContactMode.setImage)
           PopUpMenuButton()
@@ -99,7 +97,7 @@ class SelectContactScreen extends StatelessWidget {
           return SafeArea(
             top: false,
             child: Scaffold(
-              appBar: _buildAppBar(context, contacts),
+              appBar: _buildAppBar(context, contacts, model),
               body: Scrollbar(
                 child: ListView.builder(
                     physics: const ScrollPhysics(),

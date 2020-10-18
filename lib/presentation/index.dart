@@ -8,3 +8,4 @@ export 'private_chats/private_chat_view.dart';
 export 'chats/chats_view.dart';
 export 'shared/select_contact_view.dart';
 export 'status/status_view.dart';
+export 'package:WhatsAppClone/presentation/shared/mode.dart';

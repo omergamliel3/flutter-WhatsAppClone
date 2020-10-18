@@ -69,14 +69,7 @@ class _MainPageState extends State<MainPage>
 
   // returns AppBar action widget
   List<Widget> _buildAppBarAction() {
-    return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: () => print('search button pressed'),
-        tooltip: 'Search',
-      ),
-      PopUpMenuButton()
-    ];
+    return <Widget>[PopUpMenuButton()];
   }
 
   // returns AppBar bottom widget

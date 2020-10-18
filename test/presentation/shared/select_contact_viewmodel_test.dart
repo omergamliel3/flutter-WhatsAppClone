@@ -117,6 +117,8 @@ void main() {
       // mock unActiveContacts from contacts repo
       when(contactsRepo.unActiveContacts)
           .thenAnswer((realInvocation) => [contactEntity]);
+      when(contactsRepo.activeContacts)
+          .thenAnswer((realInvocation) => localDatabaseContactsEntites);
       when(contactsRepo.activateContact(contactEntity))
           .thenAnswer((realInvocation) => Future.value(true));
       when(contactsRepo.insertMessage(any)).thenAnswer((realInvocation) =>

@@ -1,3 +1,4 @@
+import 'package:WhatsAppClone/presentation/search/search_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -70,8 +71,28 @@ class SelectContactViewModel extends BaseViewModel {
     return _contactsRepo.activeContacts + _contactsRepo.unActiveContacts;
   }
 
+  void navigateSearch() {
+    _navigator.navigateToView(SearchView(
+      onPressed: () => null,
+    ));
+  }
+
   // launch device phone call
   void launchCall(String number) {
     url_launcher.launch('tel:$number');
+  }
+
+  void searchAction(
+      {ContactMode mode,
+      String number,
+      ContactEntity contact,
+      String imagePath}) {
+    if (mode == ContactMode.calls) {
+      launchCall(number);
+    } else if (mode == ContactMode.chat) {
+      activateContact(contact);
+    } else if (mode == ContactMode.setImage) {
+      sendImage(imagePath, contact);
+    }
   }
 }
