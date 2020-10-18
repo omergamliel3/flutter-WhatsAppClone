@@ -37,13 +37,15 @@ class SelectContactViewModel extends BaseViewModel {
   }
 
   Future sendImage(String imagePath, ContactEntity contactEntity) async {
+    ContactEntity contact = contactEntity;
     // active contact entity if un-active
     if (_contactsRepo.unActiveContacts.contains(contactEntity)) {
       await activateContact(contactEntity);
+      contact = _contactsRepo.activeContacts.last;
     }
     // construct new message with type image
     final message = Message(
-        foreignID: contactEntity.id,
+        foreignID: contact.id,
         fromUser: true,
         messageType: MessageType.image,
         text: imagePath,
@@ -52,8 +54,9 @@ class SelectContactViewModel extends BaseViewModel {
     final result = await _contactsRepo.insertMessage(message);
     if (result) {
       _contactsRepo.setActiveContacts();
+
       _navigator.clearTillFirstAndShow(privateChatRoute,
-          arguments: contactEntity.toJsonMap());
+          arguments: contact.toJsonMap());
     } else {
       _dialogService.showDialog(
           title: 'Failed to send image', description: 'Please try again');
