@@ -63,7 +63,7 @@ flutter_icons:
 
 # flutter splash screen setup
 flutter_native_splash:
-  image: assets/images/whatsapp_icon.png
+  image: assets/images/splash_icon.png
   color: "#ffffff"
   android_disable_fullscreen: true
 
