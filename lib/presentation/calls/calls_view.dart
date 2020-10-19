@@ -9,7 +9,12 @@ import 'package:call_log/call_log.dart';
 class CallsPage extends StatelessWidget {
   // call log list tile widget
   Widget _buildCallsListTile(CallLogEntry callLogEntry, CallsViewModel model) {
-    final name = callLogEntry.name[0] ?? 'Unknown';
+    String name;
+    if (callLogEntry.name == null || callLogEntry.name.isEmpty) {
+      name = 'U';
+    } else {
+      name = callLogEntry.name[0];
+    }
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
