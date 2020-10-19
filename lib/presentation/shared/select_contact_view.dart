@@ -69,7 +69,7 @@ class SelectContactScreen extends StatelessWidget {
         IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              model.navigateSearch();
+              model.navigateSearch(imagePath);
             }),
         if (_contactMode != ContactMode.setImage)
           PopUpMenuButton()
@@ -92,8 +92,9 @@ class SelectContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectContactViewModel>.reactive(
         viewModelBuilder: () => SelectContactViewModel(),
+        onModelReady: (model) => model.mode = _contactMode,
         builder: (context, model, child) {
-          final contacts = model.getViewContacts(_contactMode);
+          final contacts = model.getViewContacts();
           return SafeArea(
             top: false,
             child: Scaffold(

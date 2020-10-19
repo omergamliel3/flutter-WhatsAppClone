@@ -79,7 +79,7 @@ class AuthService {
   /// mock register user
   Future<bool> mockRegisterUser({int delay = 3, bool auth = true}) async {
     await Future.delayed(Duration(seconds: delay), () {
-      saveAuthentication(auth: auth);
+      //saveAuthentication(auth: auth);
     });
     return auth;
   }

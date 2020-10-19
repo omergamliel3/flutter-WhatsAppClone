@@ -77,14 +77,17 @@ void main() {
           .thenAnswer((realInvocation) => [contactEntity]);
       when(contactsRepo.unActiveContacts)
           .thenAnswer((realInvocation) => localDatabaseContactsEntites);
+      model.mode = ContactMode.chat;
       // evoke tested method
-      List<ContactEntity> contacts = model.getViewContacts(ContactMode.chat);
+      List<ContactEntity> contacts = model.getViewContacts();
       expect(contacts, equals(localDatabaseContactsEntites));
 
-      contacts = model.getViewContacts(ContactMode.calls);
+      model.mode = ContactMode.calls;
+      contacts = model.getViewContacts();
       expect(contacts, equals([contactEntity] + localDatabaseContactsEntites));
 
-      contacts = model.getViewContacts(ContactMode.setImage);
+      model.mode = ContactMode.setImage;
+      contacts = model.getViewContacts();
       expect(contacts, equals([contactEntity] + localDatabaseContactsEntites));
     });
 

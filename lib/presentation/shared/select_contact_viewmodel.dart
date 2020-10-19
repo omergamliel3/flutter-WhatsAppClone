@@ -1,4 +1,3 @@
-import 'package:WhatsAppClone/presentation/search/search_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -23,6 +22,9 @@ class SelectContactViewModel extends BaseViewModel {
   final _analytics = locator<AnalyticsService>();
   final _dialogService = locator<DialogService>();
   final _navigator = locator<NavigationService>();
+
+  // the corrent contact mode
+  ContactMode mode;
 
   // activate contact via contacts repository
   Future<void> activateContact(ContactEntity contactEntity) async {
@@ -64,16 +66,23 @@ class SelectContactViewModel extends BaseViewModel {
     }
   }
 
-  List<ContactEntity> getViewContacts(ContactMode mode) {
+  // returns a list of contacts according to the [mode]
+  List<ContactEntity> getViewContacts() {
     if (mode == ContactMode.chat) {
+      // nly unactive contacts
       return _contactsRepo.unActiveContacts;
     }
-    return _contactsRepo.activeContacts + _contactsRepo.unActiveContacts;
+    // all contacts
+    return _contactsRepo.activeContacts.reversed.toList() +
+        _contactsRepo.unActiveContacts;
   }
 
-  void navigateSearch() {
+  // navigate to search view
+  void navigateSearch(String imagePath) {
     _navigator.navigateToView(SearchView(
-      onPressed: () => null,
+      mode: mode,
+      contacts: getViewContacts(),
+      imagePath: imagePath,
     ));
   }
 
@@ -82,11 +91,7 @@ class SelectContactViewModel extends BaseViewModel {
     url_launcher.launch('tel:$number');
   }
 
-  void searchAction(
-      {ContactMode mode,
-      String number,
-      ContactEntity contact,
-      String imagePath}) {
+  void searchAction({String number, ContactEntity contact, String imagePath}) {
     if (mode == ContactMode.calls) {
       launchCall(number);
     } else if (mode == ContactMode.chat) {

@@ -1,11 +1,15 @@
+import 'package:WhatsAppClone/core/models/contact_entity.dart';
 import 'package:WhatsAppClone/presentation/search/search_viewmodel.dart';
+import 'package:WhatsAppClone/presentation/shared/mode.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchView extends StatelessWidget {
-  final Function onPressed;
+  final ContactMode mode;
+  final List<ContactEntity> contacts;
+  final String imagePath;
 
-  SearchView({this.onPressed});
+  SearchView({this.mode, this.contacts, this.imagePath});
 
   final TextEditingController _textController = TextEditingController();
 
@@ -15,7 +19,7 @@ class SearchView extends StatelessWidget {
   }
 
   // build title textField widget method
-  Widget _buildTitleTextField() {
+  Widget _buildTitleTextField(SearchViewModel model) {
     return TextField(
       controller: _textController,
       autofocus: true,
@@ -23,79 +27,95 @@ class SearchView extends StatelessWidget {
       textCapitalization: TextCapitalization.sentences,
       textInputAction: TextInputAction.search,
       decoration: const InputDecoration(
-        hintText: 'Search for articles',
+        hintText: 'Search contacts',
         hintStyle: TextStyle(fontSize: 16),
         border: InputBorder.none,
       ),
-      onChanged: (_) {
-        // check for suggestions
-        // setState(() {
-        //   futureList = _getSuggestions();
-        // });
-      },
-      onSubmitted: (search) {
-        _submitSearch(search);
+      onChanged: (value) {
+        // search suggestions
+        model.searchSuggestions(value);
       },
     );
   }
 
-  // build suggestions list view widget
-  Widget _buildSuggestions() {
-    return Container();
-    // return ListView.builder(
-    //   itemCount: suggestions.length,
-    //   itemBuilder: (context, index) {
-    //     final text = suggestions[index];
-    //     return Container(
-    //       padding: const EdgeInsets.all(2),
-    //       child: ListTile(
-    //         onTap: () {
-    //           // set textfield text to suggestions[index], keep cursor at the end of the text
-    //           _textController.text = text;
-    //           _textController.selection = TextSelection(
-    //               baseOffset: text.length, extentOffset: text.length);
-    //           // call submit search
-    //           _submitSearch(text);
-    //         },
-    //         leading: const Icon(Icons.search),
-    //         trailing: const Icon(Icons.call_made),
-    //         //subtitle: Text('SUGGESTION ${index + 1}'),
-    //         title: Text(text,
-    //             style: TextStyle(
-    //                 fontSize: 18, color: Theme.of(context).accentColor)),
-    //       ),
-    //     );
-    //   },
-    // );
+  // build streamBuilder that listen to suggestions stream from viewmodel
+  Widget _buildSuggestions(SearchViewModel model) {
+    return StreamBuilder<List<ContactEntity>>(
+      stream: model.suggestions,
+      builder: (context, snapshot) {
+        // If an error occurs
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text('Something went wrong :('),
+          );
+        }
+        // If snapshot data is not null and empty, return listView widget
+        if (snapshot.data != null && snapshot.data.isNotEmpty) {
+          return _buildDataWidget(snapshot.data, model);
+        }
+        // While loading return empty container
+        return Container();
+      },
+    );
   }
 
-  // clear method, called when pressed 'Clear' iconButton
-  void _clear() {}
+  Widget _buildDataWidget(
+      List<ContactEntity> suggestions, SearchViewModel model) {
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final contact = suggestions[index].displayName ?? '<unknown>';
+        return Container(
+          padding: const EdgeInsets.all(2),
+          child: ListTile(
+            onTap: () {
+              _textController.text = contact;
+              _textController.selection = TextSelection(
+                  baseOffset: contact.length, extentOffset: contact.length);
+              model.performAction(
+                  mode: mode,
+                  contactEntity: suggestions[index],
+                  imagePath: imagePath);
+            },
+            leading: const Icon(Icons.search),
+            trailing: const Icon(Icons.call_made),
+            title: Text(contact,
+                style: TextStyle(
+                    fontSize: 18, color: Theme.of(context).accentColor)),
+          ),
+        );
+      },
+    );
+  }
 
-  // submit search method called when submit the search
-  void _submitSearch(String search) {}
+  // set textController text value to empty string
+  void _clear(SearchViewModel model) {
+    _textController.text = '';
+    model.searchSuggestions(null);
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         top: false,
-        child: ViewModelBuilder<SearchViewModel>.reactive(
+        child: ViewModelBuilder<SearchViewModel>.nonReactive(
           viewModelBuilder: () => SearchViewModel(),
+          onModelReady: (model) => model.contacts = contacts,
           builder: (context, model, child) {
             return Scaffold(
               appBar: AppBar(
-                title: _buildTitleTextField(),
+                title: _buildTitleTextField(model),
                 actions: <Widget>[
                   IconButton(
                     tooltip: 'Clear',
                     icon: const Icon(Icons.clear),
-                    onPressed: _clear,
+                    onPressed: () => _clear(model),
                   )
                 ],
               ),
               body: GestureDetector(
                 onTap: () => _unFocusScope(context),
-                child: _buildSuggestions(),
+                child: _buildSuggestions(model),
               ),
             );
           },

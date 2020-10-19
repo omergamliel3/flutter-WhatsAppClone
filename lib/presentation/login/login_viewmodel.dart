@@ -95,6 +95,7 @@ class LoginViewModel extends BaseViewModel {
 
   // submit user authentication
   Future<void> submitAuth() async {
+    await _auth.saveAuthentication(auth: true);
     final success = await _auth.addUser(_username, _profileImage);
     if (!success) {
       _showErrorDialog('Something went wrnog', 'Please try again.');

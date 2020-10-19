@@ -28,7 +28,6 @@ Future<void> setupLocator() async {
   final _contactsService = ContactsService();
   final _contactsHandler = ContactsHandler(_contactsService);
   final _sharedPreferences = await SharedPreferences.getInstance();
-
   locator.registerLazySingleton<ContactsRepository>(() => ContactsRepository(
       localDatabase: _localDatabase, contactHandler: _contactsHandler));
 
