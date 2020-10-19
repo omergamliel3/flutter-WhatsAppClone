@@ -8,7 +8,6 @@ class SearchView extends StatelessWidget {
   final ContactMode mode;
   final List<ContactEntity> contacts;
   final String imagePath;
-
   SearchView({this.mode, this.contacts, this.imagePath});
 
   final TextEditingController _textController = TextEditingController();
@@ -33,7 +32,8 @@ class SearchView extends StatelessWidget {
       ),
       onChanged: (value) {
         // search suggestions
-        model.searchSuggestions(value);
+        //model.searchSuggestions(value);
+        model.handleOnSearchChange(value);
       },
     );
   }

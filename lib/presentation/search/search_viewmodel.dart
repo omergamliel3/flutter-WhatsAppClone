@@ -1,16 +1,18 @@
-import 'package:WhatsAppClone/core/models/message.dart';
-import 'package:WhatsAppClone/core/routes/routing_constants.dart';
-import 'package:WhatsAppClone/presentation/shared/mode.dart';
+import 'dart:async';
+
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:rxdart/rxdart.dart';
 
-import '../../locator.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:WhatsAppClone/services/index.dart';
-
+import 'package:WhatsAppClone/core/models/message.dart';
+import 'package:WhatsAppClone/core/routes/routing_constants.dart';
 import 'package:WhatsAppClone/core/models/contact_entity.dart';
+
+import '../../locator.dart';
+import 'package:WhatsAppClone/services/index.dart';
+import 'package:WhatsAppClone/presentation/shared/mode.dart';
 
 class SearchViewModel extends BaseViewModel {
   // get services, repos
@@ -18,6 +20,17 @@ class SearchViewModel extends BaseViewModel {
   final _analytics = locator<AnalyticsService>();
   final _dialogService = locator<DialogService>();
   final _navigator = locator<NavigationService>();
+
+  Timer _debounce;
+
+  void handleOnSearchChange(String value) {
+    if (_debounce?.isActive ?? false) {
+      _debounce.cancel();
+    }
+    _debounce = Timer(const Duration(milliseconds: 100), () {
+      searchSuggestions(value);
+    });
+  }
 
   // Holds the contacts entites data
   List<ContactEntity> contacts;
@@ -36,16 +49,18 @@ class SearchViewModel extends BaseViewModel {
     }
     // Trim and convert to lowercase to compare strings safely
     final validVal = value.toLowerCase().trim();
+
     final newSuggestions = <ContactEntity>[];
     // Iterate contacts list to find suggestions
     for (final contact in contacts) {
       // Trim and convert to lowecase to compare string safely
-      final name = contact.displayName.toLowerCase().trim();
+      final name = contact.displayName?.toLowerCase()?.trim() ?? '';
       // Condition
       if (name.startsWith(validVal)) {
         newSuggestions.add(contact);
       }
     }
+
     // After done iterating all contacts, add new suggestions event to the stream
     _suggestionsStream.add(newSuggestions);
   }

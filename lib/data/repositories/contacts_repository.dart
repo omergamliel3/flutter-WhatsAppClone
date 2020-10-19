@@ -60,7 +60,7 @@ class ContactsRepository with ReactiveServiceMixin {
         if (success) {
           // remove newly added contact from unActiveContacts
           _unActiveContacts.removeWhere((contact) =>
-              contact.displayName.toLowerCase() ==
+              contact.displayName?.toLowerCase() ==
               contactEntity.displayName.toLowerCase());
           return true;
         }
