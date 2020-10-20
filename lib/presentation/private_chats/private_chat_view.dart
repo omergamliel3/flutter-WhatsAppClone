@@ -135,11 +135,14 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                                 fontSize: 12.0))
                       ]),
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.file(
-                        File(message.text),
-                        fit: BoxFit.cover,
+                  : AspectRatio(
+                      aspectRatio: 1.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.file(
+                          File(message.text),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
             ),
