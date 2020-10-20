@@ -31,7 +31,7 @@ View layer (UI), viewmodel layer (business logic), and model layer (services, re
 
 ### Back-end
 - **SQLite**
-- **Firebase (Auth, Storage, Firestore, Functions)**
+- **Firebase (Auth, Storage, Firestore, Functions, FCM)**
 - **DialogFlow API (Google Cloud Platform)**
 
 # Author 🙋
