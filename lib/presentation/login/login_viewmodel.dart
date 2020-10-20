@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:WhatsAppClone/services/firebase/push_notification_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stacked/stacked.dart';
@@ -23,6 +24,7 @@ class LoginViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _connectivityService = locator<NetworkInfo>();
   final _dialogService = locator<DialogService>();
+  final _fcm = locator<PushNotificationService>();
 
   // state stream
   final BehaviorSubject<ViewState> _stateSubject =
@@ -97,12 +99,14 @@ class LoginViewModel extends BaseViewModel {
   Future<void> submitAuth() async {
     await _auth.saveAuthentication(auth: true);
     final success = await _auth.addUser(_username, _profileImage);
+    await _fcm.saveDeviceToken();
     if (!success) {
       _showErrorDialog('Something went wrnog', 'Please try again.');
       setState(ViewState.profilePic);
       return;
     }
-    _userService.saveUserName(_username);
+    await _userService.saveUserName(_username);
+
     _router.navigateMainPage();
   }
 

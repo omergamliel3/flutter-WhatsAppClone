@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/models/status.dart';
 
 class CloudDatabase {
   final _kUsersStatusCollection = 'users_status';
   final _kUserNamesCollection = 'user_names';
+  final SharedPreferences _sharedPreferences;
+
+  CloudDatabase(this._sharedPreferences);
 
   /// get the most recent user status, if there is one
   /// return null if there is no status
@@ -92,7 +96,8 @@ class CloudDatabase {
       final docRef = await FirebaseFirestore.instance
           .collection(_kUserNamesCollection)
           .add({'username': username, 'profileUrl': url});
-
+      // save user docRef as [uid] in prefs
+      await _sharedPreferences.setString('uid', docRef.id);
       print('created new firestore recored with id: ${docRef.id}');
       return true;
     } on Exception catch (e) {

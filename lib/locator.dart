@@ -1,3 +1,4 @@
+import 'package:WhatsAppClone/services/firebase/push_notification_service.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:get_it/get_it.dart';
@@ -23,11 +24,12 @@ GetIt locator = GetIt.instance;
 
 Future<void> setupLocator() async {
   // data
+  final _sharedPreferences = await SharedPreferences.getInstance();
+  await _sharedPreferences.clear();
   final _localDatabase = LocalDatabase();
-  final _cloudDatabase = CloudDatabase();
+  final _cloudDatabase = CloudDatabase(_sharedPreferences);
   final _contactsService = ContactsService();
   final _contactsHandler = ContactsHandler(_contactsService);
-  final _sharedPreferences = await SharedPreferences.getInstance();
   locator.registerLazySingleton<ContactsRepository>(() => ContactsRepository(
       localDatabase: _localDatabase, contactHandler: _contactsHandler));
 
@@ -38,6 +40,9 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<UserService>(() => UserService(
       cloudDatabase: _cloudDatabase, sharedPreferences: _sharedPreferences));
   locator.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
+  locator.registerLazySingleton<PushNotificationService>(
+      () => PushNotificationService(_sharedPreferences));
+
   locator.registerLazySingleton<AuthService>(() => AuthService(
       cloudDatabase: _cloudDatabase, sharedPreferences: _sharedPreferences));
   locator.registerLazySingleton<DialogFlowAPI>(() => DialogFlowAPI());

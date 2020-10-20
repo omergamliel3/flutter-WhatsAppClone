@@ -1,3 +1,4 @@
+import 'package:WhatsAppClone/services/firebase/push_notification_service.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../locator.dart';
@@ -18,6 +19,7 @@ class LoadingViewModel extends BaseViewModel {
   final auth = locator<AuthService>();
   final contactsRepo = locator<ContactsRepository>();
   final connectivity = locator<NetworkInfo>();
+  final fcm = locator<PushNotificationService>();
 
   /// call once after the model is construct
   Future<void> initalise() async {
@@ -27,6 +29,9 @@ class LoadingViewModel extends BaseViewModel {
 
   /// run app services initial tasks
   Future<void> runInitTasks() async {
+    // init firebase cloud messaging
+    await fcm.initialise();
+    // init connectivity service
     await connectivity.initConnectivity();
     // request device permissions
     await permission.requestPermissions();
