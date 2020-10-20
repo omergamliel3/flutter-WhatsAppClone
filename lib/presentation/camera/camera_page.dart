@@ -13,13 +13,27 @@ class CameraPage extends StatelessWidget {
       children: [
         Expanded(flex: 4, child: CameraPreview(model.cameraController)),
         Expanded(
-            child: MaterialButton(
-          minWidth: double.infinity,
-          onPressed: () => model.takePicture(),
-          child: const Icon(
-            Icons.camera_alt,
-            size: 30,
-          ),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MaterialButton(
+              onPressed: () => model.switchCamera(),
+              child: const Icon(
+                Icons.switch_camera,
+                size: 30,
+              ),
+            ),
+            const SizedBox(
+              width: 50,
+            ),
+            MaterialButton(
+              onPressed: () => model.takePicture(),
+              child: const Icon(
+                Icons.camera_alt,
+                size: 30,
+              ),
+            )
+          ],
         ))
       ],
     );
@@ -27,7 +41,7 @@ class CameraPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CameraViewModel>.nonReactive(
+    return ViewModelBuilder<CameraViewModel>.reactive(
       viewModelBuilder: () => CameraViewModel(),
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => Scaffold(

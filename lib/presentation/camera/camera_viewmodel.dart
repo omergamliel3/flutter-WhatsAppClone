@@ -10,10 +10,11 @@ class CameraViewModel extends BaseViewModel {
   final router = locator<Router>();
 
   List<CameraDescription> cameras;
-  CameraDescription firstCamera;
 
   CameraController _controller;
   Future<void> _initializeControllerFuture;
+
+  bool _isRearCamera = true;
 
   CameraController get cameraController => _controller;
   Future<void> get initializeControllerFuture => _initializeControllerFuture;
@@ -23,18 +24,41 @@ class CameraViewModel extends BaseViewModel {
     // Obtain a list of the available cameras on the device.
     cameras = await availableCameras();
     // Get a specific camera from the list of available cameras.
-    firstCamera = cameras.first;
+    final camera = cameras.first;
     // To display the current output from the camera,
     // create a CameraController.
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
-      firstCamera,
+      camera,
       // Define the resolution to use.
       ResolutionPreset.medium,
     );
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
+  }
+
+  // switch between rear and front camera if possible
+  void switchCamera() {
+    _isRearCamera = !_isRearCamera;
+    CameraDescription camera;
+
+    if (_isRearCamera) {
+      // Get the first camera from the list of cameras
+      camera = cameras.first;
+    } else {
+      // If second camera is available
+      if (cameras[1] != null) {
+        // Get the second camera from the list of cameras
+        camera = cameras[1];
+      }
+    }
+
+    // create a new CamerController with new camera
+    _controller = CameraController(camera, ResolutionPreset.medium);
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+    notifyListeners();
   }
 
   // take picture callback
