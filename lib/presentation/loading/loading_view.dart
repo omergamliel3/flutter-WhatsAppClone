@@ -45,7 +45,7 @@ class _LoadingPageState extends State<LoadingPage>
         const SizedBox(height: 12.0),
         ShaderMask(
           shaderCallback: (rect) {
-            return const LinearGradient(colors: [Colors.amber, Colors.red])
+            return LinearGradient(List: const [Colors.amber, Colors.red])
                 .createShader(rect);
           },
           child: Text(

@@ -7,7 +7,7 @@ import 'locator.dart';
 
 import 'core/shared/theme.dart';
 
-import 'core/routes/router.dart';
+import 'core/routes/router.dart' as router;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
       navigatorKey: locator<NavigationService>().navigatorKey,
-      onGenerateRoute: locator<Router>().onGenerateRoute,
+      onGenerateRoute: locator<router.Router>().onGenerateRoute,
     );
   }
 }
