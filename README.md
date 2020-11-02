@@ -1,4 +1,4 @@
-# WhatsAppClone - _UNDER CONSTRUCTION_
+# WhatsAppClone
 
 A clean mvvm styled architecture, whatsApp clone app.
 
