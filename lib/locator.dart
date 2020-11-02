@@ -25,7 +25,6 @@ GetIt locator = GetIt.instance;
 Future<void> setupLocator() async {
   // data
   final _sharedPreferences = await SharedPreferences.getInstance();
-  await _sharedPreferences.clear();
   final _localDatabase = LocalDatabase();
   final _cloudDatabase = CloudDatabase(_sharedPreferences);
   final _contactsService = ContactsService();
