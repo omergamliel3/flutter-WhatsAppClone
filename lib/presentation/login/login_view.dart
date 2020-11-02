@@ -125,11 +125,11 @@ class _LoginPageState extends State<LoginPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       padding: const EdgeInsets.all(0.0),
       child: Ink(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            List: const <Color>[kPrimaryColor, Colors.green],
+            colors: [kPrimaryColor, Colors.green],
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),
         ),
         child: Container(
           width: 150,
